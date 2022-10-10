@@ -3,8 +3,13 @@ import createError from "http-errors";
 import logger from "morgan";
 import indexRouter from "./routes/index.js";
 import usersRouter from "./routes/users.js";
+import { connectDb } from "./database-connector.js";
 
 const app = express();
+// const db = connectDb('mongodb://localhost/');
+import mongoose from 'mongoose';
+mongoose.connect('mongodb://127.0.0.1/shroom-share');
+
 
 app.use(logger("dev"));
 app.use(express.json());
