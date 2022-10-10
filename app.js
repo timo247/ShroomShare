@@ -3,6 +3,7 @@ import createError from "http-errors";
 import logger from "morgan";
 import indexRouter from "./routes/index.js";
 import usersRouter from "./routes/users.js";
+import { config } from "./config.js";
 
 const app = express();
 
@@ -28,5 +29,10 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.send(err.message);
 });
+
+/* app.listen(config.port, () => { */
+/*   console.log(`listening on *:${config.port}`); */
+/* }); */
+
 
 export default app;

@@ -1,0 +1,11 @@
+{
+    "sepcy_id": "01",
+    "user_id": "01",
+    "picture": "https://...",
+    "description": "...",
+    "date": "2022.01.01",
+    "location": {
+        "lat": "...",
+        "long": "..."
+    }
+}
