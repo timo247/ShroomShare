@@ -3,7 +3,7 @@ import createError from "http-errors";
 import logger from "morgan";
 import indexRouter from "./routes/index.js";
 import usersRouter from "./routes/users.js";
-import { connectDb } from "./database-connector.js";
+import { config } from "./config.js";
 
 const app = express();
 // const db = connectDb('mongodb://localhost/');
@@ -33,5 +33,7 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.send(err.message);
 });
+
+
 
 export default app;
