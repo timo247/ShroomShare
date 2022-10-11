@@ -6,6 +6,10 @@ import usersRouter from "./routes/users.js";
 import { config } from "./config.js";
 
 const app = express();
+// const db = connectDb('mongodb://localhost/');
+import mongoose from 'mongoose';
+mongoose.connect('mongodb://127.0.0.1/shroom-share');
+
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -30,9 +34,6 @@ app.use(function (err, req, res, next) {
   res.send(err.message);
 });
 
-/* app.listen(config.port, () => { */
-/*   console.log(`listening on *:${config.port}`); */
-/* }); */
 
 
 export default app;
