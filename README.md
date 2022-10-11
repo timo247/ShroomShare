@@ -228,11 +228,11 @@ __Réponse: 200__
 { 
     "message": "Mushroom updated",
     "specy": {
-        "sepcy_id"?: "1", 
-        "picture": ? "https://...", 
+        "sepcy_id": "1", 
+        "picture": "https://...", 
         "description": "This is a Amanita phalloides...", 
         "date": "2022.01.01", 
-        "location"?: { 
+        "location": { 
             "lat": "...", 
             "long": "...", 
         } 
@@ -263,11 +263,11 @@ __Réponse: 200__
     "message": "Mushrooms retrieved",
     "species": [
         { 
-            "sepcy_id"?: "1", 
-            "picture": ? "https://...", 
+            "sepcy_id": "1", 
+            "picture": "https://...", 
             "description": "This is a Amanita phalloides...", 
             "date": "2022.01.01", 
-            "location"?: { 
+            "location": { 
                 "lat": "...", 
                 "long": "...", 
             }
