@@ -4,12 +4,21 @@ import logger from "morgan";
 import indexRouter from "./routes/index.js";
 import usersRouter from "./routes/users.js";
 import { config } from "./config.js";
+import mongoose from 'mongoose'
 
 const app = express();
-// const db = connectDb('mongodb://localhost/');
-import mongoose from 'mongoose';
-mongoose.connect('mongodb://127.0.0.1/shroom-share');
 
+const url = 'mongodb://localhost:27017/shroomshare';
+// Use connect method to connect to the Server
+mongoose.connect(url, function (err, db) {
+  if (err) {
+    console.warn('Could not connect to database because: ' + err.message);
+  } else {
+    console.log('Connected to MongoDB');
+    // Do something with "db"...
+    db.close();
+  }
+});
 
 app.use(logger("dev"));
 app.use(express.json());
