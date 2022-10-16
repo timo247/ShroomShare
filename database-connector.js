@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const url = 'mongodb://127.0.0.1:27017/shroomshare';
 
-function connectDb() {
+function connect2Db() {
   mongoose.Promise = Promise;
   mongoose.connect(url, (err, db) => {
     if (err) {
@@ -13,6 +13,4 @@ function connectDb() {
   });
 }
 
-/* const connection = connectDb(); */
-
-export default connectDb;
+export default connect2Db;

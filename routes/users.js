@@ -6,17 +6,19 @@ const router = express.Router();
 
 // Retrieves all users
 router.get('/', async (req, res, next) => {
-  const user = await User.find({ username: 'user1' });
-  res.send(`users: ${user}`);
-  // User.find().sort('name').exec((err, users) => {
-  //   if (err) return next(err);
-  //   res.send(users);
-  // });
+  User.find().sort('name').exec((err, users) => {
+    if (err) return next(err);
+    res.send(users);
+  });
 });
 
 // Retrieves a specif user
 router.get('/:id', (req, res, next) => {
-  res.send('Got a response from the users route');
+  const id = req.params.id;
+  User.find({ _id: id }).exec((err, users) => {
+    if (err) return next(err);
+    res.send(users);
+  });
 });
 
 // Create a new user
