@@ -1,6 +1,5 @@
 import express from 'express';
 import User from '../schemas/user.js';
-// import connection from '../database-connector.js';
 
 const router = express.Router();
 
@@ -23,7 +22,13 @@ router.get('/:id', (req, res, next) => {
 
 // Create a new user
 router.post('/', (req, res, next) => {
-  res.send('Got a response from the users route');
+  const user = new User(req.body);
+  user.save((err, savedUser) => {
+    if (err) {
+      return next(err);
+    }
+    res.send(savedUser);
+  });
 });
 
 // Modify existing user
