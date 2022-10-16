@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon",
     "start": "node ./bin/start",
-    "stopdb": "brew services stop mongodb-community@6.0"
+    "stopdb": "brew services stop mongodb-community@6.0",
+    "seed": "node ./seeders/seeders.js"
   },
   "dependencies": {
     "debug": "^4.3.4",

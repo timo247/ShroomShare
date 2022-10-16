@@ -9,24 +9,25 @@ The other users of the app can then go to the gathering place and confirm whethe
 - [ShroomShare](#shroomshare)
 - [Table of Contents](#table-of-contents)
 - [Routes](#routes)
-    - [Espèces (de champignons)](#espèces-de-champignons)
-        - [Ajouter une espèce](#ajouter-une-espèce)
-        - [Modifier une espèce](#modifier-une-espèce)
-        - [Supprimer une espèce](#supprimer-une-espèce)
-        - [Retrouver toutes les espèces](#retrouver-toutes-les-espèces)
-        - [Retrouver une espèce](#retrouver-une-espèce)
-    - [Champignons](#champignons)
-        - [Ajouter un champignon](#ajouter-un-champignon)
-        - [Supprimer un champignon](#supprimer-un-champignon)
-        - [Modifier un champignon](#modifier-un-champignon)
-        - [Retrouver des champignons](#retrouver-des-champignons)
-    - [Utilisateurs](#utilisateurs)
-        - [Retrouver tous les utilisateurs](#retrouver-tous-les-utilisateurs)
-        - [Retrouver un utilisateur](#retrouver-un-utilisateur)
-        - [Créer un utilisateur](#créer-un-utilisateur)
-        - [Modifier un utilisateur](#modifier-un-utilisateur)
-        - [Supprimer un utilisateur](#supprimer-un-utilisateur)
-    - [Schémas](#schémas)
+  - [Espèces (de champignons)](#espèces-de-champignons)
+    - [Ajouter une espèce](#ajouter-une-espèce)
+    - [Modifier une espèce](#modifier-une-espèce)
+    - [Supprimer une espèce](#supprimer-une-espèce)
+    - [Retrouver toutes les espèces](#retrouver-toutes-les-espèces)
+    - [Retrouver une espèce](#retrouver-une-espèce)
+  - [Champignons](#champignons)
+    - [Ajouter un champignon](#ajouter-un-champignon)
+    - [Supprimer un champignon](#supprimer-un-champignon)
+    - [Modifier un champignon](#modifier-un-champignon)
+    - [Retrouver des champignons](#retrouver-des-champignons)
+  - [Utilisateurs](#utilisateurs)
+    - [Retrouver tous les utilisateurs](#retrouver-tous-les-utilisateurs)
+    - [Retrouver un utilisateur](#retrouver-un-utilisateur)
+    - [Créer un utilisateur](#créer-un-utilisateur)
+    - [Modifier un utilisateur](#modifier-un-utilisateur)
+    - [Supprimer un utilisateur](#supprimer-un-utilisateur)
+  - [Schémas](#schémas)
+- [Mongosh](#mongosh)
 
 # Routes 
 
@@ -419,6 +420,52 @@ User: {
 	admin: Boolean, 
 } 
 ```
+# Mongosh
+
+__Démarer mongodb (MacOS)__
+
+```bash
+brew services start mongodb-community@6.0
+```
+
+__Arrêter mongodb (MacOS)__
+
+```bash
+brew services stop mongodb-community@6.0
+```
+
+__Entrer dans mongosh__
+
+Les commandes suivantes sont à éxécuter dans `mongosh`, pour que `mongosh` soit accesible il faut que la base de données soit au préalable démarée.
+
+```bash
+mongosh
+```
+
+__Lister les db existantes__
+
+```bash
+show dbs
+```
+
+__Lister les collections existantes__
+
+```bash
+show collections
+```
+
+__Afficher le nom de la db courante__
+
+```bash
+db
+```
+
+__Changer de db__
+
+```bash
+use <dbName>
+```
+
 
  
 

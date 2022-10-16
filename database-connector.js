@@ -1,18 +1,18 @@
 import mongoose from 'mongoose';
-//  export function connectDb(url) {
-//     // Use connect method to connect to the Server
-//     MongoClient.connect(url, function(err, db) {
-//     if (err) {
-//       console.warn('Could not connect to database because: ' + err.message);
-//     } else {
-//         return db
-//         console.log('Connected to MongoDB');
-//     }
-//   });
-//   }
 
-function connectDb(url) {
-  mongoose.connect(url);
+const url = 'mongodb://127.0.0.1:27017/shroomshare';
+
+function connectDb() {
+  mongoose.Promise = Promise;
+  mongoose.connect(url, (err, db) => {
+    if (err) {
+      console.warn(`Could not connect to database because: ${err.message}`);
+    } else {
+      console.log('Connected to MongoDB');
+    }
+  });
 }
+
+/* const connection = connectDb(); */
 
 export default connectDb;

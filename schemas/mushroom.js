@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const { Schema } = mongoose;
+const Schema = mongoose.Schema;
 
 const mushroomSchema = new Schema({
   species_id: { type: Schema.Types.ObjectId, ref: 'species' },
@@ -17,6 +17,6 @@ const mushroomSchema = new Schema({
   },
 });
 mongoose.model('Mushroom', mushroomSchema, 'Mushrooms');
-const MushroomSchema = mongoose.model('Mushroom');
+const Mushroom = mongoose.model('Mushroom');
 
-export default MushroomSchema;
+export default Mushroom;

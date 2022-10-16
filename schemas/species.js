@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const { Schema } = mongoose;
+const Schema = mongoose.Schema;
 
 const specySchema = new Schema({
   name: { type: String, required: true },
@@ -9,5 +9,5 @@ const specySchema = new Schema({
   pictureFile: { type: String, required: true },
 });
 mongoose.model('Specy', specySchema, 'species');
-const SpecySchema = mongoose.model('Specy');
-export default SpecySchema;
+const Specy = mongoose.model('Specy');
+export default Specy;

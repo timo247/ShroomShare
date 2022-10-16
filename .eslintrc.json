@@ -17,6 +17,9 @@
     ],
     "import/no-extraneous-dependencies": "off",
     "no-unused-vars": "off",
-    "no-undef": "off"
+    "no-undef": "off",
+    "no-plusplus": "off",
+    "prefer-destructuring": "off",
+    "consistent-return": "off"
   }
 }
