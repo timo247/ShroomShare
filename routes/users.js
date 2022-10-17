@@ -34,27 +34,33 @@ router.post('/', (req, res, next) => {
 
 // Modify existing user
 router.patch('/:id', (req, res, next) => {
-  const id = req.id;
-  const params = req.params;
-  User.findByIdAndUpdate({ _id: id }, params, (err, modifiedUser) => {
+  const id = req.params.id;
+  const params = req.body;
+  User.findByIdAndUpdate(id, params, (err, modifiedUser) => {
     if (err) return next(err);
-    res.send(modifiedUser);
+    req.body = {};
+    req.body.message = 'User deleted';
+    req.body.user = modifiedUser;
+    next();
   });
 });
 
 // Delete an existing user
 router.delete('/:id', (req, res, next) => {
   const id = req.params.id;
-  User.deleteOne({ _id: id }, (err, deletedUser) => {
+  User.deleteOne({ _id: id }, (err) => {
     if (err) return next(err);
-    res.send(deletedUser);
+    req.body.message = 'User deleted';
+    next();
   });
 });
 
+// Delete all users (for testing purpose)
 router.delete('/', (req, res, next) => {
-  User.deleteMany({}, (err, deletedUser) => {
+  User.deleteMany({}, (err) => {
     if (err) return next(err);
-    res.send(deletedUser);
+    req.body.message = 'All Users deleted';
+    next();
   });
 });
 

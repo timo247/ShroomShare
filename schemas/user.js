@@ -8,6 +8,19 @@ const userSchema = new Schema({
   email: { type: String, required: true },
   admin: { type: Boolean, default: false },
 });
+
+userSchema.set('toJSON', {
+  transform: transformJsonUser,
+});
+
+function transformJsonUser(doc, json, options) {
+  json.id = json['_id']; // eslint-disable-line
+  delete json.password; // eslint-disable-line
+  delete json['_id']; // eslint-disable-line
+  delete json['__v']; // eslint-disable-line
+  return json;
+}
+
 mongoose.model('User', userSchema, 'users');
 const User = mongoose.model('User');
 

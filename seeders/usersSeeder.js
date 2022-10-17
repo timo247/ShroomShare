@@ -22,10 +22,6 @@ async function createUser(i) {
   } catch (error) {
     console.warn(`Could not save user because: ${error}`);
   }
-  /* user.save((err, updatedUser) => { */
-  /*   if (err) return console.warn(`Could not save user because: ${err.message}`); */
-  /*   return console.log('user succesfully added to db'); */
-  /* }); */
 }
 
 export default seeder;
