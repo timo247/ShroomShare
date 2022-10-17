@@ -5,5 +5,5 @@ import connection from '../database-connector.js';
 connection();
 // call seeder here
 await userSeeder();
-mongoose.connection.close();
+await mongoose.connection.close();
 process.exit();
