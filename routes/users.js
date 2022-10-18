@@ -17,9 +17,12 @@ router.get('/', async (req, res, next) => {
 // Retrieves a specif user
 router.get('/:id', (req, res, next) => {
   const id = req.params.id;
-  User.find({ _id: id }).exec((err, users) => {
+  User.find({ _id: id }).exec((err, user) => {
     if (err) return next(err);
-    res.send(users);
+    req.body = {};
+    req.body.message = 'User retrieved';
+    req.body.user = user;
+    next();
   });
 });
 
@@ -28,7 +31,10 @@ router.post('/', (req, res, next) => {
   const user = new User(req.body);
   User.save((err, savedUser) => {
     if (err) return next(err);
-    res.send(savedUser);
+    req.body = {};
+    req.body.message = 'User created';
+    req.body.user = savedUser;
+    next();
   });
 });
 

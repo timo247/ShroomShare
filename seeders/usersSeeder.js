@@ -1,7 +1,9 @@
+import bcrypt from 'bcrypt';
 import User from '../schemas/user.js';
 
 const numberOfUsers = 10;
 const startIndex = 1;
+const costFactor = 10;
 
 async function seeder(i = startIndex) {
   const user = await User.find({ username: `user${i}` });
@@ -10,17 +12,19 @@ async function seeder(i = startIndex) {
 }
 
 async function createUser(i) {
-  const user = new User({
-    username: `user${i}`,
-    password: `password${i}`,
-    admin: i % 2 === 0,
-    email: `user${i}@gmail.com`,
-  });
+  const plainPassword = `password${i}`;
   try {
+    const hashedPassword = await bcrypt.hash(plainPassword, costFactor);
+    const user = new User({
+      username: `user${i}`,
+      password: hashedPassword,
+      admin: i % 2 === 0,
+      email: `user${i}@gmail.com`,
+    });
     await user.save();
     console.log('user succesfully added to db');
   } catch (error) {
-    console.warn(`Could not save user because: ${error}`);
+    console.warn(`Could not create user because: ${error}`);
   }
 }
 
