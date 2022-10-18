@@ -3,6 +3,7 @@ import createError from 'http-errors';
 import logger from 'morgan';
 import indexRouter from './routes/index.js';
 import usersRouter from './routes/users.js';
+import authRouter from './routes/auth.js';
 import config from './config.js';
 import connect from './database-connector.js';
 
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use(`/${config.apiName}`, indexRouter);
+app.use(`/${config.apiName}/auth`, authRouter);
 app.use(`/${config.apiName}/users`, usersRouter);
 
 // catch 404 and forward to error handler

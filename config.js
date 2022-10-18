@@ -4,8 +4,11 @@ dotenv.config();
 
 const config = {
   port: normalizePort(process.env.PORT || '3000'),
-  apiName: 'api',
+  apiName: process.env.API_NAME || 'api',
+  secretKey: process.env.SECRET_KEY,
 };
+
+if (!config.secretKey) throw new Error('env variable $SECRET_KEY should be configured');
 
 /**
  * Normalize a port into a number, string, or false.

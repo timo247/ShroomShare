@@ -9,6 +9,10 @@ The other users of the app can then go to the gathering place and confirm whethe
 - [ShroomShare](#shroomshare)
 - [Table of Contents](#table-of-contents)
 - [Routes](#routes)
+  - [Authentification](#authentification)
+    - [Récupérer un token](#récupérer-un-token)
+  - [Images](#images)
+    - [Récupérer des images](#récupérer-des-images)
   - [Espèces (de champignons)](#espèces-de-champignons)
     - [Ajouter une espèce](#ajouter-une-espèce)
     - [Modifier une espèce](#modifier-une-espèce)
@@ -35,6 +39,48 @@ __Legendes__
 
 - `🔐`: route accesible uniquement aux __administrateurs__
 - `🔒`: route accesible uniquement aux __utilisateurs/administrateurs__
+
+## Authentification
+### Récupérer un token
+
+	POST api/auth 
+
+__Corps de la reqûete__
+
+```
+{ 
+    username: String, 
+    password: String, 
+} 
+```
+
+__Réponse 200__
+
+```json
+{
+    "message": "User connected",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkphbmUgRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.cMErWtEf7DxCXJl8C9q0L7ttkm-Ex54UWHsOCMGbtUc"
+}
+```
+## Images
+
+### Récupérer des images
+
+	🔐 POST api/pictures
+
+__Corps de la reqûete__
+
+```
+{
+    pictures_id: String[]
+}
+```
+
+__Réponse 200__
+
+```json
+TODO
+```
 
 ## Espèces (de champignons) 
 
@@ -248,7 +294,7 @@ __Réponse: 200__
 __Filtres disponibles__
 
 - `?location={ lat:Float, long:Float }`: Coordonnées GPS 
-- `?spieces=String`: Espèce(s) 
+- `?species=String`: Espèce(s) 
 - `?user=Integer`: ID Utilisateur 
 - `&total=Boolean`: Somme des champignons par utilisateur (Si TRUE) 
 - `?usage=String`: Usage 
