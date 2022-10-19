@@ -5,7 +5,7 @@ import auth from '../helpers/auth.js';
 const router = express.Router();
 
 // Retrieves all users
-router.get('/', async (req, res, next) => {
+router.get('/', auth.authenticate, async (req, res, next) => {
   try {
     const users = await User.find().sort('name');
     req.body = {};
@@ -18,7 +18,7 @@ router.get('/', async (req, res, next) => {
 });
 
 // Retrieves a specif user
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', auth.authenticate, async (req, res, next) => {
   try {
     const id = req.params.id;
     const user = await User.findOne({ _id: id });
@@ -32,7 +32,7 @@ router.get('/:id', async (req, res, next) => {
 });
 
 // Create a new user
-router.post('/', async (req, res, next) => {
+router.post('/', auth.authenticate, async (req, res, next) => {
   try {
     const user = new User(req.body);
     const savedUser = await user.save();
@@ -46,7 +46,7 @@ router.post('/', async (req, res, next) => {
 });
 
 // Modify existing user
-router.patch('/:id', async (req, res, next) => {
+router.patch('/:id', auth.authenticate, async (req, res, next) => {
   try {
     const id = req.params.id;
     const params = req.body;
@@ -62,7 +62,7 @@ router.patch('/:id', async (req, res, next) => {
 });
 
 // Delete an existing user
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', auth.authenticate, async (req, res, next) => {
   try {
     const id = req.params.id;
     await User.deleteOne({ _id: id });
@@ -75,7 +75,7 @@ router.delete('/:id', async (req, res, next) => {
 });
 
 // Delete all users (for testing purpose)
-router.delete('/', async (req, res, next) => {
+router.delete('/', auth.authenticate, async (req, res, next) => {
   try {
     await User.deleteMany({});
     req.body = {};

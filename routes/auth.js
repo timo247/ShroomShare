@@ -5,7 +5,6 @@ import config from '../config.js';
 import auth from '../helpers/auth.js';
 
 const router = express.Router();
-const secretKey = config.secretKey;
 
 // authenticate user
 router.post('/', async (req, res, next) => {
@@ -25,6 +24,7 @@ router.post('/', async (req, res, next) => {
 router.use((req, res, next) => {
   const userId = req.body.user.id.toString();
   const token = auth.generateJwtToken(userId, 1);
+  console.log(userId, token);
   if (token?.error) next(token.error);
   const verified = auth.verifyJwtToken(token.token);
   if (verified?.error) next(verified.error);

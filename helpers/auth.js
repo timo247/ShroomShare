@@ -6,7 +6,7 @@ const auth = {
     const expirationDate = Math.floor(Date.now() / 1000) + numberOfDay * 24 * 3600;
     const payload = { sub: userId, exp: expirationDate };
     try {
-      const token = jwt.sign(payload, secretKey);
+      const token = jwt.sign(payload, config.secretKey);
       return { token };
     } catch (error) {
       return { error };
@@ -14,7 +14,7 @@ const auth = {
   },
   verifyJwtToken(token) {
     try {
-      const payload = jwt.verify(token, secretKey);
+      const payload = jwt.verify(token, config.secretKey);
       return { payload };
     } catch (error) {
       return { error };
