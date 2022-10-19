@@ -1,6 +1,8 @@
 import express from 'express';
+import bcrypt from 'bcrypt';
 import User from '../schemas/user.js';
 import auth from '../helpers/auth.js';
+import config from '../config.js';
 
 const router = express.Router();
 
@@ -8,9 +10,7 @@ const router = express.Router();
 router.get('/', auth.authenticate, async (req, res, next) => {
   try {
     const users = await User.find().sort('name');
-    req.body = {};
-    req.body.message = 'Users retrieved';
-    req.body.users = users;
+    req.body = setBody({ message: 'Users retrieved', users });
     next();
   } catch (error) {
     return next(error);
@@ -22,9 +22,7 @@ router.get('/:id', auth.authenticate, async (req, res, next) => {
   try {
     const id = req.params.id;
     const user = await User.findOne({ _id: id });
-    req.body = {};
-    req.body.message = 'User retrieved';
-    req.body.user = user;
+    req.body = setBody({ message: 'User retrieved', user });
     next();
   } catch (error) {
     return next(error);
@@ -34,11 +32,10 @@ router.get('/:id', auth.authenticate, async (req, res, next) => {
 // Create a new user
 router.post('/', auth.authenticate, async (req, res, next) => {
   try {
+    req.body.password = await bcrypt.hash(req.body.password, config.costFactor);
     const user = new User(req.body);
     const savedUser = await user.save();
-    req.body = {};
-    req.body.message = 'User created';
-    req.body.user = savedUser;
+    req.body = setBody({ message: 'User created', user: savedUser });
     next();
   } catch (error) {
     return next(error);
@@ -48,13 +45,14 @@ router.post('/', auth.authenticate, async (req, res, next) => {
 // Modify existing user
 router.patch('/:id', auth.authenticate, async (req, res, next) => {
   try {
-    const id = req.params.id;
+    if (req.body.password) {
+      req.body.password = await bcrypt.hash(req.body.password, config.costFactor);
+    }
     const params = req.body;
+    const id = req.params.id;
     await User.findByIdAndUpdate(id, params);
     const modifiedUser = await User.findOne({ _id: id });
-    req.body = {};
-    req.body.message = 'User modified';
-    req.body.user = modifiedUser;
+    req.body = setBody({ message: 'User modified', user: modifiedUser });
     next();
   } catch (error) {
     return next(error);
@@ -66,8 +64,7 @@ router.delete('/:id', auth.authenticate, async (req, res, next) => {
   try {
     const id = req.params.id;
     await User.deleteOne({ _id: id });
-    req.body = {};
-    req.body.message = 'User deleted';
+    req.body = setBody({ message: 'User deleted' });
     next();
   } catch (error) {
     return next(err);
@@ -78,8 +75,7 @@ router.delete('/:id', auth.authenticate, async (req, res, next) => {
 router.delete('/', auth.authenticate, async (req, res, next) => {
   try {
     await User.deleteMany({});
-    req.body = {};
-    req.body.message = 'All Users deleted';
+    req.body = setBody({ message: 'All users deleted' });
     next();
   } catch (error) {
     return next(error);
@@ -90,5 +86,11 @@ router.use((req, res, next) => {
   const body = { ...req.body };
   res.send(body);
 });
+
+function setBody(payload) {
+  let modifiedBody = {};
+  modifiedBody = { ...payload };
+  return modifiedBody;
+}
 
 export default router;

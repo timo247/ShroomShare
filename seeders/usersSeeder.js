@@ -1,9 +1,10 @@
 import bcrypt from 'bcrypt';
+import config from '../config.js';
 import User from '../schemas/user.js';
 
 const numberOfUsers = 10;
 const startIndex = 1;
-const costFactor = 10;
+const costFactor = config.bcryptCostFactor;
 
 async function seeder(i = startIndex) {
   const user = await User.find({ username: `user${i}` });
