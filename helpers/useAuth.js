@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
 import config from '../config.js';
-import msg from '../data/messages.js';
 
 const roles = {
   admin: 'admin',
@@ -26,6 +25,14 @@ const useAuth = {
     } catch (error) {
       return { error };
     }
+  },
+  send(res, message, payload) {
+    res.status(message.status).send({ message: message.msg, ...payload });
+  },
+  setBody(payload) {
+    let modifiedBody = {};
+    modifiedBody = { ...payload };
+    return modifiedBody;
   },
 };
 

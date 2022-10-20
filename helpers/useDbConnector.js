@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 function connect2Db() {
   mongoose.Promise = Promise;
   mongoose.connect(process.env.DATABASE_URL, (err, db) => {
-    console.log(process.env.DATABASE_URL);
     if (err) {
       console.warn(`Could not connect to database because: ${err.message}`);
     } else {
