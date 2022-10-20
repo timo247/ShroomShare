@@ -1,3 +1,5 @@
-PORT=
-API_NAME=
-SECRET_KEY=
+PORT=number
+API_NAME=string
+SECRET_KEY=string
+DATABASE_URL=string
+ENABLE_DEBUtrueG_MODE=boolean

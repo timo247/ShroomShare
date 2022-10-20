@@ -6,11 +6,11 @@ const numberOfUsers = 10;
 const startIndex = 1;
 const costFactor = config.bcryptCostFactor;
 
-async function seeder(i = startIndex) {
+const seeder = async (i = startIndex) => {
   const user = await User.find({ username: `user${i}` });
   if (user.length === 0) await createUser(i);
   if (i < numberOfUsers) await seeder(i + 1);
-}
+};
 
 async function createUser(i) {
   const plainPassword = `password${i}`;
@@ -23,7 +23,7 @@ async function createUser(i) {
       email: `user${i}@gmail.com`,
     });
     await user.save();
-    console.log('user succesfully added to db');
+    if (i === numberOfUsers) console.log('users succesfully added to db');
   } catch (error) {
     console.warn(`Could not create user because: ${error}`);
   }
