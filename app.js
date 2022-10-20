@@ -5,7 +5,7 @@ import indexRouter from './routes/index.js';
 import usersRouter from './routes/users.js';
 import authRouter from './routes/auth.js';
 import config from './config.js';
-import connect from './database-connector.js';
+import connect from './helpers/useDbConnector.js';
 
 connect();
 const app = express();
