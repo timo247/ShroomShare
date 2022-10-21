@@ -22,6 +22,8 @@ const messages = {
   // ==========================================================================
   ERROR_TOKEN_VALIDATION: { status: 401, msg: 'Your token is invalid or has expired.' },
   ERROR_TOKEN_CREATION: { status: 401, msg: 'Token creation failed.' },
+  INTERNALERROR_TOKEN_CREATION: { status: 500, msg: 'Unable to create token' },
+  INTERNALERROR_TOKEN_VALIDATION: { status: 500, msg: 'Unable to verify token' },
   SUCCES_TOKEN_CREATION: { status: 201, msg: 'Token succesfully created.' },
   //  Others
   // ==========================================================================

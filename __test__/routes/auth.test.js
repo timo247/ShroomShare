@@ -1,63 +1,59 @@
-import supertest from 'supertest';
 import mongoose from 'mongoose';
-import config from '../../config.js';
-import app from '../../app';
 import cleanUpDb from '../../helpers/useCleanUpDb.js';
 import usersSeeder from '../../seeders/usersSeeder.js';
+import msg from '../../data/messages.js';
+import * as useTest from '../../helpers/useTest.js';
 
 const prepareDb = async () => {
   await cleanUpDb();
   await usersSeeder();
 };
 
-let userToken = '';
-let adminToken = '';
-
-const setTokens = async () => {
-  const res1 = await supertest(app)
-    .post(`/${config.apiName}/auth`)
-    .send(userCredentials);
-  userToken = res1.body.token;
-  if (!userToken) throw new Error('Can\'t set user\'s token');
-  const res2 = await supertest(app)
-    .post(`/${config.apiName}/auth`)
-    .send(adminCredentials);
-  adminToken = res2.body.token;
-  if (!adminToken) throw new Error('Can\'t set admin\'s token');
-};
-
-const adminCredentials = {
-  username: 'user2',
-  password: 'password2',
-};
-const userCredentials = {
-  username: 'user1',
-  password: 'password1',
-};
-
 describe('POST /auth', () => {
-  beforeAll(setTokens);
+  beforeAll(useTest.setTokens);
   beforeEach(prepareDb);
-  it('should create a token', async () => {
-    const res = await supertest(app)
-      .post(`/${config.apiName}/auth`)
-      .send(userCredentials)
-      .expect(200)
-      .expect('Content-Type', /json/);
+
+  test(msg.SUCCES_TOKEN_CREATION.msg, async () => {
+    const res = await useTest.apiCall({
+      method: 'post',
+      path: 'auth',
+      body: useTest.userCredentials,
+      messageWrapper: msg.SUCCES_TOKEN_CREATION,
+    });
     expect(res.body).toEqual(
       expect.objectContaining({
         token: expect.any(String),
-        message: expect.any(String),
+        message: expect.stringContaining(msg.SUCCES_TOKEN_CREATION.msg),
       }),
     );
   });
 
-  it('should return Ingition!', async () => {
-    const res = await supertest(app)
-      .get(`/${config.apiName}`)
-      .expect(200)
-      .expect('Content-Type', /json/);
-    expect(res.body.message).toEqual('Ingition!');
+  test(`${msg.ERROR_AUTH_LOGIN.msg} - username don't exist`, async () => {
+    const res = await useTest.apiCall({
+      method: 'post',
+      path: 'auth',
+      body: { username: 'user', password: 'password' },
+      messageWrapper: msg.ERROR_AUTH_LOGIN,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(msg.ERROR_AUTH_LOGIN.msg),
+      }),
+    );
+  });
+
+  test(`${msg.ERROR_AUTH_LOGIN.msg} - unvalid password`, async () => {
+    const res = await useTest.apiCall({
+      method: 'post',
+      path: 'auth',
+      body: { username: 'user1', password: 'password' },
+      messageWrapper: msg.ERROR_AUTH_LOGIN,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(msg.ERROR_AUTH_LOGIN.msg),
+      }),
+    );
   });
 });
 

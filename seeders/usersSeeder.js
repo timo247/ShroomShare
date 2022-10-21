@@ -23,7 +23,6 @@ async function createUser(i) {
       email: `user${i}@gmail.com`,
     });
     await user.save();
-    if (i === numberOfUsers) console.log('users succesfully added to db');
   } catch (error) {
     console.warn(`Could not create user because: ${error}`);
   }
