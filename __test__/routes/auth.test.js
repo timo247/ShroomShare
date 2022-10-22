@@ -7,23 +7,23 @@ import * as useTest from '../../helpers/useTest.js';
 const prepareDb = async () => {
   await cleanUpDb();
   await usersSeeder();
+  await useTest.setTokens();
 };
 
 describe('POST /auth', () => {
-  beforeAll(useTest.setTokens);
   beforeEach(prepareDb);
 
-  test(msg.SUCCES_TOKEN_CREATION.msg, async () => {
+  test(msg.SUCCESS_TOKEN_CREATION.msg, async () => {
     const res = await useTest.apiCall({
       method: 'post',
       path: 'auth',
       body: useTest.userCredentials,
-      messageWrapper: msg.SUCCES_TOKEN_CREATION,
+      messageWrapper: msg.SUCCESS_TOKEN_CREATION,
     });
     expect(res.body).toEqual(
       expect.objectContaining({
         token: expect.any(String),
-        message: expect.stringContaining(msg.SUCCES_TOKEN_CREATION.msg),
+        message: expect.stringContaining(msg.SUCCESS_TOKEN_CREATION.msg),
       }),
     );
   });

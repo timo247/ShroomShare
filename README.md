@@ -387,7 +387,8 @@ __Réponse 2001__
         "password": "mySecretPassword", 
         "Email": "john.doe@gmail.com",  
         "admin": "false", 
-    }
+    },
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjY1MzAwNTAsInNjb3BlIjoidXNlciIsImlhdCI6MTY2NjQ0MzY1MH0.PPkUvvPJEJZo8nMsT1IykiHvX7kPjhJwmy4saPsdw0I"
 } 
 ```
 

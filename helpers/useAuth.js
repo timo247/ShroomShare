@@ -34,6 +34,18 @@ const useAuth = {
     modifiedBody = { ...payload };
     return modifiedBody;
   },
+  getPayloadFromToken(req) {
+    const authorization = req.get('Authorization');
+    const match = authorization.match(/^Bearer (.+)$/);
+    if (!match) return {};
+    const token = match[1];
+    try {
+      const payload = jwt.verify(token, config.secretKey);
+      return payload;
+    } catch (error) {
+      return {};
+    }
+  },
 };
 
 export default useAuth;

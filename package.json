@@ -9,7 +9,7 @@
     "stopdb": "brew services stop mongodb-community@6.0",
     "seed": "node ./seeders/seeders.js",
     "seed-test": "cross-env DATABASE_URL=mongodb://127.0.0.1:27017/test node ./seeders/seeders.js",
-    "test": "cross-env DATABASE_URL=mongodb://127.0.0.1:27017/test node --experimental-vm-modules node_modules/.bin/jest",
+    "test": "cross-env DATABASE_URL=mongodb://127.0.0.1:27017/test node --experimental-vm-modules node_modules/.bin/jest --coverage",
     "doc": "apidoc -i routes -o doc"
   },
   "dependencies": {

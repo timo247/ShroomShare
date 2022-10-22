@@ -17,7 +17,6 @@ const config = {
 
 config.debug.apiErrors.color = debug.colors[1];
 config.debug.apiSucces.color = debug.colors[8];
-console.log(debug.colors);
 
 if (!config.secretKey) throw new Error('env variable $SECRET_KEY should be configured');
 if (!config.databaseUrl) throw new Error('env variable $DATABASE_URL should be configured');

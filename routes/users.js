@@ -11,9 +11,9 @@ const router = express.Router();
 // Retrieves all users
 router.get('/', auth.authenticateUser, async (req, res, next) => {
   try {
-    const users = await User.find(lol).sort('username');
+    const users = await User.find().sort('username');
     req.body = useAuth.setBody({ users });
-    useAuth.send(res, msg.SUCCES_USERS_RETRIEVAL, req.body);
+    useAuth.send(res, msg.SUCCESS_USERS_RETRIEVAL, req.body);
   } catch (error) {
     return next(error);
   }
@@ -25,7 +25,7 @@ router.get('/:id', auth.authenticateUser, async (req, res, next) => {
     const id = req.params.id;
     const user = await User.findOne({ _id: id });
     req.body = useAuth.setBody({ user });
-    useAuth.send(res, msg.SUCCES_USER_RETRIEVAL, req.body);
+    useAuth.send(res, msg.SUCCESS_USER_RETRIEVAL, req.body);
   } catch (error) {
     return next(error);
   }
@@ -34,16 +34,18 @@ router.get('/:id', auth.authenticateUser, async (req, res, next) => {
 // Create a new user
 router.post('/', async (req, res, next) => {
   try {
-    req.body.password = await bcrypt.hash(req.body.password, config.costFactor);
+    req.body.password = await bcrypt.hash(req.body.password, config.bcryptCostFactor);
+    const payload = useAuth.getPayloadFromToken(req);
+    req.body.admin = payload?.scope === 'admin';
     const user = new User(req.body);
     const savedUser = await user.save();
     const tokenWrapper = useAuth.generateJwtToken(req.currentUserId, req.currentUserRole);
     if (tokenWrapper.token) {
       req.body = useAuth.setBody({ user: savedUser, token: tokenWrapper.token });
-      useAuth.send(res, msg.SUCCES_USER_CREATION, req.body);
+      useAuth.send(res, msg.SUCCESS_USER_CREATION, req.body);
     } else {
       req.body = useAuth.setBody({ user: savedUser, warnings: [msg.ERROR_TOKEN_CREATION] });
-      useAuth.send(res, msg.SUCCES_USER_CREATION, req.body);
+      useAuth.send(res, msg.SUCCESS_USER_CREATION, req.body);
     }
   } catch (error) {
     return next(error);
@@ -63,7 +65,7 @@ router.patch('/:id', auth.authenticateUser, async (req, res, next) => {
     await User.findByIdAndUpdate(id, params);
     const modifiedUser = await User.findOne({ _id: id });
     req.body = useAuth.setBody({ user: modifiedUser });
-    useAuth.send(res, msg.SUCCES_USER_MODIFICATION, req.body);
+    useAuth.send(res, msg.SUCCESS_USER_MODIFICATION, req.body);
   } catch (error) {
     return next(error);
   }
@@ -77,7 +79,7 @@ router.delete('/:id', auth.authenticateUser, async (req, res, next) => {
     if (!areIdsIdentical) useAuth.send(res, msg.ERROR_OWNERRIGHT_GRANTATION);
     await User.deleteOne({ _id: id });
     req.body = useAuth.setBody();
-    useAuth.send(res, msg.SUCCES_USER_DELETION, req.body);
+    useAuth.send(res, msg.SUCCESS_USER_DELETION, req.body);
   } catch (error) {
     return next(err);
   }
@@ -88,7 +90,7 @@ router.delete('/', auth.authenticateAdmin, async (req, res, next) => {
   try {
     await User.deleteMany({});
     req.body = useAuth.setBody();
-    useAuth.send(res, msg.SUCCES_USERS_DELETION, req.body);
+    useAuth.send(res, msg.SUCCESS_USERS_DELETION, req.body);
   } catch (error) {
     return next(error);
   }

@@ -4,7 +4,7 @@ import config from '../config.js';
 const debugErrors = config.debug.apiErrors;
 const debugSucces = config.debug.apiSucces;
 
-function connect2Db() {
+async function connect2Db() {
   mongoose.Promise = Promise;
   mongoose.connect(process.env.DATABASE_URL, (err, db) => {
     if (err) {

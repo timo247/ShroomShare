@@ -7,24 +7,26 @@ import * as useTest from '../../helpers/useTest.js';
 const prepareDb = async () => {
   await cleanUpDb();
   await usersSeeder();
+  await useTest.setTokens();
 };
+
 // ==========================================================================
 //  GET /users
 // ==========================================================================
+
 describe('GET /users', () => {
-  beforeAll(useTest.setTokens);
   beforeEach(prepareDb);
 
-  test(msg.SUCCES_USERS_RETRIEVAL.msg, async () => {
+  test(msg.SUCCESS_USERS_RETRIEVAL.msg, async () => {
     const res = await useTest.apiCall({
       method: 'get',
       path: 'users',
-      messageWrapper: msg.SUCCES_USERS_RETRIEVAL,
+      messageWrapper: msg.SUCCESS_USERS_RETRIEVAL,
       token: useTest.userToken,
     });
     expect(res.body).toEqual(
       expect.objectContaining({
-        message: expect.stringContaining(msg.SUCCES_USERS_RETRIEVAL.msg),
+        message: expect.stringContaining(msg.SUCCESS_USERS_RETRIEVAL.msg),
         users: expect.arrayContaining([
           expect.objectContaining({
             id: expect.any(String),
@@ -35,21 +37,26 @@ describe('GET /users', () => {
       }),
     );
   });
+});
 
-  // ==========================================================================
-  //  GET /users/:id
-  // ==========================================================================
-  test(msg.SUCCES_USER_RETRIEVAL.msg, async () => {
+// ==========================================================================
+//  GET /users/:id
+// ==========================================================================
+
+describe('GET /users/:id', () => {
+  beforeEach(prepareDb);
+
+  test(msg.SUCCESS_USER_RETRIEVAL.msg, async () => {
     const validUserId = await useTest.getValidUserId(useTest.userToken);
     const res = await useTest.apiCall({
       method: 'get',
       path: `users/${validUserId}`,
-      messageWrapper: msg.SUCCES_USER_RETRIEVAL,
+      messageWrapper: msg.SUCCESS_USER_RETRIEVAL,
       token: useTest.userToken,
     });
     expect(res.body).toEqual(
       expect.objectContaining({
-        message: expect.stringContaining(msg.SUCCES_USER_RETRIEVAL.msg),
+        message: expect.stringContaining(msg.SUCCESS_USER_RETRIEVAL.msg),
         user: expect.objectContaining({
           id: expect.any(String),
           username: expect.any(String),
@@ -64,30 +71,59 @@ describe('GET /users', () => {
 //  POST /users
 // ==========================================================================
 
-test(`${msg.SUCCES_USER_CREATION.msg} - create a regular user`, async () => {
-  const res = await useTest.apiCall({
-    method: 'post',
-    path: 'users',
-    body: {
-      username: 'John Doe',
-      password: 'mySecretPassword',
-      email: 'john.doe@gmail.com',
-      admin: false,
-    },
-    messageWrapper: msg.SUCCES_USER_CREATION,
-  });
-  expect(res.body).toEqual(
-    expect.objectContaining({
-      message: expect.stringContaining(msg.SUCCES_USER_CREATION.msg),
-      user: expect.objectContaining({
-        id: expect.any(String),
-        password: expect.any(String),
-        email: expect.any(String),
-        username: expect.any(String),
-        admin: expect.any(Boolean),
+describe('POST /users', () => {
+  beforeEach(prepareDb);
+
+  test(`${msg.SUCCESS_USER_CREATION.msg} - create a regular user`, async () => {
+    const res = await useTest.apiCall({
+      method: 'post',
+      path: 'users',
+      body: {
+        username: 'John Doe',
+        password: 'mySecretPassword',
+        email: 'john.doe@gmail.com',
+        admin: false,
+      },
+      messageWrapper: msg.SUCCESS_USER_CREATION,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(msg.SUCCESS_USER_CREATION.msg),
+        token: expect.any(String),
+        user: expect.objectContaining({
+          id: expect.any(String),
+          username: expect.any(String),
+          admin: expect.any(Boolean),
+        }),
       }),
-    }),
-  );
+    );
+  });
+
+  test(`${msg.SUCCESS_USER_CREATION.msg} - forbid non admin to create a user`, async () => {
+    const res = await useTest.apiCall({
+      method: 'post',
+      path: 'users',
+      body: {
+        username: 'John Doe',
+        password: 'mySecretPassword',
+        email: 'john.doe@gmail.com',
+        admin: true,
+      },
+      messageWrapper: msg.SUCCESS_USER_CREATION,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(msg.SUCCESS_USER_CREATION.msg),
+        token: expect.any(String),
+        user: expect.objectContaining({
+          id: expect.any(String),
+          username: expect.any(String),
+          admin: expect.any(Boolean),
+        }),
+      }),
+    );
+    expect(res.body.user.admin).toEqual(false);
+  });
 });
 
 afterAll(async () => {

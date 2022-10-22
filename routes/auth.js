@@ -7,13 +7,18 @@ import msg from '../data/messages.js';
 const router = express.Router();
 
 /**
- * @api {post} /auth - Authenticate user
+ * @api {post} /auth Authenticate user
  * @apiName CreateToken
  * @apiGroup Auth
+ * @apiPermission none
  *
- * @apiParam {String} username - User's username.
- * @apiParam {String} password - User's password.
+ * @apiBody {String} username User's username
+ * @apiBody {String} password User's password
  *
+ * @apiSuccess {String} message Status message
+ * @apiSuccess {String} token User's token
+ *
+ * @apiUse SUCCESS_TOKEN_CREATION
  */
 router.post('/', async (req, res, next) => {
   try {
@@ -35,7 +40,7 @@ router.use((req, res, next) => {
   if (token?.error) useAuth.send(res, msg.INTERNALERROR_TOKEN_CREATION);
   const verified = useAuth.verifyJwtToken(token.token);
   if (verified?.error) useAuth.send(res, msg.INTERNALERROR_TOKEN_VALIDATION);
-  useAuth.send(res, msg.SUCCES_TOKEN_CREATION, { token: token.token });
+  useAuth.send(res, msg.SUCCESS_TOKEN_CREATION, { token: token.token });
 });
 
 export default router;
