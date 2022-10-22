@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import debug from 'debug';
 
 dotenv.config();
 
@@ -7,12 +8,19 @@ const config = {
   apiName: process.env.API_NAME || 'api',
   secretKey: process.env.SECRET_KEY,
   bcryptCostFactor: 10,
-  enableDebugMode: process.env.ENABLE_DEBUG_MODE || false,
   databaseUrl: process.env.DATABASE_URL,
+  debug: {
+    apiErrors: debug('api:errors'),
+    apiSucces: debug('api:succes'),
+  },
 };
 
+config.debug.apiErrors.color = debug.colors[1];
+config.debug.apiSucces.color = debug.colors[8];
+console.log(debug.colors);
+
 if (!config.secretKey) throw new Error('env variable $SECRET_KEY should be configured');
-if (!config.databaseUrl) throw new Error('env variable $DATAVBASE_URL should be configured');
+if (!config.databaseUrl) throw new Error('env variable $DATABASE_URL should be configured');
 
 /**
  * Normalize a port into a number, string, or false.

@@ -11,7 +11,7 @@ const router = express.Router();
 // Retrieves all users
 router.get('/', auth.authenticateUser, async (req, res, next) => {
   try {
-    const users = await User.find().sort('username');
+    const users = await User.find(lol).sort('username');
     req.body = useAuth.setBody({ users });
     useAuth.send(res, msg.SUCCES_USERS_RETRIEVAL, req.body);
   } catch (error) {

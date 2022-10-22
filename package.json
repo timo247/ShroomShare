@@ -4,12 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "nodemon",
+    "dev": "DEBUG='api:succes api:errors' nodemon",
     "start": "node ./bin/start",
     "stopdb": "brew services stop mongodb-community@6.0",
     "seed": "node ./seeders/seeders.js",
     "seed-test": "cross-env DATABASE_URL=mongodb://127.0.0.1:27017/test node ./seeders/seeders.js",
-    "test": "cross-env DATABASE_URL=mongodb://127.0.0.1:27017/test node --experimental-vm-modules node_modules/.bin/jest"
+    "test": "cross-env DATABASE_URL=mongodb://127.0.0.1:27017/test node --experimental-vm-modules node_modules/.bin/jest",
+    "doc": "apidoc -i routes -o doc"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
@@ -22,6 +23,7 @@
     "morgan": "~1.10.0"
   },
   "devDependencies": {
+    "apidoc": "^0.53.1",
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
     "eslint": "^8.25.0",

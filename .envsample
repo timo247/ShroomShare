@@ -1,5 +1,6 @@
 PORT=number
+NODE_ENV='dev'|'prod'
 API_NAME=string
 SECRET_KEY=string
 DATABASE_URL=string
-ENABLE_DEBUtrueG_MODE=boolean
+DEBUG=string

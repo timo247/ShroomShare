@@ -1,12 +1,16 @@
 import mongoose from 'mongoose';
+import config from '../config.js';
+
+const debugErrors = config.debug.apiErrors;
+const debugSucces = config.debug.apiSucces;
 
 function connect2Db() {
   mongoose.Promise = Promise;
   mongoose.connect(process.env.DATABASE_URL, (err, db) => {
     if (err) {
-      console.warn(`Could not connect to database because: ${err.message}`);
+      debugErrors(`Could not connect to database because: ${err.message}`);
     } else {
-      console.log('Connected to MongoDB');
+      debugSucces('Connected to MongoDB');
     }
   });
 }

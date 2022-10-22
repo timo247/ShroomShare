@@ -18,6 +18,7 @@ function transformJsonUser(doc, json, options) {
   delete json.password; // eslint-disable-line
   delete json['_id']; // eslint-disable-line
   delete json['__v']; // eslint-disable-line
+  delete json.email; // eslint-disable-line
   return json;
 }
 

@@ -6,7 +6,15 @@ import msg from '../data/messages.js';
 
 const router = express.Router();
 
-// authenticate user
+/**
+ * @api {post} /auth - Authenticate user
+ * @apiName CreateToken
+ * @apiGroup Auth
+ *
+ * @apiParam {String} username - User's username.
+ * @apiParam {String} password - User's password.
+ *
+ */
 router.post('/', async (req, res, next) => {
   try {
     const user = await User.findOne().where('username').equals(req.body.username);
@@ -24,10 +32,8 @@ router.post('/', async (req, res, next) => {
 router.use((req, res, next) => {
   const userId = req.body.user.id.toString();
   const token = useAuth.generateJwtToken(userId, req.body.admin);
-  // TODO: handle token error creation
   if (token?.error) useAuth.send(res, msg.INTERNALERROR_TOKEN_CREATION);
   const verified = useAuth.verifyJwtToken(token.token);
-  // TODO: handle token verification error
   if (verified?.error) useAuth.send(res, msg.INTERNALERROR_TOKEN_VALIDATION);
   useAuth.send(res, msg.SUCCES_TOKEN_CREATION, { token: token.token });
 });

@@ -28,6 +28,7 @@ const messages = {
   //  Others
   // ==========================================================================
   ERROR_OWNERRIGHT_GRANTATION: { status: 404, msg: 'You can only alter your own ressources.' },
+  INTERNALERROR: { status: 500, msg: 'Internal server error.' },
 };
 
 export default messages;

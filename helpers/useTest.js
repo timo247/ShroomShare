@@ -27,6 +27,12 @@ export const apiCall = async ({ method, path, body, messageWrapper, token } = {}
   return response;
 };
 
+export const getValidUserId = async (token) => {
+  const response = await supertest(app).get(`/${config.apiName}/users`)
+    .set('Authorization', `Bearer ${token}`);
+  return response.body.users[0].id;
+};
+
 export const adminCredentials = {
   username: 'user2',
   password: 'password2',
