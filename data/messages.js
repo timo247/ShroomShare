@@ -18,6 +18,8 @@ const messages = {
   ERROR_AUTH_PERMISSION_GRANTATION: { status: 401, msg: 'Permission not granted.' },
   ERROR_AUTH_HEADER_PRESENCE: { status: 401, msg: 'Authorization header is missing.' },
   ERROR_AUTH_BEARERTOKEN_FORMAT: { status: 401, msg: 'Authorization header is not a bearer token.' },
+  ERROR_AUTH_USERNAME_REQUIRED: { status: 401, msg: 'Username is required.' },
+  ERROR_AUTH_PASSWORD_REQUIRED: { status: 401, msg: 'Password is required.' },
   //  JWT tokens
   // ==========================================================================
   ERROR_TOKEN_VALIDATION: { status: 401, msg: 'Your token is invalid or has expired.' },

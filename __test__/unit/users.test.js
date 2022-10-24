@@ -2,12 +2,14 @@ import mongoose from 'mongoose';
 import cleanUpDb from '../../helpers/useCleanUpDb.js';
 import usersSeeder from '../../seeders/usersSeeder.js';
 import msg from '../../data/messages.js';
-import * as useTest from '../../helpers/useTest.js';
+import ApiTester from '../../helpers/ApiTester';
 
-const prepareDb = async () => {
+let tester;
+const prepare = async () => {
   await cleanUpDb();
   await usersSeeder();
-  await useTest.setTokens();
+  tester = new ApiTester();
+  await tester.setTokens();
 };
 
 // ==========================================================================
@@ -15,14 +17,14 @@ const prepareDb = async () => {
 // ==========================================================================
 
 describe('GET /users', () => {
-  beforeEach(prepareDb);
+  beforeEach(prepare);
 
   test(msg.SUCCESS_USERS_RETRIEVAL.msg, async () => {
-    const res = await useTest.apiCall({
+    const res = await ApiTester.apiCall({
       method: 'get',
       path: 'users',
       messageWrapper: msg.SUCCESS_USERS_RETRIEVAL,
-      token: useTest.userToken,
+      token: tester.userToken,
     });
     expect(res.body).toEqual(
       expect.objectContaining({
@@ -44,15 +46,15 @@ describe('GET /users', () => {
 // ==========================================================================
 
 describe('GET /users/:id', () => {
-  beforeEach(prepareDb);
+  beforeEach(prepare);
 
   test(msg.SUCCESS_USER_RETRIEVAL.msg, async () => {
-    const validUserId = await useTest.getValidUserId(useTest.userToken);
-    const res = await useTest.apiCall({
+    const validUserId = await ApiTester.getValidUserId(tester.userToken);
+    const res = await ApiTester.apiCall({
       method: 'get',
       path: `users/${validUserId}`,
       messageWrapper: msg.SUCCESS_USER_RETRIEVAL,
-      token: useTest.userToken,
+      token: tester.userToken,
     });
     expect(res.body).toEqual(
       expect.objectContaining({
@@ -72,10 +74,10 @@ describe('GET /users/:id', () => {
 // ==========================================================================
 
 describe('POST /users', () => {
-  beforeEach(prepareDb);
+  beforeEach(prepare);
 
   test(`${msg.SUCCESS_USER_CREATION.msg} - create a regular user`, async () => {
-    const res = await useTest.apiCall({
+    const res = await ApiTester.apiCall({
       method: 'post',
       path: 'users',
       body: {
@@ -100,7 +102,7 @@ describe('POST /users', () => {
   });
 
   test(`${msg.SUCCESS_USER_CREATION.msg} - forbid non admin to create a user`, async () => {
-    const res = await useTest.apiCall({
+    const res = await ApiTester.apiCall({
       method: 'post',
       path: 'users',
       body: {

@@ -1,0 +1,18 @@
+{
+    "swaggerDefinition": {
+        "openapi": "3.0.0",
+        "info": {
+            "title": "ShroomShare",
+            "version": "1.0.0",
+            "description": ""
+        },
+        "server": [
+            {
+                "url": "http: //localhost:3000"
+            }
+        ]
+    },
+    "apis": [
+        "routes/*.js"
+    ]
+}

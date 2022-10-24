@@ -34,11 +34,11 @@ export const getValidUserId = async (token) => {
 };
 
 export const adminCredentials = {
-  username: 'user2',
-  password: 'password2',
+  username: 'user02',
+  password: 'password02',
 };
 
 export const userCredentials = {
-  username: 'user1',
-  password: 'password1',
+  username: 'user01',
+  password: 'password01',
 };

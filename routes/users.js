@@ -11,8 +11,23 @@ const router = express.Router();
 // Retrieves all users
 router.get('/', auth.authenticateUser, async (req, res, next) => {
   try {
-    const users = await User.find().sort('username');
-    req.body = useAuth.setBody({ users });
+    const pageSize = Number(req.query?.pageSize) ?? 5;
+    let users = await User.find().sort('username');
+    const lastPage = Math.trunc(users.length / pageSize);
+    const currentPage = (() => {
+      let value = Number(req.query?.currentPage) ?? 1;
+      if (typeof value !== 'number') value = 1;
+      if (value < 1) value = 1;
+      if (value > lastPage) value = lastPage;
+      return value;
+    })();
+    console.log({ pageSize, lastPage, currentPage });
+    const firstIndex = (currentPage - 1) * pageSize;
+    const lastIndex = firstIndex + pageSize;
+    users = users.slice(firstIndex, lastIndex);
+    req.body = useAuth.setBody({
+      users, currentPage, pageSize, lastPage, firstIndex, lastIndex,
+    });
     useAuth.send(res, msg.SUCCESS_USERS_RETRIEVAL, req.body);
   } catch (error) {
     return next(error);

@@ -3,10 +3,31 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-  username: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  email: { type: String, required: true },
-  admin: { type: Boolean, default: false },
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+    minlength: 4,
+    maxlength: 20,
+  },
+  password: {
+    type: String,
+    required: true,
+    minlength: 8,
+    maxlength: 100,
+  },
+  email: {
+    type: String,
+    required: true,
+    validate: {
+      validator: (v) => /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(v),
+    },
+    message: (props) => `${props.value} is not a valid email!`,
+  },
+  admin: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 userSchema.set('toJSON', {

@@ -7,22 +7,22 @@ import msg from '../data/messages.js';
 const router = express.Router();
 
 /**
- * @api {post} /auth Authenticate user
- * @apiName CreateToken
- * @apiGroup Auth
- * @apiPermission none
- *
- * @apiBody {String} username User's username
- * @apiBody {String} password User's password
- *
- * @apiSuccess {String} message Status message
- * @apiSuccess {String} token User's token
- *
- * @apiUse SUCCESS_TOKEN_CREATION
+ * @swagger
+ * /auth:
+ *   post:
+ *     description: Create a jWT token.
+ *     responses:
+ *       200:
+ *         description: Returns a mysterious string.
+ *         content:
+ *         application/json:
+ *         schema:
  */
 router.post('/', async (req, res, next) => {
+  if (!req.body?.password ?? undefined) useAuth.send(res, msg.ERROR_AUTH_PASSWORD_REQUIRED);
+  if (!req.body?.username ?? undefined) useAuth.send(res, msg.ERROR_AUTH_USERNAME_REQUIRED);
+  const user = await User.findOne().where('username').equals(req.body.username);
   try {
-    const user = await User.findOne().where('username').equals(req.body.username);
     if (!user) useAuth.send(res, msg.ERROR_AUTH_LOGIN);
     const match = await bcrypt.compare(req.body.password, user.password);
     if (!match) useAuth.send(res, msg.ERROR_AUTH_LOGIN);
@@ -36,11 +36,11 @@ router.post('/', async (req, res, next) => {
 
 router.use((req, res, next) => {
   const userId = req.body.user.id.toString();
-  const token = useAuth.generateJwtToken(userId, req.body.admin);
-  if (token?.error) useAuth.send(res, msg.INTERNALERROR_TOKEN_CREATION);
-  const verified = useAuth.verifyJwtToken(token.token);
-  if (verified?.error) useAuth.send(res, msg.INTERNALERROR_TOKEN_VALIDATION);
-  useAuth.send(res, msg.SUCCESS_TOKEN_CREATION, { token: token.token });
+  const tokenWrapper = useAuth.generateJwtToken(userId, req.body.user.admin);
+  if (tokenWrapper?.error) useAuth.send(res, msg.INTERNALERROR_TOKEN_CREATION);
+  const payloadWrapper = useAuth.verifyJwtToken(tokenWrapper.token);
+  if (payloadWrapper?.error) useAuth.send(res, msg.INTERNALERROR_TOKEN_VALIDATION);
+  useAuth.send(res, msg.SUCCESS_TOKEN_CREATION, { token: tokenWrapper.token });
 });
 
 export default router;

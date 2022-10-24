@@ -1,4 +1,6 @@
 import express from 'express';
+import swaggerUi from 'swagger-ui-express';
+import swaggerJsodc from 'swagger-jsdoc';
 import mongoose from 'mongoose';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -11,6 +13,23 @@ import config from './config.js';
 import connect from './helpers/useDbConnector.js';
 import msg from './data/messages.js';
 
+const options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'ShroomShare',
+      version: '1.0.0',
+      description: '',
+    },
+    server: [
+      { url: `http://localhost:${config.port}` },
+    ],
+  },
+  apis: ['./routes/*.js'],
+};
+
+const specs = swaggerJsodc(options);
+
 await connect();
 const app = express();
 const __dirname = dirname(fileURLToPath(import.meta.url)); // eslint-disable-line
@@ -21,7 +40,8 @@ if (process.env.NODE_ENV !== 'test') {
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use('/doc', express.static(path.join(__dirname, 'doc')));
+// app.use('/doc', express.static(path.join(__dirname, 'doc')));
+app.use('/doc', swaggerUi.serve, swaggerUi.setup(specs));
 app.use(`/${config.apiName}`, indexRouter);
 app.use(`/${config.apiName}/auth`, authRouter);
 app.use(`/${config.apiName}/users`, usersRouter);

@@ -17,10 +17,11 @@ const authMiddlewares = {
   },
   async authenticateAdmin(req, res, next) {
     const payload = await authenticate(req, res);
+    console.log(payload);
     req.currentUserId = payload.sub;
     req.currentUserRole = payload.scope;
     if (payload.scope === roles.admin) return next();
-    useAuth.send(res, msg.ERROR_AUTH_PERMISSION);
+    useAuth.send(res, msg.ERROR_AUTH_PERMISSION_GRANTATION);
   },
 };
 

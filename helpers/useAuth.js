@@ -7,7 +7,7 @@ const roles = {
 };
 
 const useAuth = {
-  generateJwtToken(userId, isAdmin, numberOfDay = 1) {
+  generateJwtToken(userId, isAdmin, numberOfDay = 7) {
     const expirationDate = Math.floor(Date.now() / 1000) + numberOfDay * 24 * 3600;
     const role = isAdmin ? roles.admin : roles.user;
     const payload = { sub: userId, exp: expirationDate, scope: role };
@@ -27,6 +27,7 @@ const useAuth = {
     }
   },
   send(res, message, payload) {
+    console.log(message.msg);
     res.status(message.status).send({ message: message.msg, ...payload });
   },
   setBody(payload) {

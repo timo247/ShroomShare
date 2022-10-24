@@ -1,0 +1,34 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "ShroomShare",
+    "version": "1.0.0",
+    "description": ""
+  },
+  "server": [
+    {
+      "url": "http: //localhost:3000"
+    }
+  ],
+  "swagger": "2.0",
+  "paths": {
+    "/auth": {
+      "post": {
+        "description": "Create a jWT token.",
+        "responses": {
+          "200": {
+            "description": "Returns a mysterious string.",
+            "content": null,
+            "application/json": null,
+            "schema": null
+          }
+        }
+      }
+    }
+  },
+  "definitions": {},
+  "responses": {},
+  "parameters": {},
+  "securityDefinitions": {},
+  "tags": []
+}
