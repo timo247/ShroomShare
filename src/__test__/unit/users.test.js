@@ -108,7 +108,7 @@ describe('POST /users', () => {
     );
   });
 
-  messageWrapper = msg.SUCCESS_USER_CREATION(R.USER);
+  messageWrapper = msg.SUCCESS_RESSOURCE_CREATION(R.USER);
   test(`${messageWrapper.msg} - forbid non admin to create a user`, async () => {
     const res = await ApiTester.apiCall({
       method: 'post',

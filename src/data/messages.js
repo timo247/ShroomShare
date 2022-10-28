@@ -18,13 +18,6 @@ const messages = {
 
   //  Route users
   // ==========================================================================
-  SUCCESS_USER_RETRIEVAL: { status: 200, msg: 'User successfully retrieved.' },
-  SUCCESS_USERS_RETRIEVAL: { status: 200, msg: 'Users successfully retrieved.' },
-  SUCCESS_USER_CREATION: { status: 201, msg: 'Users successfully created.' },
-  SUCCESS_USER_MODIFICATION: { status: 200, msg: 'User successfully modified.' },
-  SUCCESS_USER_DELETION: { status: 200, msg: 'User successfully deleted.' },
-  SUCCESS_USERS_DELETION: { status: 200, msg: 'Users successfully deleted.' },
-  ERROR_USER_EXISTANCE: { status: 404, msg: 'User not found.' },
   SUCCESS_RESSOURCE_RETRIEVAL: (name) => {
     return { status: 200, msg: `${firstLetterUpperCase(name)} successfully retrieved.` }
   },
