@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import msg from '../data/messages.js';
 
 const Schema = mongoose.Schema;
 
@@ -22,7 +23,7 @@ const userSchema = new Schema({
     validate: {
       validator: (v) => /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(v),
     },
-    message: (props) => `${props.value} is not a valid email!`,
+    message: (props) => msg.ERROR_SCHEMA_EMAIL(props),
   },
   admin: {
     type: Boolean,
