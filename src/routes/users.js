@@ -3,32 +3,29 @@ import bcrypt from 'bcrypt';
 import User from '../schemas/user.js';
 import auth from '../middlewares/authMiddlewares.js';
 import useAuth from '../helpers/useAuth.js';
-import config from '../config.js';
-import msg from '../data/messages.js';
+import config from '../../config.js';
+import msg, { RESSOURCES as R } from '../data/messages.js';
+import Paginator from '../helpers/Paginator.js';
 
 const router = express.Router();
 
 // Retrieves all users
 router.get('/', auth.authenticateUser, async (req, res, next) => {
   try {
-    const pageSize = Number(req.query?.pageSize) ?? 5;
     let users = await User.find().sort('username');
-    const lastPage = Math.trunc(users.length / pageSize);
-    const currentPage = (() => {
-      let value = Number(req.query?.currentPage) ?? 1;
-      if (typeof value !== 'number') value = 1;
-      if (value < 1) value = 1;
-      if (value > lastPage) value = lastPage;
-      return value;
-    })();
-    console.log({ pageSize, lastPage, currentPage });
-    const firstIndex = (currentPage - 1) * pageSize;
-    const lastIndex = firstIndex + pageSize;
-    users = users.slice(firstIndex, lastIndex);
-    req.body = useAuth.setBody({
-      users, currentPage, pageSize, lastPage, firstIndex, lastIndex,
+    const pages = new Paginator({
+      numberOfItems: users.length,
+      pageSize: req.query?.pageSize,
+      currentPage: req.query?.currentPage,
     });
-    useAuth.send(res, msg.SUCCESS_USERS_RETRIEVAL, req.body);
+    users = users.slice(pages.getFirstIndex(), pages.getLastIndex());
+    req.body = useAuth.setBody({
+      users,
+      currentPage: pages.getCurrentPage(),
+      pageSize: pages.getPageSize(),
+      lastPage: pages.getLastPage(),
+    });
+    useAuth.send(res, msg.SUCCESS_RESSOURCE_RETRIEVAL(R.USERS), req.body);
   } catch (error) {
     return next(error);
   }
@@ -40,7 +37,7 @@ router.get('/:id', auth.authenticateUser, async (req, res, next) => {
     const id = req.params.id;
     const user = await User.findOne({ _id: id });
     req.body = useAuth.setBody({ user });
-    useAuth.send(res, msg.SUCCESS_USER_RETRIEVAL, req.body);
+    useAuth.send(res, msg.SUCCESS_RESSOURCE_RETRIEVAL(R.USER), req.body);
   } catch (error) {
     return next(error);
   }
@@ -57,10 +54,10 @@ router.post('/', async (req, res, next) => {
     const tokenWrapper = useAuth.generateJwtToken(req.currentUserId, req.currentUserRole);
     if (tokenWrapper.token) {
       req.body = useAuth.setBody({ user: savedUser, token: tokenWrapper.token });
-      useAuth.send(res, msg.SUCCESS_USER_CREATION, req.body);
+      useAuth.send(res, msg.SUCCESS_RESSOURCE_CREATION(R.USER), req.body);
     } else {
       req.body = useAuth.setBody({ user: savedUser, warnings: [msg.ERROR_TOKEN_CREATION] });
-      useAuth.send(res, msg.SUCCESS_USER_CREATION, req.body);
+      useAuth.send(res, msg.SUCCESS_RESSOURCE_CREATION(R.USER), req.body);
     }
   } catch (error) {
     return next(error);
@@ -80,7 +77,7 @@ router.patch('/:id', auth.authenticateUser, async (req, res, next) => {
     await User.findByIdAndUpdate(id, params);
     const modifiedUser = await User.findOne({ _id: id });
     req.body = useAuth.setBody({ user: modifiedUser });
-    useAuth.send(res, msg.SUCCESS_USER_MODIFICATION, req.body);
+    useAuth.send(res, msg.SUCCESS_RESSOURCE_MODIFICATION(R.USER), req.body);
   } catch (error) {
     return next(error);
   }
@@ -94,7 +91,7 @@ router.delete('/:id', auth.authenticateUser, async (req, res, next) => {
     if (!areIdsIdentical) useAuth.send(res, msg.ERROR_OWNERRIGHT_GRANTATION);
     await User.deleteOne({ _id: id });
     req.body = useAuth.setBody();
-    useAuth.send(res, msg.SUCCESS_USER_DELETION, req.body);
+    useAuth.send(res, msg.SUCCESS_RESSOURCE_DELETION(R.USER), req.body);
   } catch (error) {
     return next(err);
   }
@@ -105,7 +102,7 @@ router.delete('/', auth.authenticateAdmin, async (req, res, next) => {
   try {
     await User.deleteMany({});
     req.body = useAuth.setBody();
-    useAuth.send(res, msg.SUCCESS_USERS_DELETION, req.body);
+    useAuth.send(res, msg.SUCCESS_RESSOURCE_DELETION(R.USERS), req.body);
   } catch (error) {
     return next(error);
   }

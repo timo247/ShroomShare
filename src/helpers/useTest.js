@@ -1,6 +1,6 @@
 import supertest from 'supertest';
-import app from '../app.js';
-import config from '../config.js';
+import app from '../../app.js';
+import config from '../../config.js';
 
 export let userToken = '';// eslint-disable-line
 export let adminToken = '';// eslint-disable-line

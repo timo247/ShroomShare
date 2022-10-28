@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import config from '../config.js';
+import config from '../../config.js';
 import User from '../schemas/user.js';
 
 const numberOfUsers = 10;

@@ -2,16 +2,14 @@ import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsodc from 'swagger-jsdoc';
 import mongoose from 'mongoose';
-import path, { dirname } from 'path';
-import { fileURLToPath } from 'url';
 import createError from 'http-errors';
 import logger from 'morgan';
-import indexRouter from './routes/index.js';
-import usersRouter from './routes/users.js';
-import authRouter from './routes/auth.js';
+import indexRouter from './src/routes/index.js';
+import usersRouter from './src/routes/users.js';
+import authRouter from './src/routes/auth.js';
 import config from './config.js';
-import connect from './helpers/useDbConnector.js';
-import msg from './data/messages.js';
+import connect from './src/helpers/useDbConnector.js';
+import msg from './src/data/messages.js';
 
 const options = {
   definition: {
@@ -21,18 +19,19 @@ const options = {
       version: '1.0.0',
       description: '',
     },
-    server: [
-      { url: `http://localhost:${config.port}` },
+    servers: [
+      {
+        url: `http://localhost:${config.port}/${config.apiName}`,
+      },
     ],
   },
-  apis: ['./routes/*.js'],
+  apis: ['./src/routes/*.js'],
 };
 
 const specs = swaggerJsodc(options);
 
 await connect();
 const app = express();
-const __dirname = dirname(fileURLToPath(import.meta.url)); // eslint-disable-line
 
 if (process.env.NODE_ENV !== 'test') {
   app.use(logger('dev'));
@@ -40,7 +39,6 @@ if (process.env.NODE_ENV !== 'test') {
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// app.use('/doc', express.static(path.join(__dirname, 'doc')));
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(specs));
 app.use(`/${config.apiName}`, indexRouter);
 app.use(`/${config.apiName}/auth`, authRouter);

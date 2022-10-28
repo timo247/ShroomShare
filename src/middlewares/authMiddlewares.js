@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import msg from '../data/messages.js';
-import config from '../config.js';
+import config from '../../config.js';
 import useAuth from '../helpers/useAuth.js';
 
 const roles = {

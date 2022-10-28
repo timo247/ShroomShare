@@ -7,14 +7,36 @@
   },
   "server": [
     {
-      "url": "http: //localhost:3000"
+      "url": "http: //localhost:3000/api/"
     }
   ],
   "swagger": "2.0",
   "paths": {
     "/auth": {
       "post": {
-        "description": "Create a jWT token.",
+        "summary": "Create a jWT token.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "username": "user01",
+                "password": "password01"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Returns a mysterious string.",

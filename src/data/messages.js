@@ -1,3 +1,16 @@
+/* eslint-disable */
+const firstLetterUpperCase = (string) => string[0].toUpperCase() + string.substring(1);
+export const RESSOURCES = {
+  USER: 'user',
+  USERS: 'users',
+  SPECY: 'user',
+  SPECIES: 'users',
+  MUSHROOM: 'mushroom',
+  MUSHROOMS: 'mushrooms',
+  PICTURE: 'picture',
+  PICTURES: 'pictures',
+}
+
 const messages = {
   // ==========================================================================
   //   API
@@ -12,14 +25,28 @@ const messages = {
   SUCCESS_USER_DELETION: { status: 200, msg: 'User successfully deleted.' },
   SUCCESS_USERS_DELETION: { status: 200, msg: 'Users successfully deleted.' },
   ERROR_USER_EXISTANCE: { status: 404, msg: 'User not found.' },
+  SUCCESS_RESSOURCE_RETRIEVAL: (name) => {
+    return { status: 200, msg: `${firstLetterUpperCase(name)} successfully retrieved.` }
+  },
+  SUCCESS_RESSOURCE_CREATION: (name) => {
+    return { status: 201, msg: `${firstLetterUpperCase(name)} successfully created.` }
+  },
+  SUCCESS_RESSOURCE_MODIFICATION: (name) => {
+    return { status: 200, msg: `${firstLetterUpperCase(name)} successfully modified.` }
+  },
+  SUCCESS_RESSOURCE_DELETION: (name) => {
+    return { status: 200, msg: `${firstLetterUpperCase(name)} successfully deleted.` }
+  },
+  ERROR_RESSOURCE_EXISTANCE: (name) => {
+    return { status: 404, msg: `${firstLetterUpperCase(name)} not found.` }
+  },
   //  Route auth
   // ==========================================================================
   ERROR_AUTH_LOGIN: { status: 401, msg: 'Username and/or password are/is invalid.' },
   ERROR_AUTH_PERMISSION_GRANTATION: { status: 401, msg: 'Permission not granted.' },
   ERROR_AUTH_HEADER_PRESENCE: { status: 401, msg: 'Authorization header is missing.' },
   ERROR_AUTH_BEARERTOKEN_FORMAT: { status: 401, msg: 'Authorization header is not a bearer token.' },
-  ERROR_AUTH_USERNAME_REQUIRED: { status: 401, msg: 'Username is required.' },
-  ERROR_AUTH_PASSWORD_REQUIRED: { status: 401, msg: 'Password is required.' },
+  ERROR_FIELD_REQUIRED: (name, status = 401) => { return { status: status, msg: `${firstLetterUpperCase(name)} is required.` } },
   //  JWT tokens
   // ==========================================================================
   ERROR_TOKEN_VALIDATION: { status: 401, msg: 'Your token is invalid or has expired.' },

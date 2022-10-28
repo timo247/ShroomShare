@@ -1,6 +1,6 @@
 import supertest from 'supertest';
-import app from '../app.js';
-import config from '../config.js';
+import app from '../../app.js';
+import config from '../../config.js';
 
 export default class ApiTester {
   userToken = '';
@@ -31,7 +31,7 @@ export default class ApiTester {
   }
 
   static async apiCall({ method, path, body, messageWrapper, token } = {}) { // eslint-disable-line
-    const response = await supertest(app)[method](`/${config.apiName}/${path}`)
+    const response = await supertest(app)[method.toLowerCase()](`/${config.apiName}/${path}`)
       .send(body)
       .set('Authorization', `Bearer ${token}`)
       .expect(messageWrapper.status)

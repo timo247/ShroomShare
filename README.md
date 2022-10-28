@@ -507,6 +507,22 @@ __Afficher le nom de la db courante__
 db
 ```
 
+__AFficher les index d'un schémas__
+
+```bash
+db.<schema>.getIndexes()
+# exemple
+db.users.getIndexes()
+```
+
+__Supprimer un index sur un schéma__
+
+```bash
+db.<schema>.dropIndex(<indexName>)
+# exemple
+db.users.dropIndex('username')
+```
+
 __Changer de db__
 
 ```bash

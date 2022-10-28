@@ -2,8 +2,8 @@
 
 import http from 'http';
 import createDebugger from 'debug';
-import app from '../app.js';
-import config from '../config.js';
+import app from '../../app.js';
+import config from '../../config.js';
 
 const debug = createDebugger('picnic-advisor:server');
 
