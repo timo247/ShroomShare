@@ -12,7 +12,6 @@ export default class Paginator {
   lastIndex;
 
   constructor({ numberOfItems, pageSize, currentPage } = {}) {
-    console.log(numberOfItems, pageSize, currentPage);
     Paginator.#isValidParam(numberOfItems, 'numberOfItems');
     Paginator.#isValidParam(pageSize, 'pageSize');
     Paginator.#isValidParam(currentPage, 'currentPage');
