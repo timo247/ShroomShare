@@ -20,10 +20,7 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
     });
     users = users.slice(pages.getFirstIndex(), pages.getLastIndex());
     req.body = useAuth.setBody({
-      users,
-      currentPage: pages.getCurrentPage(),
-      pageSize: pages.getPageSize(),
-      lastPage: pages.getLastPage(),
+      users, currentPage: pages.currentPage, pageSize: pages.pageSize, lastPage: pages.lastPage,
     });
     useAuth.send(res, msg.SUCCESS_RESSOURCE_RETRIEVAL(R.USERS), req.body);
   } catch (error) {
@@ -46,6 +43,7 @@ router.get('/:id', auth.authenticateUser, async (req, res, next) => {
 // Create a new user
 router.post('/', async (req, res, next) => {
   try {
+    checkForRequiredParams(req, res, ['password', 'username', 'email']);
     req.body.password = await bcrypt.hash(req.body.password, config.bcryptCostFactor);
     const payload = useAuth.getPayloadFromToken(req);
     req.body.admin = payload?.scope === 'admin';
@@ -107,5 +105,11 @@ router.delete('/', auth.authenticateAdmin, async (req, res, next) => {
     return next(error);
   }
 });
+
+function checkForRequiredParams(req, res, paramNames) {
+  paramNames.forEach((name) => {
+    if (typeof req.body?.[name] === 'undefined') useAuth.send(res, msg.ERROR_PARAM_REQUIRED(name));
+  });
+}
 
 export default router;

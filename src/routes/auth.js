@@ -13,28 +13,21 @@ const router = express.Router();
  * @swagger
  * /auth:
  *   post:
+ *     tags:
+ *        - Authentification
  *     summary: Create a JWT token.
  *     requestBody:
- *       required: true
- *       description: salut
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               username:
- *                 type: string
- *               password:
- *                 type: string
- *           example:
- *             username: user01
- *             password: password01
+ *       $ref: '#/components/requestBodies/CredentialBody'
  *     responses:
  *       200:
- *         description: Returns a mysterious string.
  *         content:
- *         application/json:
- *         schema:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#components/schema/CredentialOkSchema'
+ *             examples:
+ *               CredentialResponseExemple:
+ *                 $ref: '#components/examples/CredentialOkExample'
  */
 router.post('/', async (req, res, next) => {
   if (!req.body?.password ?? undefined) useAuth.send(res, msg.ERROR_FIELD_REQUIRED('password'));
