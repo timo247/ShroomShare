@@ -5,7 +5,19 @@ const Schema = mongoose.Schema;
 const specySchema = new Schema({
   name: { type: String, required: true },
   description: { type: String, required: true },
-  usage: { type: String, required: true },
+  usage: { type: String, required: true, 
+    validate: {
+      // Returns true if the name is valid (in lower case)
+      validator: function(value) {
+        if(value === 'edible' || value === 'psychadelic') {
+          return true
+        }
+        return false;
+      },
+      // Custom error message
+      message: '{VALUE} is not in lower case'
+    }
+  },
   pictureFile: { type: String, required: true },
 });
 mongoose.model('Specy', specySchema, 'species');
