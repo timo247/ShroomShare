@@ -15,7 +15,7 @@ const specySchema = new Schema({
         return false;
       },
       // Custom error message
-      message: '{VALUE} is not in lower case'
+      message: 'usage can only be edible or psychadelic'
     }
   },
   pictureFile: { type: String, required: true },
