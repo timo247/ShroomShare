@@ -4,9 +4,9 @@ import usersSeeder from '../../seeders/usersSeeder.js';
 import msg from '../../data/messages.js';
 import useAuth from '../../helpers/useAuth.js';
 import ApiTester from '../../helpers/ApiTester.js';
+import defineTest from '../../helpers/useDefineTest.js';
 
 let tester;
-let messageWrapper = {};
 
 const prepare = async () => {
   await cleanUpDb();
@@ -18,8 +18,7 @@ const prepare = async () => {
 describe('POST /auth', () => {
   beforeEach(prepare);
 
-  messageWrapper = msg.SUCCESS_TOKEN_CREATION;
-  test(`${messageWrapper.msg} - regular user auth`, async () => {
+  defineTest(msg.SUCCESS_TOKEN_CREATION, 'regular user auth', async (messageWrapper) => {
     const res = await ApiTester.apiCall({
       method: 'post',
       path: 'auth',
@@ -36,8 +35,7 @@ describe('POST /auth', () => {
     );
   });
 
-  messageWrapper = msg.SUCCESS_TOKEN_CREATION;
-  test(`${messageWrapper.msg} - admin auth`, async () => {
+  defineTest(msg.SUCCESS_TOKEN_CREATION, 'admin auth', async (messageWrapper) => {
     const res = await ApiTester.apiCall({
       method: 'post',
       path: 'auth',
@@ -54,8 +52,7 @@ describe('POST /auth', () => {
     );
   });
 
-  messageWrapper = msg.ERROR_AUTH_LOGIN;
-  test(`${messageWrapper.msg} - username don't exist`, async () => {
+  defineTest(msg.ERROR_AUTH_LOGIN, 'username don\'t exist', async (messageWrapper) => {
     const res = await ApiTester.apiCall({
       method: 'post',
       path: 'auth',
@@ -69,8 +66,7 @@ describe('POST /auth', () => {
     );
   });
 
-  messageWrapper = msg.ERROR_AUTH_LOGIN;
-  test(`${messageWrapper.msg} - unvalid password`, async () => {
+  defineTest(msg.ERROR_AUTH_LOGIN, 'unvalid password', async (messageWrapper) => {
     const res = await ApiTester.apiCall({
       method: 'post',
       path: 'auth',

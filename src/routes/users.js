@@ -18,7 +18,7 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
       pageSize: req.query?.pageSize,
       currentPage: req.query?.currentPage,
     });
-    users = users.slice(pages.getFirstIndex(), pages.getLastIndex());
+    users = users.slice(pages.firstIndex, pages.lastIndex);
     req.body = useAuth.setBody({
       users, currentPage: pages.currentPage, pageSize: pages.pageSize, lastPage: pages.lastPage,
     });
