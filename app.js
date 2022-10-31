@@ -7,6 +7,7 @@ import logger from 'morgan';
 import indexRouter from './src/routes/index.js';
 import usersRouter from './src/routes/users.js';
 import authRouter from './src/routes/auth.js';
+import speciesRouter from './src/routes/species.js'
 import config from './config.js';
 import connect from './src/helpers/useDbConnector.js';
 import msg from './src/data/messages.js';
@@ -43,6 +44,8 @@ app.use('/doc', swaggerUi.serve, swaggerUi.setup(specs));
 app.use(`/${config.apiName}`, indexRouter);
 app.use(`/${config.apiName}/auth`, authRouter);
 app.use(`/${config.apiName}/users`, usersRouter);
+app.use(`/${config.apiName}/species`, speciesRouter);
+
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

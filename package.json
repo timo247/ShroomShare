@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "DEBUG='api:succes api:errors' nodemon",
+    "dev": "nodemon",
     "start": "node ./src/bin/start",
     "stopdb": "brew services stop mongodb-community@6.0",
     "seed": "node ./src/seeders/seeders.js",
