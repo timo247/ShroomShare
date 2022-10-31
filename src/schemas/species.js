@@ -9,7 +9,7 @@ const specySchema = new Schema({
     validate: {
       // Returns true if the name is valid (in lower case)
       validator: function(value) {
-        if(value === 'edible' || value === 'psychadelic') {
+        if(value === 'commestible' || value === 'non commestible') {
           return true
         }
         return false;

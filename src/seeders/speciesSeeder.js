@@ -6,15 +6,14 @@ const startIndex = 1;
 
 async function seeder(i = startIndex) {
     const specy = await Specy.find({ name: `specy${i}` });
-
     if (specy.length === 0) await createSpecy(i);
-    if (i < numberOfSpecies) seeder(i + 1);
+    if (i < numberOfSpecies) await seeder(i + 1);
 }
 
 async function createSpecy(i) {
-    let usage = 'psychadelic'
+    let usage = 'commestible'
     if (i % 2 === 0) {
-        usage = "edible"
+        usage = "non commestible"
     }
     const specy = new Specy({
         name: `specy${i}`,
@@ -25,11 +24,10 @@ async function createSpecy(i) {
 
     try {
         await specy.save();
-        return specy
     } catch {
         console.log("specy could not be saved")
     }
-
+    return specy
 }
 
 export default seeder;
