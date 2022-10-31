@@ -3,9 +3,9 @@ import cleanUpDb from '../../helpers/useCleanUpDb.js';
 import usersSeeder from '../../seeders/usersSeeder.js';
 import msg, { RESSOURCES as R } from '../../data/messages.js';
 import ApiTester from '../../helpers/ApiTester';
+import defineTest from '../../helpers/useDefineTest.js';
 
 let tester;
-let messageWrapper = {};
 const prepare = async () => {
   await cleanUpDb();
   await usersSeeder();
@@ -20,8 +20,7 @@ const prepare = async () => {
 describe('GET /users', () => {
   beforeEach(prepare);
 
-  messageWrapper = msg.SUCCESS_RESSOURCE_RETRIEVAL(R.USERS);
-  test(messageWrapper.msg, async () => {
+  defineTest(msg.SUCCESS_RESSOURCE_RETRIEVAL(R.USERS), '', async (messageWrapper) => {
     const res = await ApiTester.apiCall({
       method: 'get',
       path: 'users',
@@ -53,8 +52,7 @@ describe('GET /users', () => {
 describe('GET /users/:id', () => {
   beforeEach(prepare);
 
-  messageWrapper = msg.SUCCESS_RESSOURCE_RETRIEVAL(R.USER);
-  test(messageWrapper.msg, async () => {
+  defineTest(msg.SUCCESS_RESSOURCE_RETRIEVAL(R.USER), '', async (messageWrapper) => {
     const validUserId = await ApiTester.getValidUserId(tester.userToken);
     const res = await ApiTester.apiCall({
       method: 'get',
@@ -82,8 +80,7 @@ describe('GET /users/:id', () => {
 describe('POST /users', () => {
   beforeEach(prepare);
 
-  messageWrapper = msg.SUCCESS_RESSOURCE_CREATION(R.USER);
-  test(`${messageWrapper.msg} - create a regular user`, async () => {
+  defineTest(msg.SUCCESS_RESSOURCE_CREATION(R.USER), 'create a regular user', async (messageWrapper) => {
     const res = await ApiTester.apiCall({
       method: 'post',
       path: 'users',
@@ -108,8 +105,7 @@ describe('POST /users', () => {
     );
   });
 
-  messageWrapper = msg.SUCCESS_RESSOURCE_CREATION(R.USER);
-  test(`${messageWrapper.msg} - forbid non admin to create a user`, async () => {
+  defineTest(msg.SUCCESS_RESSOURCE_CREATION(R.USER), 'forbid non admin to create a user', async (messageWrapper) => {
     const res = await ApiTester.apiCall({
       method: 'post',
       path: 'users',

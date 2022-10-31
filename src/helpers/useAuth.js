@@ -27,7 +27,6 @@ const useAuth = {
     }
   },
   send(res, message, payload) {
-    console.log(message.msg);
     res.status(message.status).send({ message: message.msg, ...payload });
   },
   setBody(payload) {
