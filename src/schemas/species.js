@@ -18,7 +18,7 @@ const specySchema = new Schema({
     //   message: 'usage can only be commestible or non-commestible'
     // }
   },
-  pictureFile: { type: String, required: true },
+  pictureId: { type: String, required: true },
 });
 mongoose.model('Specy', specySchema, 'species');
 const Specy = mongoose.model('Specy');

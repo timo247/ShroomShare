@@ -1,5 +1,6 @@
 import Specy from '../schemas/species.js';
 import * as fs from 'fs';
+import Image from '../schemas/images.js'
 
 
 async function getCsvData() {
@@ -18,11 +19,12 @@ async function seeder() {
 }
 
 async function createSpecy(specy_from_file) {
+
     const specy = new Specy({
         name: specy_from_file.name,
         description: specy_from_file.description,
         usage: specy_from_file.usage,
-        pictureFile: 'random',
+        pictureId: 'random',
     });
 
     try {
