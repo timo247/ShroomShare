@@ -9,7 +9,7 @@
     "stopdb": "brew services stop mongodb-community@6.0",
     "seed": "node ./src/seeders/seeders.js",
     "seed-test": "cross-env DATABASE_URL=mongodb://127.0.0.1:27017/test node ./src/seeders/seeders.js",
-    "test": "cross-env DATABASE_URL=mongodb://127.0.0.1:27017/test node --experimental-vm-modules node_modules/.bin/jest --coverage",
+    "test": "cross-env DATABASE_URL=mongodb://127.0.0.1:27017/test node --experimental-vm-modules node_modules/.bin/jest --coverage --runInBand",
     "doc": "npx swagger-jsdoc-generator swagger.json > collection.json"
   },
   "dependencies": {
