@@ -1,33 +1,36 @@
 import Specy from '../schemas/species.js';
+import * as fs from 'fs';
 
 
-const numberOfSpecies = 10;
-const startIndex = 1;
-
-async function seeder(i = startIndex) {
-    const specy = await Specy.find({ name: `specy${i}` });
-    if (specy.length === 0) await createSpecy(i);
-    if (i < numberOfSpecies) await seeder(i + 1);
+async function getCsvData() {
+    const data = fs.readFileSync('C:/Users/timot/OneDrive/Documents/HEIG/semestre-5/ArchiOWeb/Projet/shroom-share/src/data/species.json')
+    const buffer = Buffer.from(data)
+    const mush_stringified = buffer.toString()
+    const mush_array = JSON.parse(mush_stringified)
+    return mush_array
 }
 
-async function createSpecy(i) {
-    let usage = 'commestible'
-    if (i % 2 === 0) {
-        usage = "non commestible"
+async function seeder() {
+    const species_array = await getCsvData()
+     for (const specy of species_array){
+        await createSpecy(specy);
     }
+}
+
+async function createSpecy(specy_from_file) {
     const specy = new Specy({
-        name: `specy${i}`,
-        description: `description${i}`,
-        usage: usage,
-        pictureFile: `pictureFile${i}`,
+        name: specy_from_file.name,
+        description: specy_from_file.description,
+        usage: specy_from_file.usage,
+        pictureFile: 'random',
     });
 
     try {
         await specy.save();
-    } catch {
-        console.log("specy could not be saved")
+        return specy
+    } catch (err) {
+        console.log("specy could not be saved", err)
     }
-    return specy
 }
 
 export default seeder;

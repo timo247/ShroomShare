@@ -9,7 +9,7 @@ await Promise.all([
   User.deleteMany(),
 ]);
 // call seeder here
-await userSeeder();
+//await userSeeder();
 await speciesSeeder();
 await mongoose.connection.close();
 process.exit();
