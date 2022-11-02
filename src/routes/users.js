@@ -6,6 +6,7 @@ import useAuth from '../helpers/useAuth.js';
 import config from '../../config.js';
 import msg, { RESSOURCES as R } from '../data/messages.js';
 import Paginator from '../helpers/Paginator.js';
+import useRouter from '../helpers/useRouter.js';
 
 const router = express.Router();
 
@@ -32,7 +33,11 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
 router.get('/:id', auth.authenticateUser, async (req, res, next) => {
   try {
     const id = req.params.id;
+    if (!useRouter.isValidMongooseId(id)) {
+      useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
+    }
     const user = await User.findOne({ _id: id });
+    console.log(user);
     req.body = useAuth.setBody({ user });
     useAuth.send(res, msg.SUCCESS_RESSOURCE_RETRIEVAL(R.USER), req.body);
   } catch (error) {
@@ -43,7 +48,7 @@ router.get('/:id', auth.authenticateUser, async (req, res, next) => {
 // Create a new user
 router.post('/', async (req, res, next) => {
   try {
-    checkForRequiredParams(req, res, ['password', 'username', 'email']);
+    useRouter.checkForRequiredParams(req, res, ['password', 'username', 'email']);
     req.body.password = await bcrypt.hash(req.body.password, config.bcryptCostFactor);
     const payload = useAuth.getPayloadFromToken(req);
     req.body.admin = payload?.scope === 'admin';
@@ -105,11 +110,5 @@ router.delete('/', auth.authenticateAdmin, async (req, res, next) => {
     return next(error);
   }
 });
-
-function checkForRequiredParams(req, res, paramNames) {
-  paramNames.forEach((name) => {
-    if (typeof req.body?.[name] === 'undefined') useAuth.send(res, msg.ERROR_PARAM_REQUIRED(name));
-  });
-}
 
 export default router;

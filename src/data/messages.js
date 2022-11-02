@@ -7,12 +7,14 @@ export const RESSOURCES = {
   MUSHROOMS: 'mushrooms',
   PICTURE: 'picture',
   PICTURES: 'pictures',
+  RESSOURCE: 'ressource',
+  RESSOURCES: 'ressources',
 };
 class Message {
   constructor(ressourceName, msg, status = 401) {
     Message.isValidRessource(ressourceName);
     this.status = status;
-    this.msg = `${Message.firstLetterUpperCase(ressourceName)} ${msg}.`;
+    this.msg = `${Message.firstLetterUpperCase(ressourceName)} ${msg}`;
   }
 
   static isValidRessource(string) {
@@ -31,11 +33,11 @@ class Message {
 const messages = {
   //  Ressources manipulation
   // ==========================================================================
-  SUCCESS_RESSOURCE_RETRIEVAL: (name) => new Message(name, 'successfully retrieved', 200).getMessageWrapper(),
-  SUCCESS_RESSOURCE_CREATION: (name) => new Message(name, 'successfully created', 201).getMessageWrapper(),
-  SUCCESS_RESSOURCE_MODIFICATION: (name) => new Message(name, 'successfully modified', 200).getMessageWrapper(),
-  SUCCESS_RESSOURCE_DELETION: (name) => new Message(name, 'successfully deleted', 200).getMessageWrapper(),
-  ERROR_RESSOURCE_EXISTANCE: (name) => new Message(name, 'not found', 404).getMessageWrapper(),
+  SUCCESS_RESSOURCE_RETRIEVAL: (name) => new Message(name, 'successfully retrieved.', 200).getMessageWrapper(),
+  SUCCESS_RESSOURCE_CREATION: (name) => new Message(name, 'successfully created.', 201).getMessageWrapper(),
+  SUCCESS_RESSOURCE_MODIFICATION: (name) => new Message(name, 'successfully modified.', 200).getMessageWrapper(),
+  SUCCESS_RESSOURCE_DELETION: (name) => new Message(name, 'successfully deleted.', 200).getMessageWrapper(),
+  ERROR_RESSOURCE_EXISTANCE: (name) => new Message(name, 'not found.', 404).getMessageWrapper(),
   //  Route auth
   // ==========================================================================
   ERROR_AUTH_LOGIN: { status: 401, msg: 'Username and/or password are/is invalid.' },
