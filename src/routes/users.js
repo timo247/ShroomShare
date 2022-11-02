@@ -8,6 +8,7 @@ import msg, { RESSOURCES as R } from '../data/messages.js';
 import Paginator from '../helpers/Paginator.js';
 import useRouter from '../helpers/useRouter.js';
 
+const apiErrorLogger = config.debug.apiErrors;
 const router = express.Router();
 
 // Retrieves all users
@@ -37,7 +38,6 @@ router.get('/:id', auth.authenticateUser, async (req, res, next) => {
       useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
     }
     const user = await User.findOne({ _id: id });
-    console.log(user);
     req.body = useAuth.setBody({ user });
     useAuth.send(res, msg.SUCCESS_RESSOURCE_RETRIEVAL(R.USER), req.body);
   } catch (error) {
@@ -52,6 +52,8 @@ router.post('/', async (req, res, next) => {
     req.body.password = await bcrypt.hash(req.body.password, config.bcryptCostFactor);
     const payload = useAuth.getPayloadFromToken(req);
     req.body.admin = payload?.scope === 'admin';
+    const alreadyExistingUser = await User.findOne({ username: req.body.username });
+    if (alreadyExistingUser) useAuth.send(res, msg.ERROR_USER_UNICITY('username'));
     const user = new User(req.body);
     const savedUser = await user.save();
     const tokenWrapper = useAuth.generateJwtToken(req.currentUserId, req.currentUserRole);
@@ -75,6 +77,9 @@ router.patch('/:id', auth.authenticateUser, async (req, res, next) => {
     }
     const params = req.body;
     const id = req.params.id;
+    if (!useRouter.isValidMongooseId(id)) {
+      useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
+    }
     const areIdsIdentical = String(req.currentUserId) !== String(id);
     if (!areIdsIdentical) useAuth.send(res, msg.ERROR_OWNERRIGHT_GRANTATION);
     await User.findByIdAndUpdate(id, params);
@@ -90,6 +95,9 @@ router.patch('/:id', auth.authenticateUser, async (req, res, next) => {
 router.delete('/:id', auth.authenticateUser, async (req, res, next) => {
   try {
     const id = req.params.id;
+    if (!useRouter.isValidMongooseId(id)) {
+      useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
+    }
     const areIdsIdentical = String(req.currentUserId) !== String(id);
     if (!areIdsIdentical) useAuth.send(res, msg.ERROR_OWNERRIGHT_GRANTATION);
     await User.deleteOne({ _id: id });

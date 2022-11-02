@@ -11,8 +11,8 @@ export const RESSOURCES = {
   RESSOURCES: 'ressources',
 };
 class Message {
-  constructor(ressourceName, msg, status = 401) {
-    Message.isValidRessource(ressourceName);
+  constructor(ressourceName, msg, status = 401, onlyVerifiedStrings = true) {
+    if (onlyVerifiedStrings) Message.isValidRessource(ressourceName);
     this.status = status;
     this.msg = `${Message.firstLetterUpperCase(ressourceName)} ${msg}`;
   }
@@ -44,6 +44,9 @@ const messages = {
   ERROR_AUTH_PERMISSION_GRANTATION: { status: 401, msg: 'Permission not granted.' },
   ERROR_AUTH_HEADER_PRESENCE: { status: 401, msg: 'Authorization header is missing.' },
   ERROR_AUTH_BEARERTOKEN_FORMAT: { status: 401, msg: 'Authorization header is not a bearer token.' },
+  //  Route users
+  // ==========================================================================
+  ERROR_USER_UNICITY: (name) => new Message(name, 'is already taken', 401, false).getMessageWrapper(),
   //  JWT tokens
   // ==========================================================================
   ERROR_TOKEN_VALIDATION: { status: 401, msg: 'Your token is invalid or has expired.' },
