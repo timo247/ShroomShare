@@ -35,7 +35,7 @@ router.get('/:id', auth.authenticateUser, async (req, res, next) => {
   try {
     const id = req.params.id;
     if (!useRouter.isValidMongooseId(id)) {
-      useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
+      return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
     }
     const user = await User.findOne({ _id: id });
     req.body = useAuth.setBody({ user });
@@ -53,17 +53,16 @@ router.post('/', async (req, res, next) => {
     const payload = useAuth.getPayloadFromToken(req);
     req.body.admin = payload?.scope === 'admin';
     const alreadyExistingUser = await User.findOne({ username: req.body.username });
-    if (alreadyExistingUser) useAuth.send(res, msg.ERROR_USER_UNICITY('username'));
+    if (alreadyExistingUser) return useAuth.send(res, msg.ERROR_USER_UNICITY('username'));
     const user = new User(req.body);
     const savedUser = await user.save();
     const tokenWrapper = useAuth.generateJwtToken(req.currentUserId, req.currentUserRole);
     if (tokenWrapper.token) {
       req.body = useAuth.setBody({ user: savedUser, token: tokenWrapper.token });
-      useAuth.send(res, msg.SUCCESS_RESSOURCE_CREATION(R.USER), req.body);
-    } else {
-      req.body = useAuth.setBody({ user: savedUser, warnings: [msg.ERROR_TOKEN_CREATION] });
-      useAuth.send(res, msg.SUCCESS_RESSOURCE_CREATION(R.USER), req.body);
+      return useAuth.send(res, msg.SUCCESS_RESSOURCE_CREATION(R.USER), req.body);
     }
+    req.body = useAuth.setBody({ user: savedUser, warnings: [msg.ERROR_TOKEN_CREATION] });
+    useAuth.send(res, msg.SUCCESS_RESSOURCE_CREATION(R.USER), req.body);
   } catch (error) {
     return next(error);
   }
@@ -78,7 +77,7 @@ router.patch('/:id', auth.authenticateUser, async (req, res, next) => {
     const params = req.body;
     const id = req.params.id;
     if (!useRouter.isValidMongooseId(id)) {
-      useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
+      return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
     }
     const areIdsIdentical = String(req.currentUserId) !== String(id);
     if (!areIdsIdentical) useAuth.send(res, msg.ERROR_OWNERRIGHT_GRANTATION);
@@ -96,10 +95,12 @@ router.delete('/:id', auth.authenticateUser, async (req, res, next) => {
   try {
     const id = req.params.id;
     if (!useRouter.isValidMongooseId(id)) {
-      useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
+      return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
     }
     const areIdsIdentical = String(req.currentUserId) !== String(id);
     if (!areIdsIdentical) useAuth.send(res, msg.ERROR_OWNERRIGHT_GRANTATION);
+    const userToDelete = await User.findOne({ _id: id });
+    if (!userToDelete) return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
     await User.deleteOne({ _id: id });
     req.body = useAuth.setBody();
     useAuth.send(res, msg.SUCCESS_RESSOURCE_DELETION(R.USER), req.body);
