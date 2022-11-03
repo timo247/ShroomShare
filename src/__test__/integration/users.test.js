@@ -71,6 +71,23 @@ describe('GET /users/:id', () => {
       }),
     );
   });
+
+  defineTest(msg.ERROR_RESSOURCE_EXISTANCE(R.USER), 'invalid mongoose id', async (messageWrapper) => {
+    const validUserId = await ApiTester.getValidUserId(tester.userToken);
+    const unvalidUserId = validUserId.slice(0, -2);
+
+    const res = await ApiTester.apiCall({
+      method: 'get',
+      path: `users/${unvalidUserId}`,
+      messageWrapper,
+      token: tester.userToken,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(messageWrapper.msg),
+      }),
+    );
+  });
 });
 
 // ==========================================================================
@@ -130,7 +147,60 @@ describe('POST /users', () => {
     );
     expect(res.body.user.admin).toEqual(false);
   });
+
+  defineTest(msg.ERROR_FIELD_REQUIRED('X'), 'missing fields', async (messageWrapper) => {
+    const res = await ApiTester.apiCall({
+      method: 'post',
+      path: 'users',
+      body: {
+        username: 'John Doe',
+      },
+      messageWrapper,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        messages: expect.arrayContaining([
+          msg.ERROR_FIELD_REQUIRED('password').msg,
+          msg.ERROR_FIELD_REQUIRED('email').msg,
+        ]),
+      }),
+    );
+  });
+
+  defineTest(msg.ERROR_USER_UNICITY('username'), '', async (messageWrapper) => {
+    const res = await ApiTester.apiCall({
+      method: 'post',
+      path: 'users',
+      body: {
+        username: 'user01',
+        password: 'password01',
+        email: 'user01@gmail.com',
+      },
+      messageWrapper,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(messageWrapper.msg),
+      }),
+    );
+  });
 });
+
+// ==========================================================================
+//  PATCH /users/:id
+// ==========================================================================
+
+// describe('PATCH /users/:id', () => {
+//   beforeEach(prepare);
+// });
+
+// ==========================================================================
+//  DELETE /users/:id
+// ==========================================================================
+
+// describe('DELETE /users/:id', () => {
+//   beforeEach(prepare);
+// });
 
 afterAll(async () => {
   await mongoose.disconnect();

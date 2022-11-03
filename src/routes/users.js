@@ -71,14 +71,14 @@ router.post('/', async (req, res, next) => {
 // Modify existing user
 router.patch('/:id', auth.authenticateUser, async (req, res, next) => {
   try {
-    if (req.body.password) {
-      req.body.password = await bcrypt.hash(req.body.password, config.costFactor);
-    }
-    const params = req.body;
     const id = req.params.id;
     if (!useRouter.isValidMongooseId(id)) {
       return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
     }
+    if (req.body.password) {
+      req.body.password = await bcrypt.hash(req.body.password, config.costFactor);
+    }
+    const params = req.body;
     const areIdsIdentical = String(req.currentUserId) !== String(id);
     if (!areIdsIdentical) useAuth.send(res, msg.ERROR_OWNERRIGHT_GRANTATION);
     await User.findByIdAndUpdate(id, params);
