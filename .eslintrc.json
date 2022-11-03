@@ -21,6 +21,7 @@
     "no-plusplus": "off",
     "prefer-destructuring": "off",
     "consistent-return": "off",
-    "prefer-arrow-callback": "off"
+    "prefer-arrow-callback": "off",
+    "linebreak-style": "off"
   }
 }
