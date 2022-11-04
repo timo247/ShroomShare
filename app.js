@@ -10,7 +10,9 @@ import authRouter from './src/routes/auth.js';
 import speciesRouter from './src/routes/species.js'
 import config from './config.js';
 import connect from './src/helpers/useDbConnector.js';
-import msg from './src/data/messages.js';
+import msg, { RESSOURCES as R } from './src/data/messages.js';
+
+const apiErrorsLogger = config.debug.apiErrors;
 
 const options = {
   definition: {
@@ -54,6 +56,7 @@ app.use((req, res, next) => {
 
 // error handler
 app.use((err, req, res, next) => {
+  // apiErrorsLogger(err);
   // set locals, only providing error in development
   res.locals.message = err.message;
   const env = req.app.get('env');
@@ -68,6 +71,9 @@ app.use((err, req, res, next) => {
 
 function errorFilter(res, err) {
   if (err instanceof mongoose.Error.ValidationError) return err.message;
+  // if (err instanceof mongoose.Error.CastError) {
+  //   return msg.ERROR_RESSOURCE_EXISTANCE(R.RESSOURCE).msg;
+  // }
 }
 
 export default app;

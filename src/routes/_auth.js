@@ -34,6 +34,8 @@
  *                type: string
  *             message:
  *                type: string
+ *                maxLength: 12   
+ *           required: [token]
  */
     
 // ==========================================================================
