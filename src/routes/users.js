@@ -76,10 +76,10 @@ router.patch('/:id', auth.authenticateUser, async (req, res, next) => {
       return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
     }
     if (req.body.password) {
-      req.body.password = await bcrypt.hash(req.body.password, config.costFactor);
+      req.body.password = await bcrypt.hash(req.body.password, config.bcryptCostFactor);
     }
     const params = req.body;
-    const areIdsIdentical = String(req.currentUserId) !== String(id);
+    const areIdsIdentical = String(req.currentUserId) === String(id);
     if (!areIdsIdentical) useAuth.send(res, msg.ERROR_OWNERRIGHT_GRANTATION);
     await User.findByIdAndUpdate(id, params);
     const modifiedUser = await User.findOne({ _id: id });
@@ -109,14 +109,16 @@ router.delete('/:id', auth.authenticateUser, async (req, res, next) => {
   }
 });
 
-// Delete all users (for testing purpose only)
+// Delete all users (for testing purpose only) available only in dev mode
 router.delete('/', auth.authenticateAdmin, async (req, res, next) => {
-  try {
-    await User.deleteMany({});
-    req.body = useAuth.setBody();
-    useAuth.send(res, msg.SUCCESS_RESSOURCE_DELETION(R.USERS), req.body);
-  } catch (error) {
-    return next(error);
+  if (config.nodeEnv === 'dev') {
+    try {
+      await User.deleteMany({});
+      req.body = useAuth.setBody();
+      useAuth.send(res, msg.SUCCESS_RESSOURCE_DELETION(R.USERS), req.body);
+    } catch (error) {
+      return next(error);
+    }
   }
 });
 

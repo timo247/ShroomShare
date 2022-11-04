@@ -190,9 +190,66 @@ describe('POST /users', () => {
 //  PATCH /users/:id
 // ==========================================================================
 
-// describe('PATCH /users/:id', () => {
-//   beforeEach(prepare);
-// });
+describe('PATCH /users/:id', () => {
+  beforeEach(prepare);
+
+  defineTest(msg.SUCCESS_RESSOURCE_MODIFICATION(R.USER), '', async (messageWrapper) => {
+    const validUserId = await ApiTester.getValidUserId(tester.userToken);
+    const newUsername = 'Johnny Depp';
+    const res = await ApiTester.apiCall({
+      method: 'patch',
+      path: `users/${validUserId}`,
+      body: {
+        username: newUsername,
+      },
+      token: tester.userToken,
+      messageWrapper,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(messageWrapper.msg),
+        user: expect.objectContaining({
+          id: expect.any(String),
+          username: expect.stringContaining(newUsername),
+          admin: expect.any(Boolean),
+        }),
+      }),
+    );
+  });
+
+  defineTest(msg.ERROR_RESSOURCE_EXISTANCE(R.USER), 'invalid mongoose id', async (messageWrapper) => {
+    const validUserId = await ApiTester.getValidUserId(tester.userToken);
+    const unvalidUserId = validUserId.slice(0, -2);
+
+    const res = await ApiTester.apiCall({
+      method: 'patch',
+      path: `users/${unvalidUserId}`,
+      messageWrapper,
+      token: tester.userToken,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(messageWrapper.msg),
+      }),
+    );
+  });
+
+  defineTest(msg.ERROR_OWNERRIGHT_GRANTATION, '', async (messageWrapper) => {
+    const validUserId = await ApiTester.getValidUserId(tester.userToken);
+
+    const res = await ApiTester.apiCall({
+      method: 'patch',
+      path: `users/${validUserId}`,
+      messageWrapper,
+      token: tester.adminToken,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(messageWrapper.msg),
+      }),
+    );
+  });
+});
 
 // ==========================================================================
 //  DELETE /users/:id
