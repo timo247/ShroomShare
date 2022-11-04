@@ -38,6 +38,9 @@ router.get('/:id', auth.authenticateUser, async (req, res, next) => {
       return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
     }
     const user = await User.findOne({ _id: id });
+    if (!user) {
+      return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
+    }
     req.body = useAuth.setBody({ user });
     useAuth.send(res, msg.SUCCESS_RESSOURCE_RETRIEVAL(R.USER), req.body);
   } catch (error) {
@@ -80,7 +83,7 @@ router.patch('/:id', auth.authenticateUser, async (req, res, next) => {
     }
     const params = req.body;
     const areIdsIdentical = String(req.currentUserId) === String(id);
-    if (!areIdsIdentical) useAuth.send(res, msg.ERROR_OWNERRIGHT_GRANTATION);
+    if (!areIdsIdentical) return useAuth.send(res, msg.ERROR_OWNERRIGHT_GRANTATION);
     await User.findByIdAndUpdate(id, params);
     const modifiedUser = await User.findOne({ _id: id });
     req.body = useAuth.setBody({ user: modifiedUser });
@@ -97,8 +100,8 @@ router.delete('/:id', auth.authenticateUser, async (req, res, next) => {
     if (!useRouter.isValidMongooseId(id)) {
       return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
     }
-    const areIdsIdentical = String(req.currentUserId) !== String(id);
-    if (!areIdsIdentical) useAuth.send(res, msg.ERROR_OWNERRIGHT_GRANTATION);
+    const areIdsIdentical = String(req.currentUserId) === String(id);
+    if (!areIdsIdentical) return useAuth.send(res, msg.ERROR_OWNERRIGHT_GRANTATION);
     const userToDelete = await User.findOne({ _id: id });
     if (!userToDelete) return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
     await User.deleteOne({ _id: id });

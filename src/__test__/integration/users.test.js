@@ -13,6 +13,19 @@ const prepare = async () => {
   await tester.setTokens();
 };
 
+function shuffleString(string) {
+  const a = string.split('');
+  const n = a.length;
+
+  for (let i = n - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const tmp = a[i];
+    a[i] = a[j];
+    a[j] = tmp;
+  }
+  return a.join('');
+}
+
 // ==========================================================================
 //  GET /users
 // ==========================================================================
@@ -75,6 +88,23 @@ describe('GET /users/:id', () => {
   defineTest(msg.ERROR_RESSOURCE_EXISTANCE(R.USER), 'invalid mongoose id', async (messageWrapper) => {
     const validUserId = await ApiTester.getValidUserId(tester.userToken);
     const unvalidUserId = validUserId.slice(0, -2);
+
+    const res = await ApiTester.apiCall({
+      method: 'get',
+      path: `users/${unvalidUserId}`,
+      messageWrapper,
+      token: tester.userToken,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(messageWrapper.msg),
+      }),
+    );
+  });
+
+  defineTest(msg.ERROR_RESSOURCE_EXISTANCE(R.USER), 'id is not attributed to an user', async (messageWrapper) => {
+    const validUserId = await ApiTester.getValidUserId(tester.userToken);
+    const unvalidUserId = shuffleString(validUserId);
 
     const res = await ApiTester.apiCall({
       method: 'get',
@@ -255,9 +285,58 @@ describe('PATCH /users/:id', () => {
 //  DELETE /users/:id
 // ==========================================================================
 
-// describe('DELETE /users/:id', () => {
-//   beforeEach(prepare);
-// });
+describe('DELETE /users/:id', () => {
+  beforeEach(prepare);
+
+  defineTest(msg.SUCCESS_RESSOURCE_DELETION(R.USER), '', async (messageWrapper) => {
+    const validUserId = await ApiTester.getValidUserId(tester.userToken);
+
+    const res = await ApiTester.apiCall({
+      method: 'delete',
+      path: `users/${validUserId}`,
+      messageWrapper,
+      token: tester.userToken,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(messageWrapper.msg),
+      }),
+    );
+  });
+
+  defineTest(msg.ERROR_RESSOURCE_EXISTANCE(R.USER), 'invalid mongoose id', async (messageWrapper) => {
+    const validUserId = await ApiTester.getValidUserId(tester.userToken);
+    const unvalidUserId = validUserId.slice(0, -2);
+
+    const res = await ApiTester.apiCall({
+      method: 'delete',
+      path: `users/${unvalidUserId}`,
+      messageWrapper,
+      token: tester.userToken,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(messageWrapper.msg),
+      }),
+    );
+  });
+
+  defineTest(msg.ERROR_OWNERRIGHT_GRANTATION, '', async (messageWrapper) => {
+    const validUserId = await ApiTester.getValidUserId(tester.userToken);
+
+    const res = await ApiTester.apiCall({
+      method: 'delete',
+      path: `users/${validUserId}`,
+      messageWrapper,
+      token: tester.adminToken,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(messageWrapper.msg),
+      }),
+    );
+  });
+});
 
 afterAll(async () => {
   await mongoose.disconnect();
