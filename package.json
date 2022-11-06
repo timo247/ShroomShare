@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "nodemon",
+    "dev": "cross-env DEBUG='api:errors api:succes' nodemon",
     "start": "node ./src/bin/start",
     "stopdb": "brew services stop mongodb-community@6.0",
     "seed": "node ./src/seeders/seeders.js",
@@ -21,7 +21,8 @@
     "mongodb": "^4.10.0",
     "mongoose": "^6.6.5",
     "morgan": "~1.10.0",
-    "swagger-ui-express": "^4.5.0"
+    "swagger-ui-express": "^4.5.0",
+    "ws": "^8.10.0"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",

@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 
 import http from 'http';
-import createDebugger from 'debug';
 import app from '../../app.js';
 import config from '../../config.js';
+import { createWebSocketServer } from '../../chat.js';
 
-const debug = createDebugger('picnic-advisor:server');
-
+const debug = config.debug.apiSucces;
 /**
  * Get port from environment and store in Express.
  */
@@ -16,6 +15,7 @@ app.set('port', config.port);
  * Create HTTP server.
  */
 const server = http.createServer(app);
+createWebSocketServer(server);
 
 /**
  * Listen on provided port, on all network interfaces.
