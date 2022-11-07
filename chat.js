@@ -17,7 +17,7 @@ Object.values(CHANNELS).forEach((value) => {
   channels[value] = new Map();
 });
 
-export function createWebSocketServer(httpServer) {
+function createWebSocketServer(httpServer) {
   const wss = new WebSocketServer({ clientTracking: false, noServer: true });
 
   wss.on('connection', async (ws, request, client) => {
@@ -69,7 +69,7 @@ export function createWebSocketServer(httpServer) {
 //  Helpers
 // ==========================================================================
 
-export function broadcastMessage(message, channelId) {
+function broadcastMessage(message, channelId) {
   channels[channelId].forEach((client) => { client.ws.send(JSON.stringify(message)); });
 }
 
@@ -107,3 +107,5 @@ function getQueryParam(key, url) {
   const matches = url.match(regexp);
   if (matches !== null) return matches[1];
 }
+
+export default createWebSocketServer;
