@@ -2,39 +2,46 @@ import { WebSocketServer } from 'ws';
 import jwt from 'jsonwebtoken';
 import config from './config.js';
 import User from './src/schemas/user.js';
+import Payload from './src/helpers/Payload.js';
 
 const errorsLogger = config.debug.apiErrors;
 const succesLogger = config.debug.apiSucces;
-
+const CHANNELS = {
+  FR: 0,
+  EN: 1,
+  DE: 2,
+  IT: 3,
+};
 const clients = new Map();
 
 export function createWebSocketServer(httpServer) {
   const wss = new WebSocketServer({ clientTracking: false, noServer: true });
 
-  wss.on('connection', (ws, request, client) => {
-    succesLogger(client);
-
-    clients.set(client.sub, ws);
+  wss.on('connection', async (ws, request, client) => {
+    succesLogger(request.params);
+    const user = await User.findById(client.sub);
+    clients.set(client.sub, { ws, user });
+    let response = setUserResponse('user connected', client.sub);
+    broadcastMessage(response);
 
     ws.on('message', (message) => {
-      let parsedMessage;
+      let rawMessage;
       try {
-        const rawMessage = String(message);
-        parsedMessage = JSON.parse(rawMessage);
+        rawMessage = JSON.stringify(message);
       } catch (err) {
-        return errorsLogger('Invalid JSON message received from client');
+        return errorsLogger('Invalid message received from client');
       }
-      onMessageReceived(ws, String(parsedMessage));
+      onMessageReceived(ws, rawMessage, client.sub);
     });
 
     ws.on('close', () => {
+      response = setUserResponse('user disconnected', client.sub);
+      broadcastMessage(response);
       clients.delete(client.sub);
-      succesLogger('WebSocket client disconnected');
     });
   });
 
   httpServer.on('upgrade', function upgrade(request, socket, head) {
-    succesLogger('upgrade');
     authenticate(request, function next(err, client) {
       if (err || !client) {
         socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
@@ -49,16 +56,17 @@ export function createWebSocketServer(httpServer) {
   });
 }
 
+// ==========================================================================
+//  Helpers
+// ==========================================================================
+
 export function broadcastMessage(message) {
-  succesLogger(
-    `Broadcasting message to all connected clients: ${JSON.stringify(message)}`,
-  );
-  clients.forEach((client) => { client.send(message); });
+  clients.forEach((client) => { client.send(JSON.stringify(message)); });
 }
 
-function onMessageReceived(ws, message) {
-  succesLogger(`Received WebSocket message: ${JSON.stringify(message)}`);
-  ws.send(message);
+function onMessageReceived(ws, message, clientId) {
+  const response = setUserResponse('message received', message, clientId);
+  broadcastMessage(response);
 }
 
 function authenticate(request, next) {
@@ -75,6 +83,16 @@ function authenticate(request, next) {
   }
 }
 
+function setUserResponse(status, message, clientId) {
+  return clientId
+    ? {
+      status, message, timestamp: Date.now(), userId: clientId,
+    }
+    : {
+      status, message, timestamp: Date.now(),
+    };
+}
+
 function getActiveUsers(ids) {
   const data = [];
   ids.forEach((id) => {
@@ -85,19 +103,4 @@ function getActiveUsers(ids) {
   }, (err, docs) => {
     console.log(docs);
   });
-}
-
-class Payload {
-  constructor({
-    sub, exp, scope, iat,
-  }) {
-    this.sub = sub;
-    this.exp = exp;
-    this.scope = scope;
-    this.iat = iat;
-    if (!this.sub) throw new Error('sub property is required');
-    if (!this.exp) throw new Error('exp property is required');
-    if (!this.scope) throw new Error('scope property is required');
-    if (!this.iat) throw new Error('iat property is required');
-  }
 }

@@ -48,19 +48,15 @@ app.use(`/${config.apiName}/auth`, authRouter);
 app.use(`/${config.apiName}/users`, usersRouter);
 app.use(`/${config.apiName}/species`, speciesRouter);
 
-// catch 404 and forward to error handler
 app.use((req, res, next) => {
   next(createError(404));
 });
 
-// error handler
 app.use((err, req, res, next) => {
-  // apiErrorsLogger(err);
   // set locals, only providing error in development
   res.locals.message = err.message;
   const env = req.app.get('env');
   res.locals.error = env === 'dev' ? err : {};
-  // Send the error status
   res.status(err.status || 500);
   const filtredMessage = errorFilter(res, err);
   if (filtredMessage) return res.send({ message: filtredMessage });
