@@ -23,7 +23,12 @@ export function createWebSocketServer(httpServer) {
   wss.on('connection', async (ws, request, client) => {
     const language = getQueryParam('language', request.url) || 'en';
     const currentChannel = CHANNELS[language.toUpperCase()];
-    const user = await User.findById(client.sub);
+    let user;
+    try {
+      user = await User.findById(client.sub);
+    } catch (error) {
+      return errorsLogger('id does no more exist');
+    }
     channels[currentChannel].set(client.sub, { ws, user });
     let response = setUserResponse('user connected', client.sub);
     broadcastMessage(response, currentChannel);
@@ -31,7 +36,7 @@ export function createWebSocketServer(httpServer) {
     ws.on('message', (message) => {
       let rawMessage;
       try {
-        rawMessage = JSON.stringify(message);
+        rawMessage = String(message);
       } catch (err) {
         return errorsLogger('Invalid message received from client');
       }
