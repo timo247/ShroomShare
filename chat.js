@@ -7,22 +7,26 @@ import Payload from './src/helpers/Payload.js';
 const errorsLogger = config.debug.apiErrors;
 const succesLogger = config.debug.apiSucces;
 const CHANNELS = {
-  FR: 0,
-  EN: 1,
+  EN: 0,
+  FR: 1,
   DE: 2,
   IT: 3,
 };
-const clients = new Map();
+const channels = {};
+Object.values(CHANNELS).forEach((value) => {
+  channels[value] = new Map();
+});
 
 export function createWebSocketServer(httpServer) {
   const wss = new WebSocketServer({ clientTracking: false, noServer: true });
 
   wss.on('connection', async (ws, request, client) => {
-    succesLogger(request.params);
+    const language = getQueryParam('language', request.url) || 'en';
+    const currentChannel = CHANNELS[language.toUpperCase()];
     const user = await User.findById(client.sub);
-    clients.set(client.sub, { ws, user });
+    channels[currentChannel].set(client.sub, { ws, user });
     let response = setUserResponse('user connected', client.sub);
-    broadcastMessage(response);
+    broadcastMessage(response, currentChannel);
 
     ws.on('message', (message) => {
       let rawMessage;
@@ -31,13 +35,13 @@ export function createWebSocketServer(httpServer) {
       } catch (err) {
         return errorsLogger('Invalid message received from client');
       }
-      onMessageReceived(ws, rawMessage, client.sub);
+      onMessageReceived(ws, rawMessage, client.sub, currentChannel);
     });
 
     ws.on('close', () => {
       response = setUserResponse('user disconnected', client.sub);
-      broadcastMessage(response);
-      clients.delete(client.sub);
+      broadcastMessage(response, currentChannel);
+      channels[currentChannel].delete(client.sub);
     });
   });
 
@@ -60,13 +64,13 @@ export function createWebSocketServer(httpServer) {
 //  Helpers
 // ==========================================================================
 
-export function broadcastMessage(message) {
-  clients.forEach((client) => { client.send(JSON.stringify(message)); });
+export function broadcastMessage(message, channelId) {
+  channels[channelId].forEach((client) => { client.ws.send(JSON.stringify(message)); });
 }
 
-function onMessageReceived(ws, message, clientId) {
+function onMessageReceived(ws, message, clientId, channelId) {
   const response = setUserResponse('message received', message, clientId);
-  broadcastMessage(response);
+  broadcastMessage(response, channelId);
 }
 
 function authenticate(request, next) {
@@ -93,14 +97,8 @@ function setUserResponse(status, message, clientId) {
     };
 }
 
-function getActiveUsers(ids) {
-  const data = [];
-  ids.forEach((id) => {
-    data.push(mongoose.Types.ObjectId(id));
-  });
-  User.find({
-    _id: data,
-  }, (err, docs) => {
-    console.log(docs);
-  });
+function getQueryParam(key, url) {
+  const regexp = new RegExp(`${key}=([^&]*)`);
+  const matches = url.match(regexp);
+  if (matches !== null) return matches[1];
 }
