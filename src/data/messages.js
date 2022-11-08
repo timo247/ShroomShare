@@ -57,6 +57,11 @@ const messages = {
   //  Schema validation
   // ==========================================================================
   ERROR_SCHEMA_EMAIL: (props) => `The value '${props.value}' is not a valid email.`,
+  //  Chat
+  // ==========================================================================
+  CHAT_USER_DISCONNECTION: 'User disconnected.',
+  CHAT_USER_CONNECTION: 'User connected.',
+  CHAT_MESSAGE_RECEPTION: 'Message received.',
   //  Others
   // ==========================================================================
   ERROR_OWNERRIGHT_GRANTATION: { status: 404, msg: 'You can only alter your own ressources.' },
