@@ -1,11 +1,11 @@
-import express from "express";
-import Specy from "../schemas/species.js";
+import express from 'express';
+import Specy from '../schemas/species.js';
 
 const router = express.Router();
 export default router;
 
 // Retrieves all species
-router.get("/", (req, res, next) => {
+router.get('/', (req, res, next) => {
   Specy.find({}).exec((err, species) => {
     if (err) {
       res.send({
@@ -17,7 +17,7 @@ router.get("/", (req, res, next) => {
 });
 
 // Retrieve specific specy
-router.get("/:id", (req, res, next) => {
+router.get('/:id', (req, res, next) => {
   const id = req.params.id;
   Specy.find({ _id: id }).exec((err, specy) => {
     if (err) {
@@ -30,8 +30,8 @@ router.get("/:id", (req, res, next) => {
 });
 
 // Add a new specy
-router.post("/", (req, res, next) => {
-  let specy = new Specy({
+router.post('/', (req, res, next) => {
+  const specy = new Specy({
     name: req.body.name,
     description: req.body.description,
     usage: req.body.usage,
@@ -50,7 +50,7 @@ router.post("/", (req, res, next) => {
 });
 
 // Update a specy
-router.patch("/:id", (req, res, next) => {
+router.patch('/:id', (req, res, next) => {
   Specy.updateOne(
     { _id: req.params.id },
     {
@@ -58,7 +58,7 @@ router.patch("/:id", (req, res, next) => {
       description: req.body.description,
       usage: req.body.usage,
       pictureFile: req.body.pictureFile,
-    }
+    },
   ).exec((err, specy) => {
     if (err) {
       res.send({
@@ -70,7 +70,7 @@ router.patch("/:id", (req, res, next) => {
 });
 
 // Delete a specy
-router.delete("/:id", (req, res, next) => {
+router.delete('/:id', (req, res, next) => {
   Specy.deleteOne({ _id: req.params.id }).exec((err, specy) => {
     if (err) {
       res.send({

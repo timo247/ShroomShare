@@ -22,6 +22,8 @@
     "prefer-destructuring": "off",
     "consistent-return": "off",
     "prefer-arrow-callback": "off",
-    "linebreak-style": "off"
+    "linebreak-style": "off",
+    "no-restricted-syntax": "off",
+    "no-await-in-loop": "off"
   }
 }

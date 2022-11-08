@@ -57,6 +57,7 @@ const messages = {
   //  Schema validation
   // ==========================================================================
   ERROR_SCHEMA_EMAIL: (props) => `The value '${props.value}' is not a valid email.`,
+  ERROR_SCHEMA_USAGE: (props, values) => `Usage should be one of the folowings values '${values}'.`,
   //  Chat
   // ==========================================================================
   CHAT_USER_DISCONNECTION: 'User disconnected.',

@@ -1,25 +1,43 @@
 import mongoose from 'mongoose';
+import msg from '../data/messages.js';
 
 const Schema = mongoose.Schema;
 
+const usages = ['commestible', 'non-commestible'];
+
 const specySchema = new Schema({
-  name: { type: String, required: true },
-  description: { type: String, required: true },
-  usage: { type: String, required: true, 
-    // validate: {
-    //   // Returns true if the name is valid (in lower case)
-    //   validator: function(value) {
-    //     if(value === 'commestible' || value === 'non-commestible') {
-    //       return true
-    //     }
-    //     return false;
-    //   },
-    //   // Custom error message
-    //   message: 'usage can only be commestible or non-commestible'
-    // }
+  name: {
+    type: String,
+    required: true,
   },
-  pictureId: { type: String, required: true },
+  description: {
+    type: String,
+    required: true,
+  },
+  usage: {
+    type: String,
+    required: true,
+    enum: usages,
+    message: (props) => msg.ERROR_SCHEMA_USAGE(props, String(usages).replace(',', ', ')),
+  },
+  pictureId: {
+    type: String,
+    required: true,
+  },
 });
+
+specySchema.set('toJSON', {
+  transform: transformJsonUser,
+});
+
+function transformJsonUser(doc, json, options) {
+  json.id = json['_id']; // eslint-disable-line
+  delete json['_id']; // eslint-disable-line
+  delete json['__v']; // eslint-disable-line
+  return json;
+}
+
 mongoose.model('Specy', specySchema, 'species');
 const Specy = mongoose.model('Specy');
+
 export default Specy;

@@ -1,38 +1,61 @@
-import Specy from '../schemas/species.js';
 import * as fs from 'fs';
-import Image from '../schemas/images.js'
-
+import mongoose from 'mongoose';
+import path from 'path';
+import Specy from '../schemas/species.js';
+import Image from '../schemas/images.js';
+import tobase64 from '../helpers/imgBase64.js';
 
 async function getCsvData() {
-    const data = fs.readFileSync('C:/Users/timot/OneDrive/Documents/HEIG/semestre-5/ArchiOWeb/Projet/shroom-share/src/data/species.json')
-    const buffer = Buffer.from(data)
-    const mush_stringified = buffer.toString()
-    const mush_array = JSON.parse(mush_stringified)
-    return mush_array
+  const filePath = path.resolve('src/data/species.json');
+  const data = fs.readFileSync(filePath);
+  const buffer = Buffer.from(data);
+  const mushStringified = buffer.toString();
+  const mushArray = JSON.parse(mushStringified);
+  return mushArray;
 }
 
 async function seeder() {
-    const species_array = await getCsvData()
-     for (const specy of species_array){
-        await createSpecy(specy);
-    }
+  const imgsPath = path.resolve('src/data/images');
+  const imgs = fs.readdirSync(imgsPath);
+  let i = 0;
+  const speciesArray = await getCsvData();
+  for (const specy of speciesArray) {
+    const newSpecy = await createSpecy(specy);
+    await createImg(`${imgsPath}/${imgs[i]}`, newSpecy.id);
+    i++;
+  }
 }
 
-async function createSpecy(specy_from_file) {
+async function createSpecy(specyFromFile) {
+  const id = new mongoose.Types.ObjectId();
+  const specy = new Specy({
+    _id: id,
+    name: specyFromFile.name,
+    description: specyFromFile.description,
+    usage: specyFromFile.usage,
+    pictureId: id,
+  });
 
-    const specy = new Specy({
-        name: specy_from_file.name,
-        description: specy_from_file.description,
-        usage: specy_from_file.usage,
-        pictureId: 'random',
-    });
+  try {
+    await specy.save();
+    return specy;
+  } catch (err) {
+    console.warn('specy could not be saved', err);
+  }
+}
 
-    try {
-        await specy.save();
-        return specy
-    } catch (err) {
-        console.log("specy could not be saved", err)
-    }
+async function createImg(imgPath, resourceId) {
+  const imgBase64 = tobase64(imgPath);
+  const image = new Image({
+    value: imgBase64,
+    resource_id: resourceId,
+    collectionName: 'species',
+  });
+  try {
+    await image.save();
+  } catch (err) {
+    console.warn('Can\t save image');
+  }
 }
 
 export default seeder;
