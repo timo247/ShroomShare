@@ -1,8 +1,8 @@
 export const RESSOURCES = {
   USER: 'user',
   USERS: 'users',
-  SPECY: 'user',
-  SPECIES: 'users',
+  SPECY: 'specy',
+  SPECIES: 'species',
   MUSHROOM: 'mushroom',
   MUSHROOMS: 'mushrooms',
   PICTURE: 'picture',
@@ -38,15 +38,13 @@ const messages = {
   SUCCESS_RESSOURCE_MODIFICATION: (name) => new Message(name, 'successfully modified.', 200).getMessageWrapper(),
   SUCCESS_RESSOURCE_DELETION: (name) => new Message(name, 'successfully deleted.', 200).getMessageWrapper(),
   ERROR_RESSOURCE_EXISTANCE: (name) => new Message(name, 'not found.', 404).getMessageWrapper(),
+  ERROR_RESSOURCE_UNICITY: (name) => new Message(name, 'is already taken', 401, false).getMessageWrapper(),
   //  Route auth
   // ==========================================================================
   ERROR_AUTH_LOGIN: { status: 401, msg: 'Username and/or password are/is invalid.' },
   ERROR_AUTH_PERMISSION_GRANTATION: { status: 401, msg: 'Permission not granted.' },
   ERROR_AUTH_HEADER_PRESENCE: { status: 401, msg: 'Authorization header is missing.' },
   ERROR_AUTH_BEARERTOKEN_FORMAT: { status: 401, msg: 'Authorization header is not a bearer token.' },
-  //  Route users
-  // ==========================================================================
-  ERROR_USER_UNICITY: (name) => new Message(name, 'is already taken', 401, false).getMessageWrapper(),
   //  JWT tokens
   // ==========================================================================
   ERROR_TOKEN_VALIDATION: { status: 401, msg: 'Your token is invalid or has expired.' },

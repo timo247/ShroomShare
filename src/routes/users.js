@@ -56,7 +56,7 @@ router.post('/', async (req, res, next) => {
     const payload = useAuth.getPayloadFromToken(req);
     req.body.admin = payload?.scope === 'admin';
     const alreadyExistingUser = await User.findOne({ username: req.body.username });
-    if (alreadyExistingUser) return useAuth.send(res, msg.ERROR_USER_UNICITY('username'));
+    if (alreadyExistingUser) return useAuth.send(res, msg.ERROR_RESSOURCE_UNICITY('username'));
     const user = new User(req.body);
     const savedUser = await user.save();
     const tokenWrapper = useAuth.generateJwtToken(req.currentUserId, req.currentUserRole);

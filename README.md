@@ -162,6 +162,11 @@ __Réponse  200__
 
 	🔒 GET api/species 
 
+__Filtres__
+
+- `?page=value`: Numéro de la page 
+- `?pageSize`: Nombre d’éléments par page 
+
 __Réponse 200__
 
 ```json
