@@ -20,35 +20,36 @@ async function seeder() {
   let i = 0;
   const speciesArray = await getCsvData();
   for (const specy of speciesArray) {
-    const newSpecy = await createSpecy(specy);
-    await createImg(`${imgsPath}/${imgs[i]}`, newSpecy.id);
+    const pictureId = new mongoose.Types.ObjectId();
+    const specyId = new mongoose.Types.ObjectId();
+    await createSpecy(specy, specyId, pictureId);
+    await createImg(`${imgsPath}/${imgs[i]}`, specyId, pictureId);
     i++;
   }
 }
 
-async function createSpecy(specyFromFile) {
-  const id = new mongoose.Types.ObjectId();
+async function createSpecy(specyFromFile, specyId, pictureId) {
   const specy = new Specy({
-    _id: id,
+    _id: specyId,
     name: specyFromFile.name,
     description: specyFromFile.description,
     usage: specyFromFile.usage,
-    pictureId: id,
+    pictureId,
   });
-
   try {
     await specy.save();
-    return specy;
   } catch (err) {
     console.warn('specy could not be saved', err);
   }
 }
 
-async function createImg(imgPath, resourceId) {
-  const imgBase64 = tobase64(imgPath);
+async function createImg(imgPath, specyId, pictureId) {
+  const extension = imgPath.splite('.')[1];
+  const imgBase64 = tobase64(imgPath, extension);
   const image = new Image({
+    _id: pictureId,
     value: imgBase64,
-    resource_id: resourceId,
+    resource_id: specyId,
     collectionName: 'species',
   });
   try {

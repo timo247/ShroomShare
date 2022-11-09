@@ -5,6 +5,7 @@ import Paginator from '../helpers/Paginator.js';
 import useAuth from '../helpers/useAuth.js';
 import auth from '../middlewares/authMiddlewares.js';
 import useRouter from '../helpers/useRouter.js';
+import Image from '../schemas/images.js';
 
 // TODO: --------------------------
 // * 'GET /' - add {boolean} queryParam to retrieve picture file
@@ -52,7 +53,12 @@ router.get('/:id', auth.authenticateUser, async (req, res, next) => {
     if (!specy) {
       return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.SPECY));
     }
-    req.body = useAuth.setBody({ specy });
+    const picture = await Image.findOne({ _id: specy.pictureId });
+    if (!picture) {
+      req.body = useAuth.setBody({ specy });
+      return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.PICTURE), req.body);
+    }
+    req.body = useAuth.setBody({ specy, picture });
     useAuth.send(res, msg.SUCCESS_RESSOURCE_RETRIEVAL(R.SPECY), req.body);
   } catch (error) {
     return next(error);
