@@ -58,7 +58,7 @@ __Réponse 200__
 
 ```json
 {
-    "message": "User connected",
+    "message": "User connected.",
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkphbmUgRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.cMErWtEf7DxCXJl8C9q0L7ttkm-Ex54UWHsOCMGbtUc"
 }
 ```
@@ -104,13 +104,20 @@ __Réponse 201__
 
 ```json
 {
-    "message": "Specy created",
+    "message": "Specy succefully created.",
     "specy": {
-        "name": "Amanita phalloides", 
-        "description": "The Amanita phalloides is a ...", 
-        "weight": "0.05", 
-        "usage": "edible", 
-        "picture": "https://..." 
+        "name": "Amanite phalloides",
+        "description": "The Amanita phalloides is a ..." ,
+        "usage": "non-commestible",
+        "pictureId": "636b97a08f7ef3fb6243e92e",
+        "id": "636b97a08f7ef3fb6243e92f",
+        "picture": {
+            "value": "data:image/undefinedbase64, ... ",
+            "resource_id": "636b97a08f7ef3fb6243e92f",
+            "collectionName": "species",
+            "date": "2022-11-09T12:05:51.097Z",
+            "id": "636b97a08f7ef3fb6243e92e"
+        }
     }
 } 
 ```
@@ -135,13 +142,20 @@ __Réponse 200__
 
 ```json
 {
-    "message": "Specy modified",
+    "message": "Specy succefully modified.",
     "specy": {
-        "name": "Amanita phalloides", 
-        "description": "The Amanita phalloides is a ...", 
-        "weight": "0.05", 
-        "usage": "edible", 
-        "picture": "https://..." 
+        "name": "Amanite phalloides",
+        "description": "The Amanita phalloides is a ..." ,
+        "usage": "non-commestible",
+        "pictureId": "636b97a08f7ef3fb6243e92e",
+        "id": "636b97a08f7ef3fb6243e92f",
+        "picture": {
+            "value": "data:image/undefinedbase64, ... ",
+            "resource_id": "636b97a08f7ef3fb6243e92f",
+            "collectionName": "species",
+            "date": "2022-11-09T12:05:51.097Z",
+            "id": "636b97a08f7ef3fb6243e92e"
+        }
     }
 } 
 ```
@@ -154,7 +168,7 @@ __Réponse  200__
 
 ```json
 { 
-    "message": "Specy deleted" 
+    "message": "Specy succefully deleted." 
 } 
 ```
 
@@ -166,19 +180,28 @@ __Filtres__
 
 - `?page=value`: Numéro de la page 
 - `?pageSize`: Nombre d’éléments par page 
+- `?showPictures`: {boolean} renvoie les images
 
 __Réponse 200__
 
 ```json
-{ 
-    "message": "Species succefully retrieved",
-    "species": [ 
-        { 
-            "name": "Amanita phalloides", 
-            "description": "The Amanita phalloides is a ...", 
-            "usage": "edible", 
-            "picture": "https://..." 
-        } 
+{
+    "message": "Species succefully retrieved.",
+    "species": [
+        {
+            "name": "Amanite phalloides",
+            "description": "The Amanita phalloides is a ..." ,
+            "usage": "non-commestible",
+            "pictureId": "636b97a08f7ef3fb6243e92e",
+            "id": "636b97a08f7ef3fb6243e92f",
+            "picture": {
+                "value": "data:image/undefinedbase64, ... ",
+                "resource_id": "636b97a08f7ef3fb6243e92f",
+                "collectionName": "species",
+                "date": "2022-11-09T12:05:51.097Z",
+                "id": "636b97a08f7ef3fb6243e92e"
+            }
+        }
     ] 
 } 
 ```
@@ -190,14 +213,22 @@ __Réponse 200__
 __Réponse 200__
 
 ```json
-{ 
-    "message": "Species succefully retrieved",
-    "specy": { 
-        "name": "Amanita phalloides", 
-        "description": "The Amanita phalloides is a ...", 
-        "usage": "edible", 
-        "picture": "https://..." 
-    } 
+{
+    "message": "Specy succefully retrieved.",
+    "specy": {
+        "name": "Amanite phalloides",
+        "description": "The Amanita phalloides is a ..." ,
+        "usage": "non-commestible",
+        "pictureId": "636b97a08f7ef3fb6243e92e",
+        "id": "636b97a08f7ef3fb6243e92f",
+        "picture": {
+            "value": "data:image/undefinedbase64, ... ",
+            "resource_id": "636b97a08f7ef3fb6243e92f",
+            "collectionName": "species",
+            "date": "2022-11-09T12:05:51.097Z",
+            "id": "636b97a08f7ef3fb6243e92e"
+        }
+    }
 } 
 ```
 
@@ -343,7 +374,7 @@ __Réponse: 200__
 
 ```json
 { 
-    "message": "Users retrieved",
+    "message": "Users succefully retrieved.",
 	"users": [
         { 
             "username": "John2022", 
@@ -361,7 +392,7 @@ __Réponse: 200__
 
 ```json
 { 
-    "message": "User retrieved",
+    "message": "User succefully retrieved.",
     "user": {
         "username": "John2023", 
         "admin": "false", 
@@ -386,7 +417,7 @@ __Réponse 2001__
 
 ```json
 { 
-    "message": "User created",
+    "message": "User succefully created.",
     "user": {
         "username": "John2023", 
         "password": "mySecretPassword", 
@@ -416,7 +447,7 @@ __Réponse: 200__
 
 ```json
 { 
-    "message": "User modified",
+    "message": "User succefully modified.",
     "user": {
         "username": "John2023", 
         "password": "mySecretPassword", 
@@ -434,7 +465,7 @@ __Réponse: 200__
 
 ```json
 {
-    "message": "User deleted"
+    "message": "User succefully deleted."
 }
 ```
 

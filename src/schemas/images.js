@@ -2,6 +2,8 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
+const collectionNames = ['species', 'mushrooms'];
+
 const imageSchema = new Schema({
   value: {
     type: String,
@@ -14,6 +16,7 @@ const imageSchema = new Schema({
   collectionName: {
     type: String,
     required: true,
+    enum: collectionNames,
   },
   date: {
     type: Date,
