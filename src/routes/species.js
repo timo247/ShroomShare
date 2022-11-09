@@ -1,4 +1,5 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import Specy from '../schemas/species.js';
 import msg, { RESSOURCES as R } from '../data/messages.js';
 import Paginator from '../helpers/Paginator.js';
@@ -6,10 +7,10 @@ import useAuth from '../helpers/useAuth.js';
 import auth from '../middlewares/authMiddlewares.js';
 import useRouter from '../helpers/useRouter.js';
 import Image from '../schemas/images.js';
+import config from '../../config.js';
 
 // TODO: --------------------------
 // * 'GET /' - add {boolean} queryParam to retrieve picture file
-// * 'GET /:id' - add retrieve imageFile
 // * 'DELETE /:id' - add deletion of the picture file
 // * 'POST /' - add test picture file format
 // * 'POST /' - add Pictures
@@ -18,11 +19,13 @@ import Image from '../schemas/images.js';
 // TODO: --------------------------
 
 const router = express.Router();
+const errorLogger = config.debug.apiErrors;
 export default router;
 
 // Retrieves all species
 router.get('/', auth.authenticateUser, async (req, res, next) => {
   try {
+    const showPicture = req.query?.showPicture;
     let species = await Specy.find().sort('name');
     const pages = new Paginator({
       numberOfItems: species.length,
@@ -30,6 +33,31 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
       currentPage: req.query?.currentPage,
     });
     species = species.slice(pages.firstIndex, pages.lastIndex);
+    if (showPicture === 'true') {
+      const ids = species.map((specy) => mongoose.Types.ObjectId(specy.pictureId)); //eslint-disable-line
+      const speciesMap = new Map();
+      species.forEach((specy) => {
+        speciesMap.set(specy['id'].toString(), specy);//eslint-disable-line
+      });
+      const pictures = await Image.find({
+        _id: ids,
+      });
+      if (!pictures) {
+        req.body = useAuth.setBody({
+          species,
+          currentPage: pages.currentPage,
+          pageSize: pages.pageSize,
+          lastPage: pages.lastPage,
+        });
+        return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.PICTURE), req.body);
+      }
+      pictures.forEach((picture) => {
+        const specyWithPicture = JSON.parse(JSON.stringify(speciesMap.get(picture.resource_id.toString())));//eslint-disable-line
+        specyWithPicture.picture = picture;
+        speciesMap.set(picture.resource_id.toString(), specyWithPicture);//eslint-disable-line
+      });
+      species = Array.from(speciesMap.values());
+    }
     req.body = useAuth.setBody({
       species,
       currentPage: pages.currentPage,
