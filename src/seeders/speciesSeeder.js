@@ -44,7 +44,7 @@ async function createSpecy(specyFromFile, specyId, pictureId) {
 }
 
 async function createImg(imgPath, specyId, pictureId) {
-  const extension = imgPath.splite('.')[1];
+  const extension = imgPath.split('.')[1];
   const imgBase64 = tobase64(imgPath, extension);
   const image = new Image({
     _id: pictureId,
