@@ -14,7 +14,7 @@ router.post('/', async (req, res, next) => {
     const ids = req.body.ids;
     const filteredIds = ids.filter((id) => mongoose.Types.ObjectId.isValid(id));
     const imgs = await Image.find({ _id: { $in: filteredIds } });
-    res.send(imgs);
+    res.send({ message: 'Images successfully retrieved', images: imgs });
   } catch (err) {
     return next(err);
   }
