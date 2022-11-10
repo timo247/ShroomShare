@@ -94,7 +94,6 @@ __Corps de la reqûete__
 { 
     name: String, 
     description: String, 
-    weight: number, 
     usage: String, 
     picture: File<JPG|PNG>, 
 } 

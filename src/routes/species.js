@@ -32,7 +32,7 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
         speciesMap.set(specy['id'].toString(), specy);//eslint-disable-line
       });
       const pictures = await Image.find({
-        _id: ids,
+        _id: { $in: ids },
       });
       if (!pictures) {
         req.body = useAuth.setBody({
@@ -67,7 +67,7 @@ router.get('/:id', auth.authenticateUser, async (req, res, next) => {
   try {
     const id = req.params.id;
     if (!useRouter.isValidMongooseId(id)) {
-      return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
+      return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.SPECY));
     }
     const specy = await Specy.findOne({ _id: id });
     if (!specy) {
@@ -78,7 +78,9 @@ router.get('/:id', auth.authenticateUser, async (req, res, next) => {
       req.body = useAuth.setBody({ specy });
       return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.PICTURE), req.body);
     }
-    req.body = useAuth.setBody({ specy, picture });
+    const modifiableSpecy = JSON.parse(JSON.stringify(specy));
+    modifiableSpecy.picture = picture;
+    req.body = useAuth.setBody({ specy: modifiableSpecy });
     useAuth.send(res, msg.SUCCESS_RESSOURCE_RETRIEVAL(R.SPECY), req.body);
   } catch (error) {
     return next(error);
@@ -88,23 +90,22 @@ router.get('/:id', auth.authenticateUser, async (req, res, next) => {
 // Add a new specy
 router.post('/', auth.authenticateAdmin, async (req, res, next) => {
   try {
-    useRouter.checkForRequiredParams(req, res, ['name', 'description', 'usage', 'pictureFile']);
-    const payload = useAuth.getPayloadFromToken(req);
-    req.body.admin = payload?.scope === 'admin';
+    useRouter.checkForRequiredParams(req, res, ['name', 'description', 'usage', 'picture']);
     const alreadyExistingName = await Specy.findOne({ name: req.body.name });
     if (alreadyExistingName) return useAuth.send(res, msg.ERROR_RESSOURCE_UNICITY('name'));
-    if (!isBase64(req.params.pictureFile)) return useAuth.send(res, msg.ERROR_IMG_BASE64);
+    // if (!isBase64(req.params.picture)) return useAuth.send(res, msg.ERROR_IMG_BASE64);
     const pictureId = new mongoose.Types.ObjectId();
     const specyId = new mongoose.Types.ObjectId();
     req.body['_id'] = specyId; //eslint-disable-line
     req.body.pictureId = pictureId;
-    const picture = req.body.pictureFile;
-    delete req.body.pictureFile;
+    const picture = req.body.picture;
+    delete req.body.picture;
     const specy = new Specy(req.body);
     const newPicture = new Image({ _id: pictureId, value: picture, resource_id: specyId });
     const savedSpecy = await specy.save();
-    savedSpecy.picture = newPicture;
-    req.body = useAuth.setBody({ specy: savedSpecy });
+    const newSpecy = JSON.parse(JSON.stringify(savedSpecy));
+    newSpecy.picture = newPicture;
+    req.body = useAuth.setBody({ specy: newSpecy });
     useAuth.send(res, msg.SUCCESS_RESSOURCE_CREATION(R.SPECY), req.body);
   } catch (error) {
     return next(error);
@@ -119,14 +120,14 @@ router.patch('/:id', auth.authenticateAdmin, async (req, res, next) => {
     if (!useRouter.isValidMongooseId(id)) {
       return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
     }
-    if (req.params.pictureFile ? !isBase64(req.params.pictureFile) : true === false) {
+    if (req.params.picture ? !isBase64(req.params.picture) : true === false) {
       return useAuth.send(res, msg.ERROR_IMG_BASE64);
     }
     const params = req.body;
-    if (req.params.pictureFile) {
+    if (req.params.picture) {
       const picture = {
         date: Date.now(),
-        value: req.params.pictureFile,
+        value: req.params.picture,
       };
       await Image.findOneAndUpdate({ resource_id: id }, picture);
     }
@@ -146,11 +147,9 @@ router.delete('/:id', auth.authenticateAdmin, async (req, res, next) => {
   try {
     const id = req.params.id;
     if (!useRouter.isValidMongooseId(id)) {
-      return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
+      return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.SPECY));
     }
-    const areIdsIdentical = String(req.currentUserId) === String(id);
-    if (!areIdsIdentical) return useAuth.send(res, msg.ERROR_OWNERRIGHT_GRANTATION);
-    const specyToDelete = await User.findOne({ _id: id });
+    const specyToDelete = await Specy.findOne({ _id: id });
     if (!specyToDelete) return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.SPECY));
     await Specy.deleteOne({ _id: id });
     await Image.deleteOne({ resource_id: id });
