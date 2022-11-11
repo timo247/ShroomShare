@@ -44,4 +44,10 @@ export default class ApiTester {
       .set('Authorization', `Bearer ${token}`);
     return response.body.users[0].id;
   }
+
+  static async getValidSpecyId(token) {
+    const response = await supertest(app).get(`/${config.apiName}/species`)
+      .set('Authorization', `Bearer ${token}`);
+    return response.body.species[0].id;
+  }
 }

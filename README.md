@@ -30,8 +30,8 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
     - [Créer un utilisateur](#créer-un-utilisateur)
     - [Modifier un utilisateur](#modifier-un-utilisateur)
     - [Supprimer un utilisateur](#supprimer-un-utilisateur)
-  - [Images](#images)
-    - [Retrouver des images](#retourver-des-images)
+  - [Images](#images-1)
+    - [Retrouver des images](#retrouver-des-images)
   - [Schémas](#schémas)
 - [Mongosh](#mongosh)
 
@@ -95,13 +95,12 @@ TODO
 **Corps de la reqûete**
 
 ```
-{
-    name: String,
-    description: String,
-    weight: number,
-    usage: String,
-    picture: File<JPG|PNG>,
-}
+{ 
+    name: String, 
+    description: String, 
+    usage: String, 
+    picture: File<JPG|PNG>, 
+} 
 ```
 
 **Réponse 201**
