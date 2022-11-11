@@ -11,6 +11,34 @@ import useRouter from '../helpers/useRouter.js';
 const apiErrorLogger = config.debug.apiErrors;
 const router = express.Router();
 
+/**
+ * @swagger
+ * /users:
+ *    get:
+ *      tags:
+ *        - Users
+ *      summary: Get all users
+ *      parameters:
+ *        - in: query
+ *          name: Numéro de la page
+ *          type: integer
+ *          description: Choississez le numéro de la page à afficher.(pas de page zéro et négative)
+ *        - in: query
+ *          name: Nombre d'éléments par page
+ *          type: integer
+ *          description: Nombre déléments que vous voulez sur la page.
+ *      responses:
+ *        200:
+ *           content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                $ref: '#components/schema/UserSchema'
+ *              examples:
+ *                AllUserExample:
+ *                   $ref: '#/components/examples/AllUserExample'
+ */
+
 // Retrieves all users
 router.get('/', auth.authenticateUser, async (req, res, next) => {
   try {
@@ -30,6 +58,26 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
   }
 });
 
+/**
+ * @swagger
+ * /users/:id:
+ *    get:
+ *      tags:
+ *        - Users
+ *      summary: Get a specif user
+ *      responses:
+ *        200:
+ *           content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                $ref: '#/components/schema/SpecifUserSchema'
+ *              examples:
+ *                AllUserExample:
+ *                   $ref: '#/components/examples/SpecifUserExample'
+ */
+
+
 // Retrieves a specif user
 router.get('/:id', auth.authenticateUser, async (req, res, next) => {
   try {
@@ -47,6 +95,28 @@ router.get('/:id', auth.authenticateUser, async (req, res, next) => {
     return next(error);
   }
 });
+
+/**
+ * @swagger
+ * /users:
+ *    post:
+ *      tags:
+ *        - Users
+ *      summary: Create a new user
+ *      requestBody:
+ *        $ref: '#/components/requestBodies/UserBody'
+ *      responses:
+ *        2001:
+ *          content:
+ *           application/json:
+ *              schema:
+ *               type: object
+ *               $ref: '#/components/schema/CreatedUserSchema'
+ *              examples:
+ *               CreatedUserExample:
+ *                  $ref: '#/components/examples/CreatedUserExample'
+ * 
+ */
 
 // Create a new user
 router.post('/', async (req, res, next) => {
@@ -71,6 +141,28 @@ router.post('/', async (req, res, next) => {
   }
 });
 
+/**
+ * @swagger
+ * /users/:id:
+ *    patch:
+ *      tags:
+ *        - Users
+ *      summary: Update a user
+ *      requestBody:
+ *       $ref: '#/components/requestBodies/UpdateUserBody'
+ *      responses:
+ *        200:
+ *          content:
+ *            application/json:
+ *             schema:
+ *              type: object
+ *              $ref: '#/components/schema/UpdatedUserSchema'
+ *             examples:
+ *              UpdatedUserExample:
+ *                $ref: '#/components/examples/UpdatedUserExample'
+ * 
+ */
+
 // Modify existing user
 router.patch('/:id', auth.authenticateUser, async (req, res, next) => {
   try {
@@ -92,6 +184,27 @@ router.patch('/:id', auth.authenticateUser, async (req, res, next) => {
     return next(error);
   }
 });
+
+/**
+ * @swagger
+ * /users/:id:
+ *    delete:
+ *      tags:
+ *        - Users
+ *      summary: Delete a user
+ *      responses:
+ *        200:
+ *         content:
+ *            application/json:
+ *             schema:
+ *                type: object
+ *                $ref: '#/components/schema/DeletedUserSchema'
+ *             examples:
+ *                DeletedUserExample:
+ *                  $ref: '#/components/examples/DeletedUserExample'
+ * 
+ */
+
 
 // Delete an existing user
 router.delete('/:id', auth.authenticateUser, async (req, res, next) => {
