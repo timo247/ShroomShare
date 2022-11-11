@@ -8,6 +8,7 @@ const config = {
   apiName: process.env.API_NAME || 'api',
   secretKey: process.env.SECRET_KEY,
   bcryptCostFactor: 10,
+  nodeEnv: process.env.NODE_ENV,
   databaseUrl: process.env.DATABASE_URL,
   debug: {
     apiErrors: debug('api:errors'),
@@ -20,6 +21,7 @@ config.debug.apiSucces.color = debug.colors[8];
 
 if (!config.secretKey) throw new Error('env variable $SECRET_KEY should be configured');
 if (!config.databaseUrl) throw new Error('env variable $DATABASE_URL should be configured');
+if (!config.nodeEnv) throw new Error('env variable $NODE_ENV should be configured');
 
 /**
  * Normalize a port into a number, string, or false.

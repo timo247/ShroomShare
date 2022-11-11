@@ -1,8 +1,8 @@
 # ShroomShare
 
-REST API allowing users to localize where they can gather mushrooms.
-The users go into the wild in search for mushrooms. Once they find mushrooms, they picture them and describe them. They then can create a gathering place, which is a physical place containing wild mushrooms.
-The other users of the app can then go to the gathering place and confirm whether or not they found mushrooms. Any user can create a gathering place, which is physically in a radius of 1km of where the picture has been taken.
+REST API allowing users to localize where they gather mushrooms.
+This application allows administrator to create species, which are different type of mushrooms that can be found into the wild.
+Then, the app users may find mushrooms into the wild corresponding to the available species. When they do, they then can picture them, localize them,describe them and send these informations into the app. Then, all the users can know that the particular specy can be found at the location where the user took the picture.
 
 # Table of Contents
 
@@ -30,45 +30,49 @@ The other users of the app can then go to the gathering place and confirm whethe
     - [Créer un utilisateur](#créer-un-utilisateur)
     - [Modifier un utilisateur](#modifier-un-utilisateur)
     - [Supprimer un utilisateur](#supprimer-un-utilisateur)
+  - [Images](#images)
+    - [Retrouver des images](#retourver-des-images)
   - [Schémas](#schémas)
 - [Mongosh](#mongosh)
 
-# Routes 
+# Routes
 
-__Legendes__
+**Legendes**
 
-- `🔐`: route accesible uniquement aux __administrateurs__
-- `🔒`: route accesible uniquement aux __utilisateurs/administrateurs__
+- `🔐`: route accesible uniquement aux **administrateurs**
+- `🔒`: route accesible uniquement aux **utilisateurs/administrateurs**
 
 ## Authentification
+
 ### Récupérer un token
 
-	POST api/auth 
+    POST api/auth
 
-__Corps de la reqûete__
+**Corps de la reqûete**
 
 ```
-{ 
-    username: String, 
-    password: String, 
-} 
+{
+    username: String,
+    password: String,
+}
 ```
 
-__Réponse 200__
+**Réponse 200**
 
 ```json
 {
-    "message": "User connected",
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkphbmUgRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.cMErWtEf7DxCXJl8C9q0L7ttkm-Ex54UWHsOCMGbtUc"
+  "message": "User connected.",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkphbmUgRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.cMErWtEf7DxCXJl8C9q0L7ttkm-Ex54UWHsOCMGbtUc"
 }
 ```
+
 ## Images
 
 ### Récupérer des images
 
-	🔐 POST api/pictures
+    🔐 POST api/pictures
 
-__Corps de la reqûete__
+**Corps de la reqûete**
 
 ```
 {
@@ -76,412 +80,483 @@ __Corps de la reqûete__
 }
 ```
 
-__Réponse 200__
+**Réponse 200**
 
 ```json
 TODO
 ```
 
-## Espèces (de champignons) 
+## Espèces (de champignons)
 
 ### Ajouter une espèce
 
-	🔐 POST api/species 
-    
-__Corps de la reqûete__
+    🔐 POST api/species
+
+**Corps de la reqûete**
 
 ```
-{ 
-    name: String, 
-    description: String, 
-    weight: number, 
-    usage: String, 
-    picture: File<JPG|PNG>, 
-} 
+{
+    name: String,
+    description: String,
+    weight: number,
+    usage: String,
+    picture: File<JPG|PNG>,
+}
 ```
 
-__Réponse 201__
+**Réponse 201**
 
 ```json
 {
-    "message": "Specy created",
-    "specy": {
-        "name": "Amanita phalloides", 
-        "description": "The Amanita phalloides is a ...", 
-        "weight": "0.05", 
-        "usage": "edible", 
-        "picture": "https://..." 
+  "message": "Specy succefully created.",
+  "specy": {
+    "name": "Amanite phalloides",
+    "description": "The Amanita phalloides is a ...",
+    "usage": "non-commestible",
+    "pictureId": "636b97a08f7ef3fb6243e92e",
+    "id": "636b97a08f7ef3fb6243e92f",
+    "picture": {
+      "value": "data:image/undefinedbase64, ... ",
+      "resource_id": "636b97a08f7ef3fb6243e92f",
+      "collectionName": "species",
+      "date": "2022-11-09T12:05:51.097Z",
+      "id": "636b97a08f7ef3fb6243e92e"
     }
-} 
+  }
+}
 ```
 
-### Modifier une espèce 
+### Modifier une espèce
 
-	🔐 PATCH api/species/:id 
-    
-__Corps de la reqûete__
+    🔐 PATCH api/species/:id
+
+**Corps de la reqûete**
 
 ```
-{ 
-    name?: String, 
-    description?: String, 
-    weight?: Number, 
-    usage?: String, 
-    picture?: File<JPG|PNG>, 
-} 
+{
+    name?: String,
+    description?: String,
+    weight?: Number,
+    usage?: String,
+    picture?: File<JPG|PNG>,
+}
 ```
 
-__Réponse 200__
+**Réponse 200**
 
 ```json
 {
-    "message": "Specy modified",
-    "specy": {
-        "name": "Amanita phalloides", 
-        "description": "The Amanita phalloides is a ...", 
-        "weight": "0.05", 
-        "usage": "edible", 
-        "picture": "https://..." 
+  "message": "Specy succefully modified.",
+  "specy": {
+    "name": "Amanite phalloides",
+    "description": "The Amanita phalloides is a ...",
+    "usage": "non-commestible",
+    "pictureId": "636b97a08f7ef3fb6243e92e",
+    "id": "636b97a08f7ef3fb6243e92f",
+    "picture": {
+      "value": "data:image/undefinedbase64, ... ",
+      "resource_id": "636b97a08f7ef3fb6243e92f",
+      "collectionName": "species",
+      "date": "2022-11-09T12:05:51.097Z",
+      "id": "636b97a08f7ef3fb6243e92e"
     }
-} 
+  }
+}
 ```
 
-### Supprimer une espèce 
+### Supprimer une espèce
 
-	🔐 DELETE api/species/:id 
+    🔐 DELETE api/species/:id
 
-__Réponse  200__
+**Réponse 200**
 
 ```json
-{ 
-    "message": "Specy deleted" 
-} 
+{
+  "message": "Specy succefully deleted."
+}
 ```
 
-### Retrouver toutes les espèces 
+### Retrouver toutes les espèces
 
-	🔒 GET api/species 
+    🔒 GET api/species
 
-__Réponse 200__
+**Filtres**
+
+- `?page=value`: Numéro de la page
+- `?pageSize`: Nombre d’éléments par page
+- `?showPictures`: {boolean} renvoie les images
+
+**Réponse 200**
 
 ```json
-{ 
-    "message": "Species succefully retrieved",
-    "species": [ 
-        { 
-            "name": "Amanita phalloides", 
-            "description": "The Amanita phalloides is a ...", 
-            "usage": "edible", 
-            "picture": "https://..." 
-        } 
-    ] 
-} 
-```
-
-### Retrouver une espèce 
-
-	🔒 GET api/species/:id 
-
-__Réponse 200__
-
-```json
-{ 
-    "message": "Species succefully retrieved",
-    "specy": { 
-        "name": "Amanita phalloides", 
-        "description": "The Amanita phalloides is a ...", 
-        "usage": "edible", 
-        "picture": "https://..." 
-    } 
-} 
-```
-
-## Champignons 
-
-### Ajouter un champignon 
-
-	🔒 POST api/mushrooms 
-    
-__Corps de la requête__
-
-```
-{ 
-    specy_id: Number, 
-    user_id: Number, 
-    picture: File<JPG|PNG>, 
-    description?: String, 
-    date: Date, 
-    location: { 
-        lat: String, 
-        long: String, 
-    } 
-} 
-```
-
-__Réponse 200__
-
-```json
-{ 
-    "message": "Mushroom added",
-    "specy": {
-        "sepcy_id": "1", 
-        "user_id": "1", 
-        "picture": "https://...", 
-        "description": "This is a Amanita phalloides...", 
-        "date": "2022.01.01", 
-        "location": { 
-            "lat": "...", 
-            "long": "..." 
-        } 
+{
+  "message": "Species succefully retrieved.",
+  "species": [
+    {
+      "name": "Amanite phalloides",
+      "description": "The Amanita phalloides is a ...",
+      "usage": "non-commestible",
+      "pictureId": "636b97a08f7ef3fb6243e92e",
+      "id": "636b97a08f7ef3fb6243e92f",
+      "picture": {
+        "value": "data:image/undefinedbase64, ... ",
+        "resource_id": "636b97a08f7ef3fb6243e92f",
+        "collectionName": "species",
+        "date": "2022-11-09T12:05:51.097Z",
+        "id": "636b97a08f7ef3fb6243e92e"
+      }
     }
-} 
+  ]
+}
 ```
 
-### Supprimer un champignon 
+### Retrouver une espèce
 
-	🔒 DELETE api/mushrooms/:id 
+    🔒 GET api/species/:id
 
-__Réponse: 200__
+**Réponse 200**
 
 ```json
-{ 
-    "message": "Mushroom deleted",
-} 
-```
-
-### Modifier un champignon 
-
-	🔒 PATCH api/mushrooms/:id 
-    
-__Corps de la requête__
-
-```
-{ 
-    specy_id?: Number, 
-    user_id?: Number, 
-    picture?: File<JPG|PNG>, 
-    description?: String, 
-    date?: Date, 
-    location?: { 
-        lat: Number, 
-        long: Number 
-    } 
-} 
-```
-
-__Réponse: 200__
-
-```json
-{ 
-    "message": "Mushroom updated",
-    "specy": {
-        "sepcy_id": "1", 
-        "picture": "https://...", 
-        "description": "This is a Amanita phalloides...", 
-        "date": "2022.01.01", 
-        "location": { 
-            "lat": "...", 
-            "long": "...", 
-        } 
+{
+  "message": "Specy succefully retrieved.",
+  "specy": {
+    "name": "Amanite phalloides",
+    "description": "The Amanita phalloides is a ...",
+    "usage": "non-commestible",
+    "pictureId": "636b97a08f7ef3fb6243e92e",
+    "id": "636b97a08f7ef3fb6243e92f",
+    "picture": {
+      "value": "data:image/undefinedbase64, ... ",
+      "resource_id": "636b97a08f7ef3fb6243e92f",
+      "collectionName": "species",
+      "date": "2022-11-09T12:05:51.097Z",
+      "id": "636b97a08f7ef3fb6243e92e"
     }
-} 
+  }
+}
 ```
 
-### Retrouver des champignons 
+## Champignons
 
-	🔒 GET api/mushrooms 
+### Ajouter un champignon
 
-__Filtres disponibles__
+    🔒 POST api/mushrooms
 
-- `?location={ lat:Float, long:Float }`: Coordonnées GPS 
-- `?species=String`: Espèce(s) 
-- `?user=Integer`: ID Utilisateur 
-- `&total=Boolean`: Somme des champignons par utilisateur (Si TRUE) 
-- `?usage=String`: Usage 
-- `?from=Date`: Date de début 
-- `?to=Date`: Date de Fin 
-- `?page=value`: Numéro de la page 
-- `?pageSize`: Nombre d’éléments par page 
+**Corps de la requête**
 
-__Réponse: 200__
+```
+{
+    specy_id: Number,
+    user_id: Number,
+    picture: File<JPG|PNG>,
+    description?: String,
+    date: Date,
+    location: {
+        lat: String,
+        long: String,
+    }
+}
+```
+
+**Réponse 200**
 
 ```json
-{ 
-    "message": "Mushrooms retrieved",
-    "species": [
-        { 
-            "sepcy_id": "1", 
-            "picture": "https://...", 
-            "description": "This is a Amanita phalloides...", 
-            "date": "2022.01.01", 
-            "location": { 
-                "lat": "...", 
-                "long": "...", 
+{
+  "message": "Mushroom added",
+  "specy": {
+    "sepcy_id": "1",
+    "user_id": "1",
+    "picture": "https://...",
+    "description": "This is a Amanita phalloides...",
+    "date": "2022.01.01",
+    "location": {
+      "lat": "...",
+      "long": "..."
+    }
+  }
+}
+```
+
+### Supprimer un champignon
+
+    🔒 DELETE api/mushrooms/:id
+
+**Réponse: 200**
+
+```json
+{
+  "message": "Mushroom deleted"
+}
+```
+
+### Modifier un champignon
+
+    🔒 PATCH api/mushrooms/:id
+
+**Corps de la requête**
+
+```
+{
+    specy_id?: Number,
+    user_id?: Number,
+    picture?: File<JPG|PNG>,
+    description?: String,
+    date?: Date,
+    location?: {
+        lat: Number,
+        long: Number
+    }
+}
+```
+
+**Réponse: 200**
+
+```json
+{
+  "message": "Mushroom updated",
+  "specy": {
+    "sepcy_id": "1",
+    "picture": "https://...",
+    "description": "This is a Amanita phalloides...",
+    "date": "2022.01.01",
+    "location": {
+      "lat": "...",
+      "long": "..."
+    }
+  }
+}
+```
+
+### Retrouver des champignons
+
+    🔒 GET api/mushrooms
+
+**Filtres disponibles**
+
+- `?location={ lat:Float, long:Float }`: Coordonnées GPS
+- `?species=String`: Espèce(s)
+- `?user=Integer`: ID Utilisateur
+- `&total=Boolean`: Somme des champignons par utilisateur (Si TRUE)
+- `?usage=String`: Usage
+- `?from=Date`: Date de début
+- `?to=Date`: Date de Fin
+- `?page=value`: Numéro de la page
+- `?pageSize`: Nombre d’éléments par page
+
+**Réponse: 200**
+
+```json
+{
+  "message": "Mushrooms retrieved",
+  "species": [
+    {
+      "sepcy_id": "1",
+      "picture": "https://...",
+      "description": "This is a Amanita phalloides...",
+      "date": "2022.01.01",
+      "location": {
+        "lat": "...",
+        "long": "..."
+      }
+    }
+  ]
+}
+```
+
+## Utilisateurs
+
+### Retrouver tous les utilisateurs
+
+    🔒 GET api/users
+
+**Filtres**
+
+- `?page=value`: Numéro de la page
+- `?pageSize`: Nombre d’éléments par page
+
+**Réponse: 200**
+
+```json
+{
+  "message": "Users succefully retrieved.",
+  "users": [
+    {
+      "username": "John2022",
+      "admin": "false"
+    }
+  ]
+}
+```
+
+### Retrouver un utilisateur
+
+    🔒 GET api/users/:id
+
+**Réponse: 200**
+
+```json
+{
+  "message": "User succefully retrieved.",
+  "user": {
+    "username": "John2023",
+    "admin": "false"
+  }
+}
+```
+
+### Créer un utilisateur
+
+    POST api/users
+
+```
+{
+    username: String,
+    password: String,
+    email: String,
+    admin: Boolean,
+}
+```
+
+**Réponse 201**
+
+```json
+{
+  "message": "User succefully created.",
+  "user": {
+    "username": "John2023",
+    "password": "mySecretPassword",
+    "Email": "john.doe@gmail.com",
+    "admin": "false"
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjY1MzAwNTAsInNjb3BlIjoidXNlciIsImlhdCI6MTY2NjQ0MzY1MH0.PPkUvvPJEJZo8nMsT1IykiHvX7kPjhJwmy4saPsdw0I"
+}
+```
+
+### Modifier un utilisateur
+
+    🔒 PATCH api/users/:id
+
+**Corps de la requête**
+
+```
+{
+    username?: String,
+    password?: String,
+    email?: String,
+    admin?: Boolean,
+}
+```
+
+**Réponse: 200**
+
+```json
+{
+  "message": "User succefully modified.",
+  "user": {
+    "username": "John2023",
+    "password": "mySecretPassword",
+    "Email": "john.doe@gmail.com",
+    "admin": "false"
+  }
+}
+```
+
+### Supprimer un utilisateur
+
+    🔒 DELETE api/users/:id
+
+**Réponse: 200**
+
+```json
+{
+  "message": "User succefully deleted."
+}
+```
+
+## Images
+
+### Retrouver des images
+
+    POST ap/images
+
+**Corps de la requête**
+
+```
+{
+    ids: Array
+}
+
+```
+
+**Réponse: 200**
+
+```json
+{
+    "message": "Images successfully retrieved",
+    "images": {
+        [
+            {
+                "value": "data:image/jpgbase64, /9j/4AAQSkZJRgABAQAAAQABAAD/",
+                "resource_id": "636cca7ec8fff49b7d347e5d",
+                "collectionName": "species",
+                "date": "2022-11-10T09:55:08.571Z",
+                "id": "636cca7ec8fff49b7d347e5c"
             }
-        }
-    ] 
-} 
-```
-
-## Utilisateurs 
-
-### Retrouver tous les utilisateurs 
-
-	🔒 GET api/users 
-    
-__Filtres__
-
-- `?page=value`: Numéro de la page 
-- `?pageSize`: Nombre d’éléments par page 
-
-__Réponse: 200__
-
-```json
-{ 
-    "message": "Users retrieved",
-	"users": [
-        { 
-            "username": "John2022", 
-            "admin": "false", 
-        }
-    ] 
-} 
-```
-
-### Retrouver un utilisateur 
-
-	🔒 GET api/users/:id 
-
-__Réponse: 200__
-
-```json
-{ 
-    "message": "User retrieved",
-    "user": {
-        "username": "John2023", 
-        "admin": "false", 
+        ]
     }
-} 
-```
-
-### Créer un utilisateur 
-
-	POST api/users 
-
-```
-{ 
-    username: String, 
-    password: String, 
-    email: String,  
-    admin: Boolean, 
-} 
-```
-
-__Réponse 2001__
-
-```json
-{ 
-    "message": "User created",
-    "user": {
-        "username": "John2023", 
-        "password": "mySecretPassword", 
-        "Email": "john.doe@gmail.com",  
-        "admin": "false", 
-    },
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjY1MzAwNTAsInNjb3BlIjoidXNlciIsImlhdCI6MTY2NjQ0MzY1MH0.PPkUvvPJEJZo8nMsT1IykiHvX7kPjhJwmy4saPsdw0I"
-} 
-```
-
-### Modifier un utilisateur 
-
-	🔒 PATCH api/users/:id 
-
-__Corps de la requête__
-
-```
-{ 
-    username?: String, 
-    password?: String, 
-    email?: String,  
-    admin?: Boolean, 
-} 
-```
-
-__Réponse: 200__
-
-```json
-{ 
-    "message": "User modified",
-    "user": {
-        "username": "John2023", 
-        "password": "mySecretPassword", 
-        "Email": "john.doe@gmail.com",  
-        "admin": "false", 
-    }
-} 
-```
-
-### Supprimer un utilisateur 
-
-	🔒 DELETE api/users/:id 
-
-__Réponse: 200__ 
-
-```json
-{
-    "message": "User deleted"
 }
 ```
 
 ## Schémas
 
 ```
-Species: { 
-	name: String, 
-	description: String, 
-	weight: Number, 
-	usage: String, 
-	picture: String, 
-} 
+Species: {
+	name: String,
+	description: String,
+	weight: Number,
+	usage: String,
+	picture: String,
+}
 ```
 
 ```
-Mushroom: { 
-	specy_id: Number, 
-	user_id: Number, 
-	picture: String, 
-	description?: String, 
-	date: Date, 
-	location: { 
-		lat: String, 
-		long: String, 
+Mushroom: {
+	specy_id: Number,
+	user_id: Number,
+	picture: String,
+	description?: String,
+	date: Date,
+	location: {
+		lat: String,
+		long: String,
     }
-}	 
+}
 ```
 
 ```
-User: { 
-	username: String, 
-	password: String, 
-	email: String,  
-	admin: Boolean, 
-} 
+User: {
+	username: String,
+	password: String,
+	email: String,
+	admin: Boolean,
+}
 ```
+
 # Mongosh
 
-__Démarer mongodb (MacOS)__
+**Démarer mongodb (MacOS)**
 
 ```bash
 brew services start mongodb-community@6.0
 ```
 
-__Arrêter mongodb (MacOS)__
+**Arrêter mongodb (MacOS)**
 
 ```bash
 brew services stop mongodb-community@6.0
 ```
 
-__Entrer dans mongosh__
+**Entrer dans mongosh**
 
 Les commandes suivantes sont à éxécuter dans `mongosh`, pour que `mongosh` soit accesible il faut que la base de données soit au préalable démarée.
 
@@ -489,25 +564,25 @@ Les commandes suivantes sont à éxécuter dans `mongosh`, pour que `mongosh` so
 mongosh
 ```
 
-__Lister les db existantes__
+**Lister les db existantes**
 
 ```bash
 show dbs
 ```
 
-__Lister les collections existantes__
+**Lister les collections existantes**
 
 ```bash
 show collections
 ```
 
-__Afficher le nom de la db courante__
+**Afficher le nom de la db courante**
 
 ```bash
 db
 ```
 
-__AFficher les index d'un schémas__
+**AFficher les index d'un schémas**
 
 ```bash
 db.<schema>.getIndexes()
@@ -515,7 +590,7 @@ db.<schema>.getIndexes()
 db.users.getIndexes()
 ```
 
-__Supprimer un index sur un schéma__
+**Supprimer un index sur un schéma**
 
 ```bash
 db.<schema>.dropIndex(<indexName>)
@@ -523,12 +598,8 @@ db.<schema>.dropIndex(<indexName>)
 db.users.dropIndex('username')
 ```
 
-__Changer de db__
+**Changer de db**
 
 ```bash
 use <dbName>
 ```
-
-
- 
-

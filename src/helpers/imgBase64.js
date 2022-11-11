@@ -1,14 +1,9 @@
+import fs from 'fs';
+import path from 'path';
 
-export default function tobase64(url, callback){
-    const xhr = new XMLHttpRequest();
-    xhr.onload = function() {
-        const reader = new FileReader();
-        reader.onloadend= function() {
-            callback(reader.result);
-        }
-        reader.readAsDataURL(xhr.response);
-    };
-    xhr.open('GET', url);
-    xhr.responseType = 'blob';
-    xhr.send();
+export default function tobase64(relativepath, extension) {
+  const basePath = path.resolve(relativepath);
+  const imagebase64 = fs.readFileSync(basePath, 'base64');
+  const imagebase64andinfos = `data:image/${extension}base64, ${imagebase64}`;
+  return imagebase64andinfos;
 }

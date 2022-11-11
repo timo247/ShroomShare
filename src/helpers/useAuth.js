@@ -27,8 +27,10 @@ const useAuth = {
     }
   },
   send(res, message, payload) {
-    console.log(message.msg);
-    res.status(message.status).send({ message: message.msg, ...payload });
+    // res.status(message.status).send({ message: message.msg, ...payload });
+    return Array.isArray(message.msg)
+      ? res.status(message.status).send({ messages: message.msg, ...payload })
+      : res.status(message.status).send({ message: message.msg, ...payload });
   },
   setBody(payload) {
     let modifiedBody = {};

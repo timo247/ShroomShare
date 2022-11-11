@@ -1,0 +1,142 @@
+[
+  {
+    "name": "Morille",
+    "description": "Ce sont des champignons printaniers (dès la fonte des neiges), saison assez pauvre pour les mycophages et les amateurs de champignons (mycophiles). Toutes sont d'excellents commestibles, à condition toutefois d'être suffisamment cuites (toxiques à l'état cru).",
+    "weight": "12",
+    "usage": "commestible",
+    "picture": "Morille.jpg"
+  },
+  {
+    "name": "Trompette de la Mort",
+    "description": "Malgré son nom peu engageant, la trompette-de-la-mort, à la spectaculaire couleur noire, est l'un des meilleurs champignons de la fin de l'automne. Simplement sauté, il se glisse dans les préparations de viande, ou agrémente les risottos.",
+    "weight": "10",
+    "usage": "commestible",
+    "picture": "TrompetteDeLaMort.jpg"
+  },
+  {
+    "name": "Amanites des Césares",
+    "description": "La chair est épaisse, ferme et blanche mais de couleur jaune orangé en surface",
+    "weight": "50",
+    "usage": "commestible",
+    "picture": "AmaniteCesares.jpg"
+  },
+  {
+    "name": "Cèpe d'été",
+    "description": "Le cèpe d'été (appelé aussi cèpe réticulé) ressemble fort au cèpe de Bordeaux. Il est rapidement attaqué par les limaces et devient vite verreux. ",
+    "weight": " 150",
+    "usage": "commestible",
+    "picture": "CepeEte.jpg"
+  },
+  {
+    "name": "Amanite phalloïde",
+    "description": "Une partie du voile initial forme un anneau mou, comme une jupe, d'environ 1 à 1,5 cm sous le chapeau. Les lames blanches sont nombreuses et libres.",
+    "weight": "40",
+    "usage": "non-commestible",
+    "picture": "AmanitePhalloide.jpg"
+  },
+  {
+    "name": "Amanite tue-mouches",
+    "description": "L'amanite tue-mouches (Amanita muscaria), très caractéristique, est facile à identifier. Elle est parfois consommée volontairement pour ses effets hallucinogènes. Ce champignon contient de l'acide iboténique, du muscimol et de la muscazone.",
+    "weight": "50",
+    "usage": "non-commestible",
+    "picture": "AmaniteTueMouches.jpg"
+  },
+  {
+    "name": "Bolet de Satan",
+    "description": "Le Bolet satan est le plus gros des Bolets d'Europe, son chapeau généralement de 10 à 25 cm de diamètre peut atteindre voire dépasser 30 cm . Blanc pur au départ, il ressemble alors à une boule de neige, il s'étale ensuite en un large dôme aplati et tourne au grisâtre aux reflets verdâtres.",
+    "weight": "200",
+    "usage": "non-commestible",
+    "picture": "BoletDeSatan.jpg"
+  },
+  {
+    "name": "Bolet pied rouge",
+    "description": "C'est un champignon charnu à la chair jaune vif qui bleuit au moindre contact. Le pied mesure de 3 à 18 cm de haut pour 2 à 5 cm de large, en forme de massue et s'élançant vers le chapeau. Il est de couleur jaune et recouvert de nombreux points rouges.",
+    "weight": "30",
+    "usage": "commestible",
+    "picture": "BoletPiedRouge.jpg"
+  },
+  {
+    "name": "Coprin chevelu",
+    "description": "Le coprin chevelu a un chapeau tout à fait caractéristique couvert de mèches laineuses blanches,  devenant noirâtres sur la bordure, avec une forme en « doigt de gant » ou cloche presque cylindrique. Il peut mesurer entre 5 et 15 cm de hauteur.\"",
+    "weight": "30",
+    "usage": "commestible",
+    "picture": "CoprinChevelu.jpg"
+  },
+  {
+    "name": "Vesse-de-loup",
+    "description": "Lycoperdon perlatum, la Vesse-de-loup perlée, est une espèce de champignons basidiomycètes de la famille des Agaricaceae ou des Lycoperdaceae selon les classifications. C'est un champignon de taille moyenne avec un corps rond, allant en s'amenuisant vers une tige large.",
+    "weight": "200",
+    "usage": "commestible",
+    "picture": "VesseDeLoup.jpg"
+  },
+  {
+    "name": "Pied Bleu",
+    "description": "Le Pied bleu est le nom vernaculaire français du Tricholome nu, une espèce de champignons basidiomycètes, excellent commestible, rattaché à la famille des Tricholomatacées.",
+    "weight": "30",
+    "usage": "commestible",
+    "picture": "PiedBleu.jpg"
+  },
+  {
+    "name": "Lactaire Sanguin",
+    "description": "Elles sont typiquement rose vineux pâle, avec une marge chamois rose pâle. Le stipe est cylindrique et mesure de 2 à 5 cm de haut pour 1 à 3 cm d'épaisseur. Sa surface lisse est beige rosâtre à gris rosâtre, parfois avec quelques fossettes (scrobicules) orange rougeâtre à brun-vineux. La chair varie de ferme à fragile.",
+    "weight": "500",
+    "usage": "commestible",
+    "picture": "LactaireSanguin.jpg"
+  },
+  {
+    "name": "Pleurote",
+    "description": "Sa forme de coquille d'huitre est à l'origine de son nom. Ses lames sont décurrentes, serrées, blanches ou crème, et le pied est très court, aussi excentré. La chair est ferme et élastique à la fois, avec un goût et une odeur à la fois suaves et peu affirmés, ce qui en fait sans doute son attrait.",
+    "weight": "81",
+    "usage": "commestible",
+    "picture": "Pleurote.jpg"
+  },
+  {
+    "name": "Truffe",
+    "description": "Champignon ascomycète mycorhizien en forme de tubercule souterrain apprécié pour son parfum, qu'il communique aux préparations culinaires, et dont la plante hôte est généralement le chêne.",
+    "weight": "60",
+    "usage": "commestible",
+    "picture": "TruffeNoire.jpg"
+  },
+  {
+    "name": "Bolet Jaune",
+    "description": "hapeau 5 à 12 cm , hémisphérique puis convexe, brun-rouge à brun chocolat légèrement violacé, Cuticule. Cuticule très visqueuse, séparable mais fragile, marge dépassante.",
+    "weight": "150",
+    "usage": "commestible",
+    "picture": "BoletJaune.jpg"
+  },
+  {
+    "name": "Cèpe de Bordeaux",
+    "description": "10 à 30 cm de haut. 5 à 30 cm de diamètre, épais, convexe en se développant de couleur variable (bai, brun, marron, ocre, brun-roux). 10 à 25 cm de long, massif, blafard, d'abord bulbeux puis s'allongeant au fur et à mesure du développement du champignon, réticulé de blanc.",
+    "weight": "1000",
+    "usage": "commestible",
+    "picture": "CepeBordeaux.jpg"
+  },
+  {
+    "name": "Bolet Bai",
+    "description": "Le chapeau du bolet bai est assez charnu, de couleur beige foncée à marron, il mesure de 4 à 15 cm et a une forme convexe, qui s'aplatit en vieillissant. Le revêtement est velouté et visqueux par temps humide. Les tubes sont de couleur beige à jaune et bleuissent au toucher.",
+    "weight": "50",
+    "usage": "commestible",
+    "picture": "BoletBai"
+  },
+  {
+    "name": "Chanterelles d'automne",
+    "description": "Elle a une forme de trompette (comme les trompettes de la mort) et porte des plis sous son chapeau. Il en existe plusieurs espèces : Cantharellus tubaeformis qui possède un pied jaune-brun et un chapeau brun plus foncé. La variété « lutescens » a un pied plus coloré jaune-orangé.",
+    "weight": "16",
+    "usage": "commestible",
+    "picture": "ChanterelleAutomne.jpg"
+  },
+  {
+    "name": "Pied de Mouton",
+    "description": "e pied est excentré, 3 à 8 cm de haut sur 1 à 3 cm de large, plutôt robuste, avec une forme irrégulière variable mais généralement trapu, de la même couleur que les aiguillons, roussissant par endroits. La chair est ferme mais cassante, blanche mais virant à l'orange, presque toujours saine.",
+    "weight": "15",
+    "usage": "commestible",
+    "picture": "PiedDeMouton.jpg"
+  },
+  {
+    "name": "Girolle",
+    "description": "Son chapeau (de 2 à 12 cm de diamètre) de couleur jaune citron à orangé est convexe. La girolle a une forme en entonnoir. Au revers, des plis formant des lamelles descendent assez bas sur le pied. Son pied s'amincit vers la base.",
+    "weight": "5,4",
+    "usage": "commestible",
+    "picture": "Girolle.jpg"
+  }
+]

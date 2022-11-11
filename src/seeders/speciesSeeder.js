@@ -1,35 +1,62 @@
+import * as fs from 'fs';
+import mongoose from 'mongoose';
+import path from 'path';
 import Specy from '../schemas/species.js';
+import Image from '../schemas/images.js';
+import tobase64 from '../helpers/imgBase64.js';
 
-
-const numberOfSpecies = 10;
-const startIndex = 1;
-
-async function seeder(i = startIndex) {
-    const specy = await Specy.find({ name: `specy${i}` });
-
-    if (specy.length === 0) await createSpecy(i);
-    if (i < numberOfSpecies) seeder(i + 1);
+async function getCsvData() {
+  const filePath = path.resolve('src/data/species.json');
+  const data = fs.readFileSync(filePath);
+  const buffer = Buffer.from(data);
+  const mushStringified = buffer.toString();
+  const mushArray = JSON.parse(mushStringified);
+  return mushArray;
 }
 
-async function createSpecy(i) {
-    let usage = 'psychadelic'
-    if (i % 2 === 0) {
-        usage = "edible"
-    }
-    const specy = new Specy({
-        name: `specy${i}`,
-        description: `description${i}`,
-        usage: usage,
-        pictureFile: `pictureFile${i}`,
-    });
+async function seeder() {
+  const imgsPath = path.resolve('src/data/images');
+  const imgs = fs.readdirSync(imgsPath);
+  let i = 0;
+  const speciesArray = await getCsvData();
+  for (const specy of speciesArray) {
+    const pictureId = new mongoose.Types.ObjectId();
+    const specyId = new mongoose.Types.ObjectId();
+    await createSpecy(specy, specyId, pictureId);
+    await createImg(`${imgsPath}/${imgs[i]}`, specyId, pictureId);
+    i++;
+  }
+}
 
-    try {
-        await specy.save();
-        return specy
-    } catch {
-        console.log("specy could not be saved")
-    }
+async function createSpecy(specyFromFile, specyId, pictureId) {
+  const specy = new Specy({
+    _id: specyId,
+    name: specyFromFile.name,
+    description: specyFromFile.description,
+    usage: specyFromFile.usage,
+    pictureId,
+  });
+  try {
+    await specy.save();
+  } catch (err) {
+    console.warn('specy could not be saved', err);
+  }
+}
 
+async function createImg(imgPath, specyId, pictureId) {
+  const extension = imgPath.split('.')[1];
+  const imgBase64 = tobase64(imgPath, extension);
+  const image = new Image({
+    _id: pictureId,
+    value: imgBase64,
+    resource_id: specyId,
+    collectionName: 'species',
+  });
+  try {
+    await image.save();
+  } catch (err) {
+    console.warn('Can\t save image');
+  }
 }
 
 export default seeder;

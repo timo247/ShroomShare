@@ -1,18 +1,20 @@
 export const RESSOURCES = {
   USER: 'user',
   USERS: 'users',
-  SPECY: 'user',
-  SPECIES: 'users',
+  SPECY: 'specy',
+  SPECIES: 'species',
   MUSHROOM: 'mushroom',
   MUSHROOMS: 'mushrooms',
   PICTURE: 'picture',
   PICTURES: 'pictures',
+  RESSOURCE: 'ressource',
+  RESSOURCES: 'ressources',
 };
 class Message {
-  constructor(ressourceName, msg, status = 401) {
-    Message.isValidRessource(ressourceName);
+  constructor(ressourceName, msg, status = 401, onlyVerifiedStrings = true) {
+    if (onlyVerifiedStrings) Message.isValidRessource(ressourceName);
     this.status = status;
-    this.msg = `${Message.firstLetterUpperCase(ressourceName)} ${msg}.`;
+    this.msg = `${Message.firstLetterUpperCase(ressourceName)} ${msg}`;
   }
 
   static isValidRessource(string) {
@@ -31,11 +33,12 @@ class Message {
 const messages = {
   //  Ressources manipulation
   // ==========================================================================
-  SUCCESS_RESSOURCE_RETRIEVAL: (name) => new Message(name, 'successfully retrieved', 200).getMessageWrapper(),
-  SUCCESS_RESSOURCE_CREATION: (name) => new Message(name, 'successfully created', 201).getMessageWrapper(),
-  SUCCESS_RESSOURCE_MODIFICATION: (name) => new Message(name, 'successfully modified', 200).getMessageWrapper(),
-  SUCCESS_RESSOURCE_DELETION: (name) => new Message(name, 'successfully deleted', 200).getMessageWrapper(),
-  ERROR_RESSOURCE_EXISTANCE: (name) => new Message(name, 'not found', 404).getMessageWrapper(),
+  SUCCESS_RESSOURCE_RETRIEVAL: (name) => new Message(name, 'successfully retrieved.', 200).getMessageWrapper(),
+  SUCCESS_RESSOURCE_CREATION: (name) => new Message(name, 'successfully created.', 201).getMessageWrapper(),
+  SUCCESS_RESSOURCE_MODIFICATION: (name) => new Message(name, 'successfully modified.', 200).getMessageWrapper(),
+  SUCCESS_RESSOURCE_DELETION: (name) => new Message(name, 'successfully deleted.', 200).getMessageWrapper(),
+  ERROR_RESSOURCE_EXISTANCE: (name) => new Message(name, 'not found.', 404).getMessageWrapper(),
+  ERROR_RESSOURCE_UNICITY: (name) => new Message(name, 'is already taken', 401, false).getMessageWrapper(),
   //  Route auth
   // ==========================================================================
   ERROR_AUTH_LOGIN: { status: 401, msg: 'Username and/or password are/is invalid.' },
@@ -52,12 +55,19 @@ const messages = {
   //  Schema validation
   // ==========================================================================
   ERROR_SCHEMA_EMAIL: (props) => `The value '${props.value}' is not a valid email.`,
+  ERROR_SCHEMA_USAGE: (props, values) => `Usage should be one of the folowings values '${values}'.`,
+  //  Chat
+  // ==========================================================================
+  CHAT_USER_DISCONNECTION: 'User disconnected.',
+  CHAT_USER_CONNECTION: 'User connected.',
+  CHAT_MESSAGE_RECEPTION: 'Message received.',
   //  Others
   // ==========================================================================
   ERROR_OWNERRIGHT_GRANTATION: { status: 404, msg: 'You can only alter your own ressources.' },
   INTERNALERROR: { status: 500, msg: 'Internal server error.' },
   ERROR_FIELD_REQUIRED: (name, status = 401) => ({ status, msg: `The body field '${name}' is required.` }),
   ERROR_PARAM_REQUIRED: (name, status = 401) => ({ status, msg: `The query param '${name}' is required.` }),
+  ERROR_IMG_BASE64: 'Picture is not base64.',
 };
 
 export default messages;

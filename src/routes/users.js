@@ -6,7 +6,9 @@ import useAuth from '../helpers/useAuth.js';
 import config from '../../config.js';
 import msg, { RESSOURCES as R } from '../data/messages.js';
 import Paginator from '../helpers/Paginator.js';
+import useRouter from '../helpers/useRouter.js';
 
+const apiErrorLogger = config.debug.apiErrors;
 const router = express.Router();
 
 /**
@@ -46,7 +48,7 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
       pageSize: req.query?.pageSize,
       currentPage: req.query?.currentPage,
     });
-    users = users.slice(pages.getFirstIndex(), pages.getLastIndex());
+    users = users.slice(pages.firstIndex, pages.lastIndex);
     req.body = useAuth.setBody({
       users, currentPage: pages.currentPage, pageSize: pages.pageSize, lastPage: pages.lastPage,
     });
@@ -80,7 +82,13 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
 router.get('/:id', auth.authenticateUser, async (req, res, next) => {
   try {
     const id = req.params.id;
+    if (!useRouter.isValidMongooseId(id)) {
+      return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
+    }
     const user = await User.findOne({ _id: id });
+    if (!user) {
+      return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
+    }
     req.body = useAuth.setBody({ user });
     useAuth.send(res, msg.SUCCESS_RESSOURCE_RETRIEVAL(R.USER), req.body);
   } catch (error) {
@@ -113,20 +121,21 @@ router.get('/:id', auth.authenticateUser, async (req, res, next) => {
 // Create a new user
 router.post('/', async (req, res, next) => {
   try {
-    checkForRequiredParams(req, res, ['password', 'username', 'email']);
+    useRouter.checkForRequiredParams(req, res, ['password', 'username', 'email']);
     req.body.password = await bcrypt.hash(req.body.password, config.bcryptCostFactor);
     const payload = useAuth.getPayloadFromToken(req);
     req.body.admin = payload?.scope === 'admin';
+    const alreadyExistingUser = await User.findOne({ username: req.body.username });
+    if (alreadyExistingUser) return useAuth.send(res, msg.ERROR_RESSOURCE_UNICITY('username'));
     const user = new User(req.body);
     const savedUser = await user.save();
     const tokenWrapper = useAuth.generateJwtToken(req.currentUserId, req.currentUserRole);
     if (tokenWrapper.token) {
       req.body = useAuth.setBody({ user: savedUser, token: tokenWrapper.token });
-      useAuth.send(res, msg.SUCCESS_RESSOURCE_CREATION(R.USER), req.body);
-    } else {
-      req.body = useAuth.setBody({ user: savedUser, warnings: [msg.ERROR_TOKEN_CREATION] });
-      useAuth.send(res, msg.SUCCESS_RESSOURCE_CREATION(R.USER), req.body);
+      return useAuth.send(res, msg.SUCCESS_RESSOURCE_CREATION(R.USER), req.body);
     }
+    req.body = useAuth.setBody({ user: savedUser, warnings: [msg.ERROR_TOKEN_CREATION] });
+    useAuth.send(res, msg.SUCCESS_RESSOURCE_CREATION(R.USER), req.body);
   } catch (error) {
     return next(error);
   }
@@ -157,13 +166,16 @@ router.post('/', async (req, res, next) => {
 // Modify existing user
 router.patch('/:id', auth.authenticateUser, async (req, res, next) => {
   try {
+    const id = req.params.id;
+    if (!useRouter.isValidMongooseId(id)) {
+      return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
+    }
     if (req.body.password) {
-      req.body.password = await bcrypt.hash(req.body.password, config.costFactor);
+      req.body.password = await bcrypt.hash(req.body.password, config.bcryptCostFactor);
     }
     const params = req.body;
-    const id = req.params.id;
-    const areIdsIdentical = String(req.currentUserId) !== String(id);
-    if (!areIdsIdentical) useAuth.send(res, msg.ERROR_OWNERRIGHT_GRANTATION);
+    const areIdsIdentical = String(req.currentUserId) === String(id);
+    if (!areIdsIdentical) return useAuth.send(res, msg.ERROR_OWNERRIGHT_GRANTATION);
     await User.findByIdAndUpdate(id, params);
     const modifiedUser = await User.findOne({ _id: id });
     req.body = useAuth.setBody({ user: modifiedUser });
@@ -198,8 +210,13 @@ router.patch('/:id', auth.authenticateUser, async (req, res, next) => {
 router.delete('/:id', auth.authenticateUser, async (req, res, next) => {
   try {
     const id = req.params.id;
-    const areIdsIdentical = String(req.currentUserId) !== String(id);
-    if (!areIdsIdentical) useAuth.send(res, msg.ERROR_OWNERRIGHT_GRANTATION);
+    if (!useRouter.isValidMongooseId(id)) {
+      return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
+    }
+    const areIdsIdentical = String(req.currentUserId) === String(id);
+    if (!areIdsIdentical) return useAuth.send(res, msg.ERROR_OWNERRIGHT_GRANTATION);
+    const userToDelete = await User.findOne({ _id: id });
+    if (!userToDelete) return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
     await User.deleteOne({ _id: id });
     req.body = useAuth.setBody();
     useAuth.send(res, msg.SUCCESS_RESSOURCE_DELETION(R.USER), req.body);
@@ -208,21 +225,17 @@ router.delete('/:id', auth.authenticateUser, async (req, res, next) => {
   }
 });
 
-// Delete all users (for testing purpose only)
+// Delete all users (for testing purpose only) available only in dev mode
 router.delete('/', auth.authenticateAdmin, async (req, res, next) => {
-  try {
-    await User.deleteMany({});
-    req.body = useAuth.setBody();
-    useAuth.send(res, msg.SUCCESS_RESSOURCE_DELETION(R.USERS), req.body);
-  } catch (error) {
-    return next(error);
+  if (config.nodeEnv === 'dev') {
+    try {
+      await User.deleteMany({});
+      req.body = useAuth.setBody();
+      useAuth.send(res, msg.SUCCESS_RESSOURCE_DELETION(R.USERS), req.body);
+    } catch (error) {
+      return next(error);
+    }
   }
 });
-
-function checkForRequiredParams(req, res, paramNames) {
-  paramNames.forEach((name) => {
-    if (typeof req.body?.[name] === 'undefined') useAuth.send(res, msg.ERROR_PARAM_REQUIRED(name));
-  });
-}
 
 export default router;

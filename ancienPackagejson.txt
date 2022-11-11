@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "nodemon",
+    "dev": "cross-env DEBUG='api:errors api:succes' nodemon",
     "start": "node ./src/bin/start",
     "seed": "node ./src/seeders/seeders.js",
     "seed-test": "cross-env DATABASE_URL=mongodb://127.0.0.1:27017/test node ./src/seeders/seeders.js",
