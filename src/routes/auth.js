@@ -46,6 +46,7 @@ router.post('/', async (req, res, next) => {
   }
 });
 
+
 router.use((req, res, next) => {
   const userId = req.body.user.id.toString();
   const tokenWrapper = useAuth.generateJwtToken(userId, req.body.user.admin);
