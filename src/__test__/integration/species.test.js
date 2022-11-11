@@ -75,7 +75,7 @@ describe('GET /species', () => {
   defineTest(msg.SUCCESS_RESSOURCE_RETRIEVAL(R.SPECIES), 'with pictures', async (messageWrapper) => {
     const res = await ApiTester.apiCall({
       method: 'get',
-      path: 'species/?showPictures=true',
+      path: 'species/?showPictures=true&pageSize=2',
       messageWrapper,
       token: tester.userToken,
     });
@@ -191,7 +191,7 @@ describe('POST /species', () => {
       method: 'post',
       path: 'species',
       body: {
-        name: 'Bollet',
+        name: 'Bollet de test',
         description: '...',
         usage: 'commestible',
         picture,
@@ -205,14 +205,13 @@ describe('POST /species', () => {
       expect.objectContaining({
         message: expect.stringContaining(messageWrapper.msg),
         specy: expect.objectContaining({
-          description: expect.any(String),
-          id: expect.any(String),
           name: expect.any(String),
-          pictureId: expect.any(String),
+          description: expect.any(String),
           usage: expect.any(String),
+          pictureId: expect.any(String),
+          id: expect.any(String),
           picture: expect.objectContaining({
             resource_id: expect.any(String),
-            collectionName: expect.any(String),
             date: expect.any(String),
             id: expect.any(String),
           }),
@@ -242,23 +241,26 @@ describe('POST /species', () => {
     );
   });
 
-  // defineTest(msg.ERROR_USER_UNICITY('username'), '', async (messageWrapper) => {
-  //   const res = await ApiTester.apiCall({
-  //     method: 'post',
-  //     path: 'users',
-  //     body: {
-  //       username: 'user01',
-  //       password: 'password01',
-  //       email: 'user01@gmail.com',
-  //     },
-  //     messageWrapper,
-  //   });
-  //   expect(res.body).toEqual(
-  //     expect.objectContaining({
-  //       message: expect.stringContaining(messageWrapper.msg),
-  //     }),
-  //   );
-  // });
+  defineTest(msg.ERROR_RESSOURCE_UNICITY('name'), '', async (messageWrapper) => {
+    const picture = createPicture();
+    const res = await ApiTester.apiCall({
+      method: 'post',
+      path: 'species',
+      body: {
+        name: 'Morille',
+        description: '...',
+        usage: 'commestible',
+        picture,
+      },
+      messageWrapper,
+      token: tester.adminToken,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(messageWrapper.msg),
+      }),
+    );
+  });
 });
 
 // // ==========================================================================
