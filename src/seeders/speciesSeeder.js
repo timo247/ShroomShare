@@ -1,10 +1,11 @@
 import * as fs from 'fs';
 import mongoose from 'mongoose';
-import isBase64 from 'is-base64';
+import base64 from '@hexagon/base64';
 import path from 'path';
 import Specy from '../schemas/species.js';
 import Image from '../schemas/images.js';
 import tobase64 from '../helpers/imgBase64.js';
+import isBase64 from '../helpers/useValidateBase64';
 
 async function getCsvData() {
   const filePath = path.resolve('src/data/species.json');
@@ -47,7 +48,7 @@ async function createSpecy(specyFromFile, specyId, pictureId) {
 async function createImg(imgPath, specyId, pictureId) {
   const extension = imgPath.split('.')[1];
   const imgBase64 = tobase64(imgPath, extension);
-  // if (!isBase64(imgBase64, { mimeRequired: true })) throw new Error('picture is not base64');
+  if (!isBase64(imgBase64)) throw new Error('picture is not base64');
   const image = new Image({
     _id: pictureId,
     value: imgBase64,

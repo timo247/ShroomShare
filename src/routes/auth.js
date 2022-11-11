@@ -29,6 +29,7 @@ const router = express.Router();
  *               CredentialResponseExemple:
  *                 $ref: '#components/examples/CredentialOkExample'
  */
+
 router.post('/', async (req, res, next) => {
   if (!req.body?.password ?? undefined) useAuth.send(res, msg.ERROR_FIELD_REQUIRED('password'));
   if (!req.body?.username ?? undefined) useAuth.send(res, msg.ERROR_FIELD_REQUIRED('username'));
@@ -45,7 +46,6 @@ router.post('/', async (req, res, next) => {
     next(error);
   }
 });
-
 
 router.use((req, res, next) => {
   const userId = req.body.user.id.toString();

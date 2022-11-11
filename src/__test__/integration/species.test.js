@@ -262,6 +262,26 @@ describe('POST /species', () => {
       }),
     );
   });
+
+  defineTest(msg.ERROR_IMG_BASE64, '', async (messageWrapper) => {
+    const res = await ApiTester.apiCall({
+      method: 'post',
+      path: 'species',
+      body: {
+        name: 'Bollet de test',
+        description: '...',
+        usage: 'commestible',
+        picture: 'dafkjjafljfaj',
+      },
+      messageWrapper,
+      token: tester.adminToken,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(messageWrapper.msg),
+      }),
+    );
+  });
 });
 
 // ==========================================================================
@@ -312,6 +332,25 @@ describe('PATCH /species/:id', () => {
     const res = await ApiTester.apiCall({
       method: 'patch',
       path: `species/${unvalidSpecyId}`,
+      messageWrapper,
+      token: tester.adminToken,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(messageWrapper.msg),
+      }),
+    );
+  });
+
+  defineTest(msg.ERROR_IMG_BASE64, '', async (messageWrapper) => {
+    const validSpecyId = await ApiTester.getValidSpecyId(tester.adminToken);
+    const res = await ApiTester.apiCall({
+      method: 'patch',
+      path: `species/${validSpecyId}`,
+      body: {
+        name: 'Bollet de test',
+        picture: 'dafkjjafljfaj',
+      },
       messageWrapper,
       token: tester.adminToken,
     });

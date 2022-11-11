@@ -1,6 +1,6 @@
 import express from 'express';
-import isBase64 from 'is-base64';
 import mongoose from 'mongoose';
+import isBase64 from '../helpers/useValidateBase64.js';
 import Specy from '../schemas/species.js';
 import msg, { RESSOURCES as R } from '../data/messages.js';
 import Paginator from '../helpers/Paginator.js';
@@ -12,7 +12,6 @@ import config from '../../config.js';
 
 const router = express.Router();
 const errorLogger = config.debug.apiErrors;
-export default router;
 
 /**
  * @swagger
@@ -44,8 +43,6 @@ export default router;
  *           examples:
  *            CreatedSpecieExample:
  *              $ref: '#/components/examples/RetrievedAllSpecieExample'
- *      
- * 
  */
 
 // Retrieves all species
@@ -113,9 +110,8 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
  *           examples:
  *            CreatedSpecieExample:
  *              $ref: '#/components/examples/RetrievedSpecieExample'
- *      
- * 
  */
+
 // Retrieve specific specy
 router.get('/:id', auth.authenticateUser, async (req, res, next) => {
   try {
@@ -160,16 +156,15 @@ router.get('/:id', auth.authenticateUser, async (req, res, next) => {
  *           examples:
  *            CreatedSpecieExample:
  *              $ref: '#/components/examples/CreatedSpecieExample'
- *      
- * 
  */
+
 // Add a new specy
 router.post('/', auth.authenticateAdmin, async (req, res, next) => {
   try {
     useRouter.checkForRequiredParams(req, res, ['name', 'description', 'usage', 'picture']);
     const alreadyExistingName = await Specy.findOne({ name: req.body.name });
     if (alreadyExistingName) return useAuth.send(res, msg.ERROR_RESSOURCE_UNICITY('name'));
-    // if (!isBase64(req.params.picture)) return useAuth.send(res, msg.ERROR_IMG_BASE64);
+    if (!isBase64(req.body.picture)) return useAuth.send(res, msg.ERROR_IMG_BASE64);
     const pictureId = new mongoose.Types.ObjectId();
     const specyId = new mongoose.Types.ObjectId();
     req.body['_id'] = specyId; //eslint-disable-line
@@ -207,20 +202,18 @@ router.post('/', auth.authenticateAdmin, async (req, res, next) => {
  *           examples:
  *            CreatedSpecieExample:
  *              $ref: '#/components/examples/UpdatedSpecieExample'
- *      
- * 
  */
+
 // Update a specy
 router.patch('/:id', auth.authenticateAdmin, async (req, res, next) => {
   try {
     const id = req.params.id;
-    let body;
     if (!useRouter.isValidMongooseId(id)) {
       return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.SPECY));
     }
-    // if (req.params.picture ? !isBase64(req.params.picture) : true === false) {
-    //   return useAuth.send(res, msg.ERROR_IMG_BASE64);
-    // }
+    if (req.body.picture) {
+      if (!isBase64(req.body.picture)) return useAuth.send(res, msg.ERROR_IMG_BASE64);
+    }
     const params = req.body;
     if (params.picture) {
       const picture = {
@@ -259,8 +252,6 @@ router.patch('/:id', auth.authenticateAdmin, async (req, res, next) => {
  *           examples:
  *            CreatedSpecieExample:
  *              $ref: '#/components/examples/DeletedSpecieExample'
- *      
- * 
  */
 
 // Delete a specy
@@ -280,3 +271,5 @@ router.delete('/:id', auth.authenticateAdmin, async (req, res, next) => {
     return next(err);
   }
 });
+
+export default router;
