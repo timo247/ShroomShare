@@ -14,6 +14,17 @@ const router = express.Router();
 const errorLogger = config.debug.apiErrors;
 export default router;
 
+/**
+ * @swagger
+ * /species:
+ *    get:
+ *      tags:
+ *        - Species
+ *      summary: Create a new specie
+ *      
+ * 
+ */
+
 // Retrieves all species
 router.get('/', auth.authenticateUser, async (req, res, next) => {
   try {
