@@ -20,7 +20,30 @@ export default router;
  *    get:
  *      tags:
  *        - Species
- *      summary: Create a new specie
+ *      summary: Retrieve all species
+ *      parameters:
+ *        - in: query
+ *          name: Numéro de la page
+ *          type: integer
+ *          description: Numéro de la page à afficher.(pas de page zéro et négative)
+ *        - in: query
+ *          name: Nombre d'éléments par page
+ *          type: integer
+ *          description: Nombre d'éléments que vous voulez sur la page.
+ *        - in: query
+ *          name: Montrer les images
+ *          type: boolean
+ *          description: Si vous voulez voir les images ou non.
+ *      responses:
+ *       200:
+ *        content:
+ *          application/json:
+ *           schema:
+ *            type: object
+ *            $ref: '#components/schema/RetrievedAllSpecieSchema'
+ *           examples:
+ *            CreatedSpecieExample:
+ *              $ref: '#/components/examples/RetrievedAllSpecieExample'
  *      
  * 
  */
@@ -73,6 +96,26 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
   }
 });
 
+/**
+ * @swagger
+ * /species/:id:
+ *    get:
+ *      tags:
+ *        - Species
+ *      summary: Retrieve specie
+ *      responses:
+ *       200:
+ *        content:
+ *          application/json:
+ *           schema:
+ *            type: object
+ *            $ref: '#components/schema/RetrievedSpecieSchema'
+ *           examples:
+ *            CreatedSpecieExample:
+ *              $ref: '#/components/examples/RetrievedSpecieExample'
+ *      
+ * 
+ */
 // Retrieve specific specy
 router.get('/:id', auth.authenticateUser, async (req, res, next) => {
   try {
@@ -98,6 +141,28 @@ router.get('/:id', auth.authenticateUser, async (req, res, next) => {
   }
 });
 
+/**
+ * @swagger
+ * /species:
+ *    post:
+ *      tags:
+ *        - Species
+ *      summary: Create a new specie
+ *      requestBody:
+ *       $ref: '#/components/requestBodies/SpecieBody'
+ *      responses:
+ *       201:
+ *        content:
+ *          application/json:
+ *           schema:
+ *            type: object
+ *            $ref: '#components/schema/CreatedSpecieSchema'
+ *           examples:
+ *            CreatedSpecieExample:
+ *              $ref: '#/components/examples/CreatedSpecieExample'
+ *      
+ * 
+ */
 // Add a new specy
 router.post('/', auth.authenticateAdmin, async (req, res, next) => {
   try {
@@ -123,6 +188,28 @@ router.post('/', auth.authenticateAdmin, async (req, res, next) => {
   }
 });
 
+/**
+ * @swagger
+ * /species/:id:
+ *    patch:
+ *      tags:
+ *        - Species
+ *      summary: Update a specie
+ *      requestBody:
+ *       $ref: '#/components/requestBodies/UpdateSpecieBody'
+ *      responses:
+ *       200:
+ *        content:
+ *          application/json:
+ *           schema:
+ *            type: object
+ *            $ref: '#components/schema/UpdatedSpecieSchema'
+ *           examples:
+ *            CreatedSpecieExample:
+ *              $ref: '#/components/examples/UpdatedSpecieExample'
+ *      
+ * 
+ */
 // Update a specy
 router.patch('/:id', auth.authenticateAdmin, async (req, res, next) => {
   try {
@@ -152,6 +239,27 @@ router.patch('/:id', auth.authenticateAdmin, async (req, res, next) => {
     return next(error);
   }
 });
+
+/**
+ * @swagger
+ * /species/:id:
+ *    delete:
+ *      tags:
+ *        - Species
+ *      summary: Delete a specie
+ *      responses:
+ *       200:
+ *        content:
+ *          application/json:
+ *           schema:
+ *            type: object
+ *            $ref: '#components/schema/DeletedSpecieSchema'
+ *           examples:
+ *            CreatedSpecieExample:
+ *              $ref: '#/components/examples/DeletedSpecieExample'
+ *      
+ * 
+ */
 
 // Delete a specy
 router.delete('/:id', auth.authenticateAdmin, async (req, res, next) => {
