@@ -12,6 +12,7 @@ import imagesRouter from './src/routes/images.js';
 import config from './config.js';
 import connect from './src/helpers/useDbConnector.js';
 import msg, { RESSOURCES as R } from './src/data/messages.js';
+import useAuth from './src/helpers/useAuth.js';
 
 const apiErrorsLogger = config.debug.apiErrors;
 
@@ -50,9 +51,7 @@ app.use(`/${config.apiName}/users`, usersRouter);
 app.use(`/${config.apiName}/species`, speciesRouter);
 app.use(`/${config.apiName}/images`, imagesRouter);
 
-app.use((req, res, next) => {
-  next(createError(404));
-});
+app.use((req, res, next) => useAuth.send(res, msg.ERROR_ROUTE_EXISTENCE));
 
 app.use((err, req, res, next) => {
   // set locals, only providing error in development

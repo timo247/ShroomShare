@@ -68,6 +68,7 @@ const messages = {
   ERROR_FIELD_REQUIRED: (name, status = 401) => ({ status, msg: `The body field '${name}' is required.` }),
   ERROR_PARAM_REQUIRED: (name, status = 401) => ({ status, msg: `The query param '${name}' is required.` }),
   ERROR_IMG_BASE64: { status: 401, msg: 'Picture is not base64.' },
+  ERROR_ROUTE_EXISTENCE: { status: 404, msg: 'This route doesn\'t exist' },
 };
 
 export default messages;

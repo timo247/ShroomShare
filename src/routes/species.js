@@ -118,24 +118,26 @@ router.patch('/:id', auth.authenticateAdmin, async (req, res, next) => {
     const id = req.params.id;
     let body;
     if (!useRouter.isValidMongooseId(id)) {
-      return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
+      return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.SPECY));
     }
-    if (req.params.picture ? !isBase64(req.params.picture) : true === false) {
-      return useAuth.send(res, msg.ERROR_IMG_BASE64);
-    }
+    // if (req.params.picture ? !isBase64(req.params.picture) : true === false) {
+    //   return useAuth.send(res, msg.ERROR_IMG_BASE64);
+    // }
     const params = req.body;
-    if (req.params.picture) {
+    if (params.picture) {
       const picture = {
         date: Date.now(),
         value: req.params.picture,
       };
+      delete params.picture;
       await Image.findOneAndUpdate({ resource_id: id }, picture);
     }
     await Specy.findByIdAndUpdate(id, params);
-    const modifiedSpecy = await User.findOne({ _id: id });
+    const modifiedSpecy = await Specy.findOne({ _id: id });
     const modifiedPicture = await Image.findOne({ resource_id: id });
-    modifiedSpecy.picture = modifiedPicture;
-    req.body = useAuth.setBody({ specy: modifiedSpecy });
+    const newSpecy = JSON.parse(JSON.stringify(modifiedSpecy));
+    newSpecy.picture = modifiedPicture;
+    req.body = useAuth.setBody({ specy: newSpecy });
     useAuth.send(res, msg.SUCCESS_RESSOURCE_MODIFICATION(R.SPECY), req.body);
   } catch (error) {
     return next(error);

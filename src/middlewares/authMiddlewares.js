@@ -15,7 +15,7 @@ const authMiddlewares = {
     const payload = await authenticate(req, res);
     req.currentUserId = payload.sub;
     req.currentUserRole = payload.scope;
-    next();
+    return next();
   },
   async authenticateAdmin(req, res, next) {
     const payload = await authenticate(req, res);
@@ -28,7 +28,6 @@ const authMiddlewares = {
 
 async function authenticate(req, res) {
   const authorization = req.get('Authorization');
-  errorLogger(authorization);
   if (!authorization) useAuth.send(res, msg.ERROR_AUTH_HEADER_PRESENCE);
   const match = authorization.match(/^Bearer (.+)$/);
   if (!match) useAuth.send(res, msg.ERROR_AUTH_BEARERTOKEN_FORMAT);
