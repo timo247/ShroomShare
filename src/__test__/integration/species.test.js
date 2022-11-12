@@ -18,19 +18,6 @@ const prepare = async () => {
   await tester.setTokens();
 };
 
-function shuffleString(string) {
-  const a = string.split('');
-  const n = a.length;
-
-  for (let i = n - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    const tmp = a[i];
-    a[i] = a[j];
-    a[j] = tmp;
-  }
-  return a.join('');
-}
-
 function createPicture() {
   const imgsPath = path.resolve('src/data/images');
   const imgs = fs.readdirSync(imgsPath);
@@ -162,7 +149,7 @@ describe('GET /species/:id', () => {
 
   defineTest(msg.ERROR_RESSOURCE_EXISTANCE(R.SPECY), 'id is not attributed to a specy', async (messageWrapper) => {
     const validSpecyId = await ApiTester.getValidSpecyId(tester.userToken);
-    const unvalidSpecyId = shuffleString(validSpecyId);
+    const unvalidSpecyId = ApiTester.shuffleString(validSpecyId);
 
     const res = await ApiTester.apiCall({
       method: 'get',

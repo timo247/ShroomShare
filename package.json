@@ -13,7 +13,8 @@
     "test-auth": "cross-env DATABASE_URL=mongodb://127.0.0.1:27017/test node --experimental-vm-modules node_modules/.bin/jest auth.test.js",
     "test-users": "cross-env DATABASE_URL=mongodb://127.0.0.1:27017/test node --experimental-vm-modules node_modules/.bin/jest users.test.js",
     "test-species": "cross-env DATABASE_URL=mongodb://127.0.0.1:27017/test node --experimental-vm-modules node_modules/.bin/jest species.test.js",
-    "test-mush": "cross-env DATABASE_URL=mongodb://127.0.0.1:27017/test node --experimental-vm-modules node_modules/.bin/jest mushrooms.test.js",
+    "test-mushrooms": "cross-env DATABASE_URL=mongodb://127.0.0.1:27017/test node --experimental-vm-modules node_modules/.bin/jest mushrooms.test.js",
+    "test-pictures": "cross-env DATABASE_URL=mongodb://127.0.0.1:27017/test node --experimental-vm-modules node_modules/.bin/jest pictures.test.js",
     "doc": "npx swagger-jsdoc-generator swagger.json > collection.json"
   },
   "dependencies": {
