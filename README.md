@@ -460,7 +460,7 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
 
 ```
 {
-    ids: Array
+    ids: String[]
 }
 
 ```
@@ -469,8 +469,8 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
 
 ```json
 {
-  "message": "Images successfully retrieved",
-  "images": [
+  "message": "Pictures successfully retrieved.",
+  "pictures": [
      {
         "value": "data:image/jpgbase64, /9j/4AAQSkZJRgABAQAAAQABAAD/",
         "resource_id": "636cca7ec8fff49b7d347e5d",
