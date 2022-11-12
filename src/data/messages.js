@@ -38,7 +38,7 @@ const messages = {
   SUCCESS_RESSOURCE_MODIFICATION: (name) => new Message(name, 'successfully modified.', 200).getMessageWrapper(),
   SUCCESS_RESSOURCE_DELETION: (name) => new Message(name, 'successfully deleted.', 200).getMessageWrapper(),
   ERROR_RESSOURCE_EXISTANCE: (name) => new Message(name, 'not found.', 404).getMessageWrapper(),
-  ERROR_RESSOURCE_UNICITY: (name) => new Message(name, 'is already taken', 401, false).getMessageWrapper(),
+  ERROR_RESSOURCE_UNICITY: (name) => new Message(name, 'is already taken.', 401, false).getMessageWrapper(),
   //  Route auth
   // ==========================================================================
   ERROR_AUTH_LOGIN: { status: 401, msg: 'Username and/or password are/is invalid.' },
@@ -61,6 +61,10 @@ const messages = {
   CHAT_USER_DISCONNECTION: 'User disconnected.',
   CHAT_USER_CONNECTION: 'User connected.',
   CHAT_MESSAGE_RECEPTION: 'Message received.',
+  //  Pictures
+  // ==========================================================================
+  ERROR_PICTURE_ID: (id) => `Picture id is unvalid: ${String(id)}.`,
+  ERROR_PICTURE_EXISTENCE: (id) => `Picture not found: ${String(id)}.`,
   //  Others
   // ==========================================================================
   ERROR_OWNERRIGHT_GRANTATION: { status: 404, msg: 'You can only alter your own ressources.' },
