@@ -2,7 +2,6 @@ import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsodc from 'swagger-jsdoc';
 import mongoose from 'mongoose';
-import createError from 'http-errors';
 import logger from 'morgan';
 import indexRouter from './src/routes/index.js';
 import usersRouter from './src/routes/users.js';

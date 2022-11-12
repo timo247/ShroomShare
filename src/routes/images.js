@@ -6,7 +6,6 @@ import msg from '../data/messages.js';
 
 const router = express.Router();
 const errorLogger = config.debug.apiErrors;
-export default router;
 
 // Retrieves all species
 router.post('/', async (req, res, next) => {
@@ -19,3 +18,5 @@ router.post('/', async (req, res, next) => {
     return next(err);
   }
 });
+
+export default router;

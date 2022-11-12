@@ -12,25 +12,28 @@ const roles = {
 
 const authMiddlewares = {
   async authenticateUser(req, res, next) {
-    const payload = await authenticate(req, res);
+    const payload = await authenticate(req);
+    if (payload.error) return useAuth.send(res, payload.error);
     req.currentUserId = payload.sub;
     req.currentUserRole = payload.scope;
     return next();
   },
   async authenticateAdmin(req, res, next) {
-    const payload = await authenticate(req, res);
+    const payload = await authenticate(req);
+    if (payload.error) return useAuth.send(res, payload.error);
     req.currentUserId = payload.sub;
     req.currentUserRole = payload.scope;
     if (payload.scope === roles.admin) return next();
-    useAuth.send(res, msg.ERROR_AUTH_PERMISSION_GRANTATION);
+    return useAuth.send(res, msg.ERROR_AUTH_PERMISSION_GRANTATION);
   },
 };
 
-async function authenticate(req, res) {
+async function authenticate(req) {
   const authorization = req.get('Authorization');
-  if (!authorization) useAuth.send(res, msg.ERROR_AUTH_HEADER_PRESENCE);
+  errorLogger(authorization);
+  if (!authorization) return { error: msg.ERROR_AUTH_HEADER_PRESENCE };
   const match = authorization.match(/^Bearer (.+)$/);
-  if (!match) useAuth.send(res, msg.ERROR_AUTH_BEARERTOKEN_FORMAT);
+  if (!match) return { error: msg.ERROR_AUTH_BEARERTOKEN_FORMAT };
   const token = match[1];
   try {
     const payload = jwt.verify(token, config.secretKey);
@@ -38,7 +41,8 @@ async function authenticate(req, res) {
     req.currentUserRole = payload.scope;
     return payload;
   } catch (error) {
-    useAuth.send(res, msg.ERROR_TOKEN_VALIDATION);
+    return { error: msg.ERROR_TOKEN_VALIDATION };
   }
 }
+
 export default authMiddlewares;

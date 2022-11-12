@@ -42,7 +42,8 @@ export default class ApiTester {
   static async getValidUserId(token) {
     const response = await supertest(app).get(`/${config.apiName}/users`)
       .set('Authorization', `Bearer ${token}`);
-    return response.body.users[0].id;
+    const id = response.body.users.find((el) => el.username === 'user01').id;
+    return id;
   }
 
   static async getValidSpecyId(token) {

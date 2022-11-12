@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import cleanUpDb from '../../helpers/useCleanUpDb.js';
 import usersSeeder from '../../seeders/usersSeeder.js';
 import msg, { RESSOURCES as R } from '../../data/messages.js';
-import ApiTester from '../../helpers/ApiTester';
+import ApiTester from '../../helpers/ApiTester.js';
 import defineTest from '../../helpers/useDefineTest.js';
 
 let tester;
@@ -197,7 +197,7 @@ describe('POST /users', () => {
     );
   });
 
-  defineTest(msg.ERROR_USER_UNICITY('username'), '', async (messageWrapper) => {
+  defineTest(msg.ERROR_RESSOURCE_UNICITY('username'), '', async (messageWrapper) => {
     const res = await ApiTester.apiCall({
       method: 'post',
       path: 'users',

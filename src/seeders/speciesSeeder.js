@@ -1,10 +1,9 @@
 import * as fs from 'fs';
 import mongoose from 'mongoose';
-import base64 from '@hexagon/base64';
 import path from 'path';
 import Specy from '../schemas/species.js';
 import Image from '../schemas/images.js';
-import tobase64 from '../helpers/imgBase64.js';
+import tobase64 from '../helpers/useToBase64.js';
 import isBase64 from '../helpers/useValidateBase64';
 
 async function getCsvData() {

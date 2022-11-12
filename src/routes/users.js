@@ -77,7 +77,6 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
  *                   $ref: '#/components/examples/SpecifUserExample'
  */
 
-
 // Retrieves a specif user
 router.get('/:id', auth.authenticateUser, async (req, res, next) => {
   try {
@@ -115,7 +114,6 @@ router.get('/:id', auth.authenticateUser, async (req, res, next) => {
  *              examples:
  *               CreatedUserExample:
  *                  $ref: '#/components/examples/CreatedUserExample'
- * 
  */
 
 // Create a new user
@@ -160,7 +158,6 @@ router.post('/', async (req, res, next) => {
  *             examples:
  *              UpdatedUserExample:
  *                $ref: '#/components/examples/UpdatedUserExample'
- * 
  */
 
 // Modify existing user
@@ -202,9 +199,7 @@ router.patch('/:id', auth.authenticateUser, async (req, res, next) => {
  *             examples:
  *                DeletedUserExample:
  *                  $ref: '#/components/examples/DeletedUserExample'
- * 
  */
-
 
 // Delete an existing user
 router.delete('/:id', auth.authenticateUser, async (req, res, next) => {

@@ -5,10 +5,9 @@ import cleanUpDb from '../../helpers/useCleanUpDb.js';
 import usersSeeder from '../../seeders/usersSeeder.js';
 import speciesSeeder from '../../seeders/speciesSeeder.js';
 import msg, { RESSOURCES as R } from '../../data/messages.js';
-import ApiTester from '../../helpers/ApiTester';
+import ApiTester from '../../helpers/ApiTester.js';
 import defineTest from '../../helpers/useDefineTest.js';
-import tobase64 from '../../helpers/imgBase64';
-import Specy from '../../schemas/species';
+import tobase64 from '../../helpers/useToBase64.js';
 
 let tester;
 const prepare = async () => {

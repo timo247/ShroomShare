@@ -3,7 +3,7 @@
 import http from 'http';
 import app from '../../app.js';
 import config from '../../config.js';
-import createWebSocketServer from '../../chat.js';
+import createWebSocketServer from '../chat.js';
 
 const debug = config.debug.apiSucces;
 /**
