@@ -29,7 +29,7 @@ const mushroomSchema = new Schema({
 });
 
 // Create a geospatial index on the location property.
-mushroomSchema.index({ location: '2dsphere' });
+mushroomSchema.index({ 'geolocalisation.location': '2dsphere' });
 
 function validateGeoJsonCoordinates(value) {
   return Array.isArray(value) && value.length >= 2 && value.length <= 3 && isLongitude(value[0]) && isLatitude(value[1]);

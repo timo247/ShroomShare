@@ -73,6 +73,8 @@ const messages = {
   ERROR_DURATION_VALIDATION: 'duration is too big',
   ERROR_LONGITUDE_VALIDATION: 'not a valid longitude',
   ERROR_LATITUDE_VALIDATION: 'not a valid latitude',
+  ERROR_INVALID_USER_ID: 'the id does not match any user',
+  ERROR_MUSHROOM_DUPLICATE: 'this mushroom already exist',
 };
 
 export default messages;

@@ -50,7 +50,10 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
     });
     users = users.slice(pages.firstIndex, pages.lastIndex);
     req.body = useAuth.setBody({
-      users, currentPage: pages.currentPage, pageSize: pages.pageSize, lastPage: pages.lastPage,
+      users,
+      currentPage: pages.currentPage,
+      pageSize: pages.pageSize,
+      lastPage: pages.lastPage,
     });
     useAuth.send(res, msg.SUCCESS_RESSOURCE_RETRIEVAL(R.USERS), req.body);
   } catch (error) {
