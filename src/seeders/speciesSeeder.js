@@ -4,7 +4,7 @@ import path from 'path';
 import Specy from '../schemas/species.js';
 import Image from '../schemas/images.js';
 import tobase64 from '../helpers/useToBase64.js';
-import isBase64 from '../helpers/useValidateBase64';
+import isBase64 from '../helpers/useValidateBase64.js';
 
 async function getCsvData() {
   const filePath = path.resolve('src/data/species.json');
