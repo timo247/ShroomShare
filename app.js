@@ -45,7 +45,7 @@ app.use(express.json({ limit: '10MB' }));
 app.use(express.urlencoded({ extended: false }));
 
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(specs));
-app.use(`/${config.apiName}`, indexRouter);
+app.use('/api', indexRouter);
 app.use(`/${config.apiName}/auth`, authRouter);
 app.use(`/${config.apiName}/users`, usersRouter);
 app.use(`/${config.apiName}/species`, speciesRouter);
