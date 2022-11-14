@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 export const RESSOURCES = {
   USER: 'user',
   USERS: 'users',
