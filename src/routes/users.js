@@ -20,11 +20,11 @@ const router = express.Router();
  *      summary: Get all users
  *      parameters:
  *        - in: query
- *          name: Numéro de la page
+ *          name: page
  *          type: integer
  *          description: Choississez le numéro de la page à afficher.(pas de page zéro et négative)
  *        - in: query
- *          name: Nombre d'éléments par page
+ *          name: PageSize
  *          type: integer
  *          description: Nombre déléments que vous voulez sur la page.
  *      responses:
@@ -105,7 +105,7 @@ router.get('/:id', auth.authenticateUser, async (req, res, next) => {
  *      requestBody:
  *        $ref: '#/components/requestBodies/UserBody'
  *      responses:
- *        2001:
+ *        201:
  *          content:
  *           application/json:
  *              schema:
@@ -234,3 +234,126 @@ router.delete('/', auth.authenticateAdmin, async (req, res, next) => {
 });
 
 export default router;
+
+
+/**
+ * @swagger
+ * /mushrooms:
+ *    post:
+ *      tags:
+ *        - Mushrooms
+ *      summary: Add a new mushroom
+ *      requestBody:
+ *       $ref: '#/components/requestBodies/CreateMushroomBody'
+ *      responses:
+ *       201:
+ *        content:
+ *          application/json:
+ *           schema:
+ *            type: object
+ *            $ref: '#/components/schema/CreatedMushroomSchema'
+ *           examples:
+ *            CreatedMushroomExample:
+ *             $ref: '#/components/examples/CreatedMushroomExample'
+ */
+
+/**
+ * @swagger
+ * /mushrooms/:id:
+ *    delete:
+ *      tags:
+ *        - Mushrooms
+ *      summary: Delete a mushroom
+ *      responses:
+ *       200:
+ *        content:
+ *          application/json:
+ *           schema:
+ *            type: object
+ *            $ref: '#/components/schema/DeletedMushroomSchema'
+ *           examples:
+ *            CreatedMushroomExample:
+ *             $ref: '#/components/examples/DeletedMushroomExample'
+ */
+
+/**
+ * @swagger
+ * /mushrooms/:id:
+ *    patch:
+ *      tags:
+ *        - Mushrooms
+ *      summary:  Update a mushroom
+ *      requestBody:
+ *       $ref: '#/components/requestBodies/UpdateMushroomBody'
+ *      responses:
+ *       200:
+ *        content:
+ *          application/json:
+ *           schema:
+ *            type: object
+ *            $ref: '#/components/schema/UpdatedMushroomSchema'
+ *           examples:
+ *            CreatedMushroomExample:
+ *             $ref: '#/components/examples/UpdatedMushroomExample'
+ */
+
+
+/**
+ * @swagger
+ * /mushrooms:
+ *    get:
+ *      tags:
+ *        - Mushrooms
+ *      summary: Retrieved all mushrooms
+ *      parameters:
+ *        - in: query
+ *          name: location
+ *          type: integer
+ *          description: Coordonnées GPS (nombres)
+ *        - in: query
+ *          name: speciesId
+ *          type: String
+ *          description: Choississez l'espèce de champignon
+ *        - in: query
+ *          name: userId
+ *          type: integer
+ *          description: Choississez l'ID de l'utilisateur
+ *        - in: query
+ *          name: showPictures
+ *          type: boolean
+ *          description: Affichez les images ou non
+ *        - in: query
+ *          name: total
+ *          type: boolean
+ *          description: Sommez des champignons par utilisateur
+ *        - in: query
+ *          name: usage
+ *          type: String
+ *          description: Comestible ou non-comestible
+ *        - in: query
+ *          name: from
+ *          type: date
+ *          description: Choississez la date de début
+ *        - in: query
+ *          name: to
+ *          type: date
+ *          description: Choississez la date de fin
+ *        - in: query
+ *          name: page
+ *          type: integer
+ *          description: Choississez le numéro de la page à afficher.(pas de page zéro et négative)
+ *        - in: query
+ *          name: pageSize
+ *          type: integer
+ *          description: Nombre déléments que vous voulez sur la page.
+ *      responses:
+ *        200:
+ *           content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                $ref: '#components/schema/RetrievedMushroomSchema'
+ *              examples:
+ *                AllUserExample:
+ *                   $ref: '#/components/examples/RetrievedMushroomExample'
+ */

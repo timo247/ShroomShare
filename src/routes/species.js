@@ -22,15 +22,15 @@ const errorLogger = config.debug.apiErrors;
  *      summary: Retrieve all species
  *      parameters:
  *        - in: query
- *          name: Numéro de la page
+ *          name: page
  *          type: integer
  *          description: Numéro de la page à afficher.(pas de page zéro et négative)
  *        - in: query
- *          name: Nombre d'éléments par page
+ *          name: pageSize
  *          type: integer
  *          description: Nombre d'éléments que vous voulez sur la page.
  *        - in: query
- *          name: Montrer les images
+ *          name: showPictures
  *          type: boolean
  *          description: Si vous voulez voir les images ou non.
  *      responses:

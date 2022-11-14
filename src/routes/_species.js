@@ -45,6 +45,7 @@
  *                      type: string
  *                     description:
  *                      type: string
+ *                     usage:
  *                      enum: 
  *                           - commestible
  *                           - non-commestible
@@ -101,12 +102,12 @@
  *              usage: commestible
  *              pictureId: 5f9fcvdfvfbbbnsf9f9vsvvfs9f9f9f9f9f
  *              id: 5f9f9f9f9f9f9f9f9f9f9f9f
- *           picture:
- *             value: data:image/undefinedbase64,...
- *             resource_id: 5f9f9fvavrnztjsaabstwgb356736gv3ff9f9f9f9f9f9f
- *             collectionName: species
- *             date: 2020-10-29T15:00:00.000Z
- *             id: 5f9f9jv43jt6354zbqhf9f9f9f
+ *              picture:
+ *                  value: data:image/undefinedbase64,...
+ *                  resource_id: 5f9f9fvavrnztjsaabstwgb356736gv3ff9f9f9f9f9f9f
+ *                  collectionName: species
+ *                  date: 2020-10-29T15:00:00.000Z
+ *                  id: 5f9f9jv43jt6354zbqhf9f9f9f
  */
 // =================================================
 // Request Body
@@ -157,6 +158,7 @@
  *                      type: string
  *                     description:
  *                      type: string
+ *                     usage:
  *                      enum: 
  *                           - commestible
  *                           - non-commestible
@@ -256,6 +258,7 @@
  *                      type: string
  *                     description:
  *                      type: string
+ *                     usage:
  *                      enum: 
  *                           - commestible
  *                           - non-commestible
@@ -404,9 +407,10 @@
 *                      type: string
 *                    description:
 *                      type: string
-*                    enum: 
-*                      - commestible
-*                      - non-commestible
+*                    usage:
+*                      enum: 
+*                       - commestible
+*                       - non-commestible
 *                    pictureId:
 *                      type: string
 *                    id:
