@@ -62,7 +62,7 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500);
   const filtredMessage = errorFilter(res, err);
   if (filtredMessage) return res.send({ message: filtredMessage });
-  if (env === 'dev') return res.send({ message: err.message });
+  if (env === 'dev') return res.send({ message: err });
   res.send({ message: msg.INTERNALERROR.msg });
 });
 

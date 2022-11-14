@@ -48,7 +48,9 @@ router.post('/', async (req, res, next) => {
 });
 
 router.use((req, res, next) => {
+  if (!req.body.user) useAuth.send(res, msg.ERROR_METHOD_EXISTENCE);
   const userId = req.body.user.id.toString();
+  console.log({ userId });
   const tokenWrapper = useAuth.generateJwtToken(userId, req.body.user.admin);
   if (tokenWrapper?.error) useAuth.send(res, msg.INTERNALERROR_TOKEN_CREATION);
   const payloadWrapper = useAuth.verifyJwtToken(tokenWrapper.token);
