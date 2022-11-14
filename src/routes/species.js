@@ -60,7 +60,7 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
       const ids = species.map((specy) => mongoose.Types.ObjectId(specy.pictureId)); //eslint-disable-line
       const speciesMap = new Map();
       species.forEach((specy) => {
-        speciesMap.set(specy['id'].toString(), specy);//eslint-disable-line
+        speciesMap.set(specy['id'].toString(), specy); //eslint-disable-line
       });
       const pictures = await Image.find({
         _id: { $in: ids },
@@ -75,9 +75,9 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
         return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.PICTURE), req.body);
       }
       pictures.forEach((picture) => {
-        const specyWithPicture = JSON.parse(JSON.stringify(speciesMap.get(picture.resource_id.toString())));//eslint-disable-line
+        const specyWithPicture = JSON.parse(JSON.stringify(speciesMap.get(picture.resource_id.toString()))); //eslint-disable-line
         specyWithPicture.picture = picture;
-        speciesMap.set(picture.resource_id.toString(), specyWithPicture);//eslint-disable-line
+        speciesMap.set(picture.resource_id.toString(), specyWithPicture); //eslint-disable-line
       });
       species = Array.from(speciesMap.values());
     }
@@ -172,7 +172,11 @@ router.post('/', auth.authenticateAdmin, async (req, res, next) => {
     const picture = req.body.picture;
     delete req.body.picture;
     const specy = new Specy(req.body);
-    const newPicture = new Image({ _id: pictureId, value: picture, resource_id: specyId });
+    const newPicture = new Image({
+      _id: pictureId,
+      value: picture,
+      resource_id: specyId,
+    });
     const savedSpecy = await specy.save();
     const newSpecy = JSON.parse(JSON.stringify(savedSpecy));
     newSpecy.picture = newPicture;

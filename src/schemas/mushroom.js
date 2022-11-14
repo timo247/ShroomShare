@@ -9,15 +9,23 @@ const mushroomSchema = new Schema({
   description: { type: String, required: false },
   date: { type: Date, required: true, default: Date.now },
   geolocalisation: {
-     // store geospatial information as GeoJSON object
+    // store geospatial information as GeoJSON object
     location: {
-      type: { type: String, required: true, enum: ['Point'] },
-      coordinate: {type: [Number], required: true, validate:{
-        validator: validateGeoJsonCoordinates,
-        message: '{VALUE} is not a valid longitude/latitude(/altitude) coordinates array'
-      }}
-    }
-  }
+      type: {
+        type: String,
+        required: true,
+        enum: ['Point'],
+      },
+      coordinates: {
+        type: [Number],
+        required: true,
+        validate: {
+          validator: validateGeoJsonCoordinates,
+          message: '{VALUE} is not a valid longitude/latitude(/altitude) coordinates array',
+        },
+      },
+    },
+  },
 });
 
 // Create a geospatial index on the location property.
@@ -34,7 +42,6 @@ function isLatitude(value) {
 function isLongitude(value) {
   return value >= -180 && value <= 180;
 }
-
 
 mongoose.model('Mushroom', mushroomSchema, 'Mushrooms');
 const Mushroom = mongoose.model('Mushroom');

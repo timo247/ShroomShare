@@ -38,7 +38,8 @@ const messages = {
   SUCCESS_RESSOURCE_MODIFICATION: (name) => new Message(name, 'successfully modified.', 200).getMessageWrapper(),
   SUCCESS_RESSOURCE_DELETION: (name) => new Message(name, 'successfully deleted.', 200).getMessageWrapper(),
   ERROR_RESSOURCE_EXISTANCE: (name) => new Message(name, 'not found.', 404).getMessageWrapper(),
-  ERROR_RESSOURCE_UNICITY: (name) => new Message(name, 'is already taken.', 401, false).getMessageWrapper(),
+  ERROR_RESSOURCE_UNICITY: (name) => new Message(name, 'is already taken', 401, false).getMessageWrapper(),
+  ERROR_RESSOURCE_DUPLICATE: (name) => new Message(name, 'already exist', 409).getMessageWrapper(),
   //  Route auth
   // ==========================================================================
   ERROR_AUTH_LOGIN: { status: 401, msg: 'Username and/or password are/is invalid.' },
@@ -61,19 +62,17 @@ const messages = {
   CHAT_USER_DISCONNECTION: 'User disconnected.',
   CHAT_USER_CONNECTION: 'User connected.',
   CHAT_MESSAGE_RECEPTION: 'Message received.',
-  //  Pictures
-  // ==========================================================================
-  ERROR_PICTURE_ID: (id) => `Picture id is unvalid: ${String(id)}.`,
-  ERROR_PICTURE_EXISTENCE: (id) => `Picture not found: ${String(id)}.`,
   //  Others
   // ==========================================================================
   ERROR_OWNERRIGHT_GRANTATION: { status: 404, msg: 'You can only alter your own ressources.' },
   INTERNALERROR: { status: 500, msg: 'Internal server error.' },
   ERROR_FIELD_REQUIRED: (name, status = 401) => ({ status, msg: `The body field '${name}' is required.` }),
   ERROR_PARAM_REQUIRED: (name, status = 401) => ({ status, msg: `The query param '${name}' is required.` }),
-  ERROR_IMG_BASE64: { status: 401, msg: 'Picture is not base64.' },
-  ERROR_ROUTE_EXISTENCE: { status: 404, msg: 'This route doesn\'t exist' },
-  ERROR_EMPTY_ARRAY: (arrayName) => ({ status: 404, msg: `The array property '${arrayName}' can't be empty.` }),
+  ERROR_IMG_BASE64: 'Picture is not base64.',
+  ERROR_DATE_VALIDATION: 'date cannot be in futur',
+  ERROR_DURATION_VALIDATION: 'duration is too big',
+  ERROR_LONGITUDE_VALIDATION: 'not a valid longitude',
+  ERROR_LATITUDE_VALIDATION: 'not a valid latitude',
 };
 
 export default messages;
