@@ -3,7 +3,8 @@ import mongoose from 'mongoose';
 import path from 'path';
 import Specy from '../schemas/species.js';
 import Image from '../schemas/images.js';
-import tobase64 from '../helpers/imgBase64.js';
+import tobase64 from '../helpers/useToBase64.js';
+import isBase64 from '../helpers/useValidateBase64';
 
 async function getCsvData() {
   const filePath = path.resolve('src/data/species.json');
@@ -23,7 +24,7 @@ async function seeder() {
     const pictureId = new mongoose.Types.ObjectId();
     const specyId = new mongoose.Types.ObjectId();
     await createSpecy(specy, specyId, pictureId);
-    await createImg(`${imgsPath}/${imgs[i]}`, specyId, pictureId);
+    await createImg(`src/data/images/${imgs[i]}`, specyId, pictureId);
     i++;
   }
 }
@@ -46,6 +47,7 @@ async function createSpecy(specyFromFile, specyId, pictureId) {
 async function createImg(imgPath, specyId, pictureId) {
   const extension = imgPath.split('.')[1];
   const imgBase64 = tobase64(imgPath, extension);
+  if (!isBase64(imgBase64)) throw new Error('picture is not base64');
   const image = new Image({
     _id: pictureId,
     value: imgBase64,

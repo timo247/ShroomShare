@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import cleanUpDb from '../../helpers/useCleanUpDb.js';
 import usersSeeder from '../../seeders/usersSeeder.js';
 import msg, { RESSOURCES as R } from '../../data/messages.js';
-import ApiTester from '../../helpers/ApiTester';
+import ApiTester from '../../helpers/ApiTester.js';
 import defineTest from '../../helpers/useDefineTest.js';
 
 let tester;
@@ -12,19 +12,6 @@ const prepare = async () => {
   tester = new ApiTester();
   await tester.setTokens();
 };
-
-function shuffleString(string) {
-  const a = string.split('');
-  const n = a.length;
-
-  for (let i = n - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    const tmp = a[i];
-    a[i] = a[j];
-    a[j] = tmp;
-  }
-  return a.join('');
-}
 
 // ==========================================================================
 //  GET /users
@@ -104,7 +91,7 @@ describe('GET /users/:id', () => {
 
   defineTest(msg.ERROR_RESSOURCE_EXISTANCE(R.USER), 'id is not attributed to an user', async (messageWrapper) => {
     const validUserId = await ApiTester.getValidUserId(tester.userToken);
-    const unvalidUserId = shuffleString(validUserId);
+    const unvalidUserId = ApiTester.shuffleString(validUserId);
 
     const res = await ApiTester.apiCall({
       method: 'get',
@@ -197,7 +184,7 @@ describe('POST /users', () => {
     );
   });
 
-  defineTest(msg.ERROR_USER_UNICITY('username'), '', async (messageWrapper) => {
+  defineTest(msg.ERROR_RESSOURCE_UNICITY('username'), '', async (messageWrapper) => {
     const res = await ApiTester.apiCall({
       method: 'post',
       path: 'users',

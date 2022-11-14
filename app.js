@@ -2,16 +2,17 @@ import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsodc from 'swagger-jsdoc';
 import mongoose from 'mongoose';
-import createError from 'http-errors';
 import logger from 'morgan';
 import indexRouter from './src/routes/index.js';
 import usersRouter from './src/routes/users.js';
 import authRouter from './src/routes/auth.js';
 import speciesRouter from './src/routes/species.js';
 import mushroomRouter from './src/routes/mushrooms.js';
+import picturesRouter from './src/routes/pictures.js';
 import config from './config.js';
 import connect from './src/helpers/useDbConnector.js';
 import msg, { RESSOURCES as R } from './src/data/messages.js';
+import useAuth from './src/helpers/useAuth.js';
 
 const apiErrorsLogger = config.debug.apiErrors;
 
@@ -40,7 +41,7 @@ const app = express();
 if (process.env.NODE_ENV !== 'test') {
   app.use(logger('dev'));
 }
-app.use(express.json());
+app.use(express.json({ limit: '10MB' }));
 app.use(express.urlencoded({ extended: false }));
 
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(specs));
@@ -49,10 +50,9 @@ app.use(`/${config.apiName}/auth`, authRouter);
 app.use(`/${config.apiName}/users`, usersRouter);
 app.use(`/${config.apiName}/species`, speciesRouter);
 app.use(`/${config.apiName}/mushrooms`, mushroomRouter);
+app.use(`/${config.apiName}/pictures`, picturesRouter);
 
-app.use((req, res, next) => {
-  next(createError(404));
-});
+app.use((req, res, next) => useAuth.send(res, msg.ERROR_ROUTE_EXISTENCE));
 
 app.use((err, req, res, next) => {
   // set locals, only providing error in development
@@ -62,7 +62,7 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500);
   const filtredMessage = errorFilter(res, err);
   if (filtredMessage) return res.send({ message: filtredMessage });
-  if (env === 'dev') res.send({ message: err.message });
+  if (env === 'dev') return res.send({ message: err.message });
   res.send({ message: msg.INTERNALERROR.msg });
 });
 

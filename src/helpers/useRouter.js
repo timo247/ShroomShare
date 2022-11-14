@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import msg from '../data/messages.js';
 import useAuth from './useAuth.js';
 

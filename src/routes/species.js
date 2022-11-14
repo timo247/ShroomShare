@@ -1,6 +1,6 @@
 import express from 'express';
-import isBase64 from 'is-base64';
 import mongoose from 'mongoose';
+import isBase64 from '../helpers/useValidateBase64.js';
 import Specy from '../schemas/species.js';
 import msg, { RESSOURCES as R } from '../data/messages.js';
 import Paginator from '../helpers/Paginator.js';
@@ -12,7 +12,38 @@ import config from '../../config.js';
 
 const router = express.Router();
 const errorLogger = config.debug.apiErrors;
-export default router;
+
+/**
+ * @swagger
+ * /species:
+ *    get:
+ *      tags:
+ *        - Species
+ *      summary: Retrieve all species
+ *      parameters:
+ *        - in: query
+ *          name: Numéro de la page
+ *          type: integer
+ *          description: Numéro de la page à afficher.(pas de page zéro et négative)
+ *        - in: query
+ *          name: Nombre d'éléments par page
+ *          type: integer
+ *          description: Nombre d'éléments que vous voulez sur la page.
+ *        - in: query
+ *          name: Montrer les images
+ *          type: boolean
+ *          description: Si vous voulez voir les images ou non.
+ *      responses:
+ *       200:
+ *        content:
+ *          application/json:
+ *           schema:
+ *            type: object
+ *            $ref: '#components/schema/RetrievedAllSpecieSchema'
+ *           examples:
+ *            CreatedSpecieExample:
+ *              $ref: '#/components/examples/RetrievedAllSpecieExample'
+ */
 
 // Retrieves all species
 router.get('/', auth.authenticateUser, async (req, res, next) => {
@@ -32,7 +63,7 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
         speciesMap.set(specy['id'].toString(), specy); //eslint-disable-line
       });
       const pictures = await Image.find({
-        _id: ids,
+        _id: { $in: ids },
       });
       if (!pictures) {
         req.body = useAuth.setBody({
@@ -62,12 +93,31 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
   }
 });
 
+/**
+ * @swagger
+ * /species/:id:
+ *    get:
+ *      tags:
+ *        - Species
+ *      summary: Retrieve specie
+ *      responses:
+ *       200:
+ *        content:
+ *          application/json:
+ *           schema:
+ *            type: object
+ *            $ref: '#components/schema/RetrievedSpecieSchema'
+ *           examples:
+ *            CreatedSpecieExample:
+ *              $ref: '#/components/examples/RetrievedSpecieExample'
+ */
+
 // Retrieve specific specy
 router.get('/:id', auth.authenticateUser, async (req, res, next) => {
   try {
     const id = req.params.id;
     if (!useRouter.isValidMongooseId(id)) {
-      return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
+      return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.SPECY));
     }
     const specy = await Specy.findOne({ _id: id });
     if (!specy) {
@@ -78,28 +128,49 @@ router.get('/:id', auth.authenticateUser, async (req, res, next) => {
       req.body = useAuth.setBody({ specy });
       return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.PICTURE), req.body);
     }
-    req.body = useAuth.setBody({ specy, picture });
+    const modifiableSpecy = JSON.parse(JSON.stringify(specy));
+    modifiableSpecy.picture = picture;
+    req.body = useAuth.setBody({ specy: modifiableSpecy });
     useAuth.send(res, msg.SUCCESS_RESSOURCE_RETRIEVAL(R.SPECY), req.body);
   } catch (error) {
     return next(error);
   }
 });
 
+/**
+ * @swagger
+ * /species:
+ *    post:
+ *      tags:
+ *        - Species
+ *      summary: Create a new specie
+ *      requestBody:
+ *       $ref: '#/components/requestBodies/SpecieBody'
+ *      responses:
+ *       201:
+ *        content:
+ *          application/json:
+ *           schema:
+ *            type: object
+ *            $ref: '#components/schema/CreatedSpecieSchema'
+ *           examples:
+ *            CreatedSpecieExample:
+ *              $ref: '#/components/examples/CreatedSpecieExample'
+ */
+
 // Add a new specy
 router.post('/', auth.authenticateAdmin, async (req, res, next) => {
   try {
-    useRouter.checkForRequiredParams(req, res, ['name', 'description', 'usage', 'pictureFile']);
-    const payload = useAuth.getPayloadFromToken(req);
-    req.body.admin = payload?.scope === 'admin';
+    useRouter.checkForRequiredParams(req, res, ['name', 'description', 'usage', 'picture']);
     const alreadyExistingName = await Specy.findOne({ name: req.body.name });
     if (alreadyExistingName) return useAuth.send(res, msg.ERROR_RESSOURCE_UNICITY('name'));
-    if (!isBase64(req.params.pictureFile)) return useAuth.send(res, msg.ERROR_IMG_BASE64);
+    if (!isBase64(req.body.picture)) return useAuth.send(res, msg.ERROR_IMG_BASE64);
     const pictureId = new mongoose.Types.ObjectId();
     const specyId = new mongoose.Types.ObjectId();
     req.body['_id'] = specyId; //eslint-disable-line
     req.body.pictureId = pictureId;
-    const picture = req.body.pictureFile;
-    delete req.body.pictureFile;
+    const picture = req.body.picture;
+    delete req.body.picture;
     const specy = new Specy(req.body);
     const newPicture = new Image({
       _id: pictureId,
@@ -107,54 +178,94 @@ router.post('/', auth.authenticateAdmin, async (req, res, next) => {
       resource_id: specyId,
     });
     const savedSpecy = await specy.save();
-    savedSpecy.picture = newPicture;
-    req.body = useAuth.setBody({ specy: savedSpecy });
+    const newSpecy = JSON.parse(JSON.stringify(savedSpecy));
+    newSpecy.picture = newPicture;
+    req.body = useAuth.setBody({ specy: newSpecy });
     useAuth.send(res, msg.SUCCESS_RESSOURCE_CREATION(R.SPECY), req.body);
   } catch (error) {
     return next(error);
   }
 });
 
+/**
+ * @swagger
+ * /species/:id:
+ *    patch:
+ *      tags:
+ *        - Species
+ *      summary: Update a specie
+ *      requestBody:
+ *       $ref: '#/components/requestBodies/UpdateSpecieBody'
+ *      responses:
+ *       200:
+ *        content:
+ *          application/json:
+ *           schema:
+ *            type: object
+ *            $ref: '#components/schema/UpdatedSpecieSchema'
+ *           examples:
+ *            CreatedSpecieExample:
+ *              $ref: '#/components/examples/UpdatedSpecieExample'
+ */
+
 // Update a specy
 router.patch('/:id', auth.authenticateAdmin, async (req, res, next) => {
   try {
     const id = req.params.id;
-    let body;
     if (!useRouter.isValidMongooseId(id)) {
-      return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
+      return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.SPECY));
     }
-    if (req.params.pictureFile ? !isBase64(req.params.pictureFile) : true === false) {
-      return useAuth.send(res, msg.ERROR_IMG_BASE64);
+    if (req.body.picture) {
+      if (!isBase64(req.body.picture)) return useAuth.send(res, msg.ERROR_IMG_BASE64);
     }
     const params = req.body;
-    if (req.params.pictureFile) {
+    if (params.picture) {
       const picture = {
         date: Date.now(),
-        value: req.params.pictureFile,
+        value: req.params.picture,
       };
+      delete params.picture;
       await Image.findOneAndUpdate({ resource_id: id }, picture);
     }
     await Specy.findByIdAndUpdate(id, params);
-    const modifiedSpecy = await User.findOne({ _id: id });
+    const modifiedSpecy = await Specy.findOne({ _id: id });
     const modifiedPicture = await Image.findOne({ resource_id: id });
-    modifiedSpecy.picture = modifiedPicture;
-    req.body = useAuth.setBody({ specy: modifiedSpecy });
+    const newSpecy = JSON.parse(JSON.stringify(modifiedSpecy));
+    newSpecy.picture = modifiedPicture;
+    req.body = useAuth.setBody({ specy: newSpecy });
     useAuth.send(res, msg.SUCCESS_RESSOURCE_MODIFICATION(R.SPECY), req.body);
   } catch (error) {
     return next(error);
   }
 });
 
+/**
+ * @swagger
+ * /species/:id:
+ *    delete:
+ *      tags:
+ *        - Species
+ *      summary: Delete a specie
+ *      responses:
+ *       200:
+ *        content:
+ *          application/json:
+ *           schema:
+ *            type: object
+ *            $ref: '#components/schema/DeletedSpecieSchema'
+ *           examples:
+ *            CreatedSpecieExample:
+ *              $ref: '#/components/examples/DeletedSpecieExample'
+ */
+
 // Delete a specy
 router.delete('/:id', auth.authenticateAdmin, async (req, res, next) => {
   try {
     const id = req.params.id;
     if (!useRouter.isValidMongooseId(id)) {
-      return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
+      return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.SPECY));
     }
-    const areIdsIdentical = String(req.currentUserId) === String(id);
-    if (!areIdsIdentical) return useAuth.send(res, msg.ERROR_OWNERRIGHT_GRANTATION);
-    const specyToDelete = await User.findOne({ _id: id });
+    const specyToDelete = await Specy.findOne({ _id: id });
     if (!specyToDelete) return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.SPECY));
     await Specy.deleteOne({ _id: id });
     await Image.deleteOne({ resource_id: id });
@@ -164,3 +275,5 @@ router.delete('/:id', auth.authenticateAdmin, async (req, res, next) => {
     return next(err);
   }
 });
+
+export default router;

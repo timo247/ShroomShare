@@ -1,6 +1,9 @@
+import path from 'path';
+import fs from 'fs';
 import supertest from 'supertest';
 import app from '../../app.js';
 import config from '../../config.js';
+import tobase64 from './useToBase64.js';
 
 export default class ApiTester {
   userToken = '';
@@ -42,6 +45,40 @@ export default class ApiTester {
   static async getValidUserId(token) {
     const response = await supertest(app).get(`/${config.apiName}/users`)
       .set('Authorization', `Bearer ${token}`);
-    return response.body.users[0].id;
+    const id = response.body.users.find((el) => el.username === 'user01').id;
+    return id;
+  }
+
+  static async getValidSpecyId(token) {
+    const response = await supertest(app).get(`/${config.apiName}/species`)
+      .set('Authorization', `Bearer ${token}`);
+    return response.body.species[0].id;
+  }
+
+  static async getValidMushroomId(token) {
+    const response = await supertest(app).get(`/${config.apiName}/mushrooms`)
+      .set('Authorization', `Bearer ${token}`);
+    return response.body.mushrooms[0].id;
+  }
+
+  static shuffleString(string) {
+    const a = string.split('');
+    const n = a.length;
+
+    for (let i = n - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const tmp = a[i];
+      a[i] = a[j];
+      a[j] = tmp;
+    }
+    return a.join('');
+  }
+
+  static createPicture() {
+    const imgsPath = path.resolve('src/data/images');
+    const imgs = fs.readdirSync(imgsPath);
+    const extension = imgs[0].split('.')[1];
+    const imgBase64 = tobase64(`src/data/images/${imgs[0]}`, extension);
+    return imgBase64;
   }
 }
