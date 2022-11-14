@@ -106,7 +106,7 @@ const messages = {
   ERROR_LONGITUDE_VALIDATION: 'Not a valid longitude',
   ERROR_LATITUDE_VALIDATION: 'Not a valid latitude',
   ERRRO_GEOJSON_FORMAT: { status: 401, msg: 'Not a valid latitude' },
-  ERROR_ROUTE_EXISTENCE: { status: 404, msg: 'This route doesn\t exist.' },
+  ERROR_ROUTE_EXISTENCE: { status: 404, msg: 'This route doesn\'t exist.' },
 };
 
 export default messages;
