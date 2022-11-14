@@ -31,7 +31,7 @@ router.patch('/:id', auth.authenticateUser, async (req, res, next) => {
     }
     if (req.body.geolocalisation) {
       if (!validateGeoJsonCoordinates(req.body.geolocalisation)) {
-        return useAuth.send(res, msg.ERROR_DATE_FORMAT);
+        return useAuth.send(res, msg.ERROR_GEOJSON_FORMAT);
       }
     }
     const params = req.body;

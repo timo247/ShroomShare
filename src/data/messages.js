@@ -18,8 +18,9 @@ class Message {
   }
 
   static isValidRessource(string) {
-    if (!Object.values(RESSOURCES).includes(string))
+    if (!Object.values(RESSOURCES).includes(string)) {
       throw new Error(`${string} is not a valid input`);
+    }
   }
 
   static firstLetterUpperCase(string) {
@@ -34,20 +35,13 @@ class Message {
 const messages = {
   //  Ressources manipulation
   // ==========================================================================
-  SUCCESS_RESSOURCE_RETRIEVAL: (name) =>
-    new Message(name, 'successfully retrieved.', 200).getMessageWrapper(),
-  SUCCESS_RESSOURCE_CREATION: (name) =>
-    new Message(name, 'successfully created.', 201).getMessageWrapper(),
-  SUCCESS_RESSOURCE_MODIFICATION: (name) =>
-    new Message(name, 'successfully modified.', 200).getMessageWrapper(),
-  SUCCESS_RESSOURCE_DELETION: (name) =>
-    new Message(name, 'successfully deleted.', 200).getMessageWrapper(),
-  ERROR_RESSOURCE_EXISTANCE: (name) =>
-    new Message(name, 'not found.', 404).getMessageWrapper(),
-  ERROR_RESSOURCE_UNICITY: (name) =>
-    new Message(name, 'is already taken', 401, false).getMessageWrapper(),
-  ERROR_RESSOURCE_DUPLICATE: (name) =>
-    new Message(name, 'already exist', 409).getMessageWrapper(),
+  SUCCESS_RESSOURCE_RETRIEVAL: (name) => new Message(name, 'successfully retrieved.', 200).getMessageWrapper(),
+  SUCCESS_RESSOURCE_CREATION: (name) => new Message(name, 'successfully created.', 201).getMessageWrapper(),
+  SUCCESS_RESSOURCE_MODIFICATION: (name) => new Message(name, 'successfully modified.', 200).getMessageWrapper(),
+  SUCCESS_RESSOURCE_DELETION: (name) => new Message(name, 'successfully deleted.', 200).getMessageWrapper(),
+  ERROR_RESSOURCE_EXISTANCE: (name) => new Message(name, 'not found.', 404).getMessageWrapper(),
+  ERROR_RESSOURCE_UNICITY: (name) => new Message(name, 'is already taken', 401, false).getMessageWrapper(),
+  ERROR_RESSOURCE_DUPLICATE: (name) => new Message(name, 'already exist', 409).getMessageWrapper(),
   //  Route auth
   // ==========================================================================
   ERROR_AUTH_LOGIN: {
@@ -81,10 +75,8 @@ const messages = {
   SUCCESS_TOKEN_CREATION: { status: 201, msg: 'Token succesfully created.' },
   //  Schema validation
   // ==========================================================================
-  ERROR_SCHEMA_EMAIL: (props) =>
-    `The value '${props.value}' is not a valid email.`,
-  ERROR_SCHEMA_USAGE: (props, values) =>
-    `Usage should be one of the folowings values '${values}'.`,
+  ERROR_SCHEMA_EMAIL: (props) => `The value '${props.value}' is not a valid email.`,
+  ERROR_SCHEMA_USAGE: (props, values) => `Usage should be one of the folowings values '${values}'.`,
   //  Chat
   // ==========================================================================
   CHAT_USER_DISCONNECTION: 'User disconnected.',
@@ -111,6 +103,8 @@ const messages = {
   ERROR_DURATION_VALIDATION: 'Duration is too big',
   ERROR_LONGITUDE_VALIDATION: 'Not a valid longitude',
   ERROR_LATITUDE_VALIDATION: 'Not a valid latitude',
+  ERRRO_GEOJSON_FORMAT: { status: 401, msg: 'Not a valid latitude' },
+  ERROR_ROUTE_EXISTENCE: { status: 404, msg: 'This route doesn\t exist.' },
 };
 
 export default messages;

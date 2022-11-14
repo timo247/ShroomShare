@@ -6,12 +6,6 @@ import msg, { RESSOURCES as R } from '../../data/messages.js';
 import ApiTester from '../../helpers/ApiTester.js';
 import defineTest from '../../helpers/useDefineTest.js';
 
-/*
- * TODO: GET /mushrooms
- * TODO: POST /mushrooms
- * TODO: PATCH /mushrooms/:id
- */
-
 let tester;
 const prepare = async () => {
   await cleanUpDb();
@@ -28,10 +22,10 @@ const prepare = async () => {
 describe('GET /mushrooms', () => {
   beforeEach(prepare);
 
-  defineTest(msg.SUCCESS_RESSOURCE_RETRIEVAL(R.SPECIES), 'without pictures', async (messageWrapper) => {
+  defineTest(msg.SUCCESS_RESSOURCE_RETRIEVAL(R.MUSHROOMS), 'without pictures', async (messageWrapper) => {
     const res = await ApiTester.apiCall({
       method: 'get',
-      path: 'species',
+      path: 'mushrooms/?showPictures=true',
       messageWrapper,
       token: tester.userToken,
     });
@@ -41,20 +35,21 @@ describe('GET /mushrooms', () => {
         currentPage: expect.any(Number),
         lastPage: expect.any(Number),
         pageSize: expect.any(Number),
-        species: expect.arrayContaining([
+        mushrooms: expect.arrayContaining([
           expect.objectContaining({
             description: expect.any(String),
             id: expect.any(String),
-            name: expect.any(String),
+            species_id: expect.any(String),
+            user_id: expect.any(String),
+            date: expect.any(String),
             pictureId: expect.any(String),
-            usage: expect.any(String),
           }),
         ]),
       }),
     );
   });
 
-  defineTest(msg.SUCCESS_RESSOURCE_RETRIEVAL(R.SPECIES), 'with pictures', async (messageWrapper) => {
+  defineTest(msg.SUCCESS_RESSOURCE_RETRIEVAL(R.MUSHROOMS), 'with pictures', async (messageWrapper) => {
     const res = await ApiTester.apiCall({
       method: 'get',
       path: 'species/?showPictures=true&pageSize=2',
@@ -67,19 +62,127 @@ describe('GET /mushrooms', () => {
         currentPage: expect.any(Number),
         lastPage: expect.any(Number),
         pageSize: expect.any(Number),
-        species: expect.arrayContaining([
+        mushrooms: expect.arrayContaining([
           expect.objectContaining({
             id: expect.any(String),
-            name: expect.any(String),
             description: expect.any(String),
-            usage: expect.any(String),
             pictureId: expect.any(String),
+            user_id: expect.any(String),
+            date: expect.any(String),
+            species_id: expect.any(String),
             picture: expect.objectContaining({
               value: expect.any(String),
               resource_id: expect.any(String),
               collectionName: expect.any(String),
               date: expect.any(String),
               id: expect.any(String),
+            }),
+            geolocalisation: expect.objectContaining({
+              location: expect.objectContaining({
+                type: expect.stringContaining('Point'),
+              }),
+              coordinates: expect.number(Array),
+            }),
+          }),
+        ]),
+      }),
+    );
+  });
+
+  defineTest(msg.SUCCESS_RESSOURCE_RETRIEVAL(R.MUSHROOMS), 'retrieve specific species id ', async (messageWrapper) => {
+    const validSpecyId = ApiTester.getValidSpecyId();
+    const res = await ApiTester.apiCall({
+      method: 'get',
+      path: `species/pageSize=2&speciesId=${validSpecyId}`,
+      messageWrapper,
+      token: tester.userToken,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(messageWrapper.msg),
+        currentPage: expect.any(Number),
+        lastPage: expect.any(Number),
+        pageSize: expect.any(Number),
+        mushrooms: expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(String),
+            description: expect.any(String),
+            pictureId: expect.any(String),
+            user_id: expect.any(String),
+            date: expect.any(String),
+            species_id: expect.stringContaining(validSpecyId),
+            geolocalisation: expect.objectContaining({
+              location: expect.objectContaining({
+                type: expect.stringContaining('Point'),
+              }),
+              coordinates: expect.number(Array),
+            }),
+          }),
+        ]),
+      }),
+    );
+  });
+
+  defineTest(msg.SUCCESS_RESSOURCE_RETRIEVAL(R.MUSHROOMS), 'retrieve specific user\'s mushrooms', async (messageWrapper) => {
+    const validUserId = ApiTester.getValidUserId();
+    const res = await ApiTester.apiCall({
+      method: 'get',
+      path: `species/pageSize=2&userId=${validUserId}`,
+      messageWrapper,
+      token: tester.userToken,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(messageWrapper.msg),
+        currentPage: expect.any(Number),
+        lastPage: expect.any(Number),
+        pageSize: expect.any(Number),
+        mushrooms: expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(String),
+            description: expect.any(String),
+            pictureId: expect.any(String),
+            user_id: expect.stringContaining(validUserId),
+            date: expect.any(String),
+            species_id: expect.any(String),
+            geolocalisation: expect.objectContaining({
+              location: expect.objectContaining({
+                type: expect.stringContaining('Point'),
+              }),
+              coordinates: expect.number(Array),
+            }),
+          }),
+        ]),
+      }),
+    );
+  });
+
+  defineTest(msg.SUCCESS_RESSOURCE_RETRIEVAL(R.MUSHROOMS), 'retrieve a specific usage', async (messageWrapper) => {
+    const res = await ApiTester.apiCall({
+      method: 'get',
+      path: 'species/pageSize=2&usage=commestible',
+      messageWrapper,
+      token: tester.userToken,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(messageWrapper.msg),
+        currentPage: expect.any(Number),
+        lastPage: expect.any(Number),
+        pageSize: expect.any(Number),
+        mushrooms: expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(String),
+            description: expect.any(String),
+            pictureId: expect.any(String),
+            user_id: expect.stringContaining(validUserId),
+            date: expect.any(String),
+            species_id: expect.any(String),
+            geolocalisation: expect.objectContaining({
+              location: expect.objectContaining({
+                type: expect.stringContaining('Point'),
+              }),
+              coordinates: expect.number(Array),
             }),
           }),
         ]),
@@ -95,35 +198,41 @@ describe('GET /mushrooms', () => {
 describe('POST /mushrooms', () => {
   beforeEach(prepare);
 
-  defineTest(msg.SUCCESS_RESSOURCE_CREATION(R.SPECY), 'create a regular specy', async (messageWrapper) => {
+  defineTest(msg.SUCCESS_RESSOURCE_CREATION(R.MUSHROOM), '', async (messageWrapper) => {
     const picture = createPicture();
+    const newDate = String(date.now());
     const res = await ApiTester.apiCall({
       method: 'post',
-      path: 'species',
+      path: 'mushrooms',
       body: {
-        name: 'Bollet de test',
         description: '...',
-        usage: 'commestible',
+        species_id: 1,
         picture,
+        date: newDate,
+        geolocalisation: {
+          location: 'Point',
+          coordinates: [46.616517, 6.234434],
+        },
       },
       messageWrapper,
-      token: tester.adminToken,
+      token: tester.userToken,
     });
-    expect(typeof res.body.specy.picture.value).toBe('string');
-    delete res.body.specy.picture.value;
+    expect(typeof res.body.mushroom.picture.value).toBe('string');
+    delete res.body.mushroom.picture.value;
     expect(res.body).toEqual(
       expect.objectContaining({
         message: expect.stringContaining(messageWrapper.msg),
-        specy: expect.objectContaining({
-          name: expect.any(String),
-          description: expect.any(String),
-          usage: expect.any(String),
-          pictureId: expect.any(String),
+        mushroom: expect.objectContaining({
+          species_id: expect.stringContaining('1'),
+          description: expect.stringContaining('...'),
+          user_id: expect.any(String),
+          date: expect.stringContaining(newDate),
           id: expect.any(String),
           picture: expect.objectContaining({
             resource_id: expect.any(String),
             date: expect.any(String),
             id: expect.any(String),
+            collectionName: expect.any(String),
           }),
         }),
       }),
@@ -131,39 +240,45 @@ describe('POST /mushrooms', () => {
   });
 
   defineTest(msg.ERROR_FIELD_REQUIRED('X'), 'missing fields', async (messageWrapper) => {
+    const newDate = String(date.now());
     const res = await ApiTester.apiCall({
       method: 'post',
-      path: 'species',
+      path: 'mushrooms',
       body: {
-        name: 'Bollet',
         description: '...',
+        species_id: 1,
+        date: newDate,
       },
       messageWrapper,
-      token: tester.adminToken,
+      token: tester.userToken,
     });
     expect(res.body).toEqual(
       expect.objectContaining({
         messages: expect.arrayContaining([
           msg.ERROR_FIELD_REQUIRED('picture').msg,
-          msg.ERROR_FIELD_REQUIRED('usage').msg,
+          msg.ERROR_FIELD_REQUIRED('geolocalisation').msg,
         ]),
       }),
     );
   });
 
-  defineTest(msg.ERROR_RESSOURCE_UNICITY('name'), '', async (messageWrapper) => {
-    const picture = createPicture();
+  defineTest(msg.ERROR_IMG_BASE64, '', async (messageWrapper) => {
+    const newDate = String(date.now());
     const res = await ApiTester.apiCall({
       method: 'post',
       path: 'species',
       body: {
-        name: 'Morille',
         description: '...',
-        usage: 'commestible',
-        picture,
+        species_id: 1,
+        picture: 'adfakfj',
+        date: newDate,
+        geolocalisation: {
+          location: 'Point',
+          coordinates: [46.616517, 6.234434],
+        },
       },
       messageWrapper,
-      token: tester.adminToken,
+      token: tester.userToken,
     });
     expect(res.body).toEqual(
       expect.objectContaining({
@@ -172,18 +287,48 @@ describe('POST /mushrooms', () => {
     );
   });
 
-  defineTest(msg.ERROR_IMG_BASE64, '', async (messageWrapper) => {
+  defineTest(msg.ERROR_DATE_FORMAT, '', async (messageWrapper) => {
+    const picture = createPicture();
     const res = await ApiTester.apiCall({
       method: 'post',
       path: 'species',
       body: {
-        name: 'Bollet de test',
         description: '...',
-        usage: 'commestible',
-        picture: 'dafkjjafljfaj',
+        species_id: 1,
+        picture,
+        date: 'gg',
+        geolocalisation: {
+          location: 'Point',
+          coordinates: [46.616517, 6.234434],
+        },
       },
       messageWrapper,
-      token: tester.adminToken,
+      token: tester.userToken,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(messageWrapper.msg),
+      }),
+    );
+  });
+
+  defineTest(msg.ERRRO_GEOJSON_FORMAT, '', async (messageWrapper) => {
+    const newDate = String(date.now());
+    const res = await ApiTester.apiCall({
+      method: 'post',
+      path: 'species',
+      body: {
+        description: '...',
+        species_id: 1,
+        picture: 'adfakfj',
+        date: newDate,
+        geolocalisation: {
+          location: 'Point',
+          coordinates: [null, null],
+        },
+      },
+      messageWrapper,
+      token: tester.userToken,
     });
     expect(res.body).toEqual(
       expect.objectContaining({
@@ -233,15 +378,18 @@ describe('PATCH /mushrooms/:id', () => {
             date: expect.any(String),
             id: expect.any(String),
           }),
-          location: expect.objectContaining({
-            // TODO: implement this
+          geolocalisation: expect.objectContaining({
+            location: expect.objectContaining({
+              type: expect.stringContaining('Point'),
+            }),
+            coordinates: expect.number(Array),
           }),
         }),
       }),
     );
   });
 
-  defineTest(msg.ERROR_RESSOURCE_EXISTANCE(R.SPECY), 'invalid mongoose id', async (messageWrapper) => {
+  defineTest(msg.ERROR_RESSOURCE_EXISTANCE(R.MUSHROOM), 'invalid mongoose id', async (messageWrapper) => {
     const validMushroomId = await ApiTester.getValidSpecyId(tester.adminToken);
     const unvalidMushroomId = validMushroomId.slice(0, -2);
 
