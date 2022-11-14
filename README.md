@@ -243,7 +243,7 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
   "message": "Mushroom added",
   "mushroom": {
     "species_id": "1",
-    "user_id": "1",
+    "user_id": "636b97a08f7ef3fb6243e92f",
     "picture": "https://...",
     "description": "This is a Amanita phalloides...",
     "date": "2022.01.01",
@@ -306,6 +306,7 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
   "message": "Mushroom updated",
   "mushroom": {
     "species_id": "1",
+    "user_id": "636b97a08f7ef3fb6243e92f",
     "picture": "https://...",
     "description": "This is a Amanita phalloides...",
     "date": "2022.01.01",
@@ -353,6 +354,7 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
   "mushroom": [
     {
       "sepcy_id": "1",
+      "user_id": "636b97a08f7ef3fb6243e92f",
       "picture": "https://...",
       "description": "This is a Amanita phalloides...",
       "date": "2022.01.01",
