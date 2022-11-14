@@ -16,6 +16,27 @@ import validateDate from '../helpers/useValidateDate.js';
 const router = express.Router();
 const errorLogger = config.debug.apiErrors;
 
+/**
+ * @swagger
+ * /mushrooms/:id:
+ *    patch:
+ *      tags:
+ *        - Mushrooms
+ *      summary:  Update a mushroom
+ *      requestBody:
+ *       $ref: '#/components/requestBodies/UpdateMushroomBody'
+ *      responses:
+ *       200:
+ *        content:
+ *          application/json:
+ *           schema:
+ *            type: object
+ *            $ref: '#/components/schema/UpdatedMushroomSchema'
+ *           examples:
+ *            CreatedMushroomExample:
+ *             $ref: '#/components/examples/UpdatedMushroomExample'
+ */
+
 // Update a mushroom
 router.patch('/:id', auth.authenticateUser, async (req, res, next) => {
   try {
@@ -55,6 +76,26 @@ router.patch('/:id', auth.authenticateUser, async (req, res, next) => {
   }
 });
 
+
+/**
+ * @swagger
+ * /mushrooms/:id:
+ *    delete:
+ *      tags:
+ *        - Mushrooms
+ *      summary: Delete a mushroom
+ *      responses:
+ *       200:
+ *        content:
+ *          application/json:
+ *           schema:
+ *            type: object
+ *            $ref: '#/components/schema/DeletedMushroomSchema'
+ *           examples:
+ *            CreatedMushroomExample:
+ *             $ref: '#/components/examples/DeletedMushroomExample'
+ */
+
 // delete a mushroom
 router.delete('/:id', auth.authenticateUser, async (req, res, next) => {
   try {
@@ -78,6 +119,66 @@ router.delete('/:id', auth.authenticateUser, async (req, res, next) => {
     return next(err);
   }
 });
+
+/**
+ * @swagger
+ * /mushrooms:
+ *    get:
+ *      tags:
+ *        - Mushrooms
+ *      summary: Retrieved all mushrooms
+ *      parameters:
+ *        - in: query
+ *          name: location
+ *          type: integer
+ *          description: Coordonnées GPS (nombres)
+ *        - in: query
+ *          name: speciesId
+ *          type: String
+ *          description: Choississez l'espèce de champignon
+ *        - in: query
+ *          name: userId
+ *          type: integer
+ *          description: Choississez l'ID de l'utilisateur
+ *        - in: query
+ *          name: showPictures
+ *          type: boolean
+ *          description: Affichez les images ou non
+ *        - in: query
+ *          name: total
+ *          type: boolean
+ *          description: Sommez des champignons par utilisateur
+ *        - in: query
+ *          name: usage
+ *          type: String
+ *          description: Comestible ou non-comestible
+ *        - in: query
+ *          name: from
+ *          type: date
+ *          description: Choississez la date de début
+ *        - in: query
+ *          name: to
+ *          type: date
+ *          description: Choississez la date de fin
+ *        - in: query
+ *          name: page
+ *          type: integer
+ *          description: Choississez le numéro de la page à afficher.(pas de page zéro et négative)
+ *        - in: query
+ *          name: pageSize
+ *          type: integer
+ *          description: Nombre déléments que vous voulez sur la page.
+ *      responses:
+ *        200:
+ *           content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                $ref: '#components/schema/RetrievedMushroomSchema'
+ *              examples:
+ *                AllUserExample:
+ *                   $ref: '#/components/examples/RetrievedMushroomExample'
+ */
 
 // Retrieves all mushrooms
 router.get('/', auth.authenticateUser, async (req, res, next) => {
@@ -271,6 +372,28 @@ router.get('/location/:long/:lat/:radius', auth.authenticateUser, async (req, re
     next(err);
   }
 });
+
+/**
+ * @swagger
+ * /mushrooms:
+ *    post:
+ *      tags:
+ *        - Mushrooms
+ *      summary: Add a new mushroom
+ *      requestBody:
+ *       $ref: '#/components/requestBodies/CreateMushroomBody'
+ *      responses:
+ *       201:
+ *        content:
+ *          application/json:
+ *           schema:
+ *            type: object
+ *            $ref: '#/components/schema/CreatedMushroomSchema'
+ *           examples:
+ *            CreatedMushroomExample:
+ *             $ref: '#/components/examples/CreatedMushroomExample'
+ */
+
 
 // Add new mushroom
 router.post('/', auth.authenticateUser, async (req, res, next) => {
