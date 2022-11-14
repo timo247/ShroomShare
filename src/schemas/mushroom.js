@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import validateGeoJsonCoordinates from '../helpers/useValidateGeoJsonCoordinates.js';
 
 const Schema = mongoose.Schema;
 
@@ -31,19 +32,7 @@ const mushroomSchema = new Schema({
 // Create a geospatial index on the location property.
 mushroomSchema.index({ location: '2dsphere' });
 
-function validateGeoJsonCoordinates(value) {
-  return Array.isArray(value) && value.length >= 2 && value.length <= 3 && isLongitude(value[0]) && isLatitude(value[1]);
-}
-
-function isLatitude(value) {
-  return value >= -90 && value <= 90;
-}
-
-function isLongitude(value) {
-  return value >= -180 && value <= 180;
-}
-
-mongoose.model('Mushroom', mushroomSchema, 'Mushrooms');
+mongoose.model('Mushroom', mushroomSchema, 'mushrooms');
 const Mushroom = mongoose.model('Mushroom');
 
 export default Mushroom;

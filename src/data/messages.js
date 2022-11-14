@@ -69,10 +69,11 @@ const messages = {
   ERROR_FIELD_REQUIRED: (name, status = 401) => ({ status, msg: `The body field '${name}' is required.` }),
   ERROR_PARAM_REQUIRED: (name, status = 401) => ({ status, msg: `The query param '${name}' is required.` }),
   ERROR_IMG_BASE64: 'Picture is not base64.',
-  ERROR_DATE_VALIDATION: 'date cannot be in futur',
-  ERROR_DURATION_VALIDATION: 'duration is too big',
-  ERROR_LONGITUDE_VALIDATION: 'not a valid longitude',
-  ERROR_LATITUDE_VALIDATION: 'not a valid latitude',
+  ERROR_DATE_FORMAT: 'Date format is unvalid.',
+  ERROR_DATE_VALIDATION: 'Date cannot be in futur.',
+  ERROR_DURATION_VALIDATION: 'Duration is too big',
+  ERROR_LONGITUDE_VALIDATION: 'Not a valid longitude',
+  ERROR_LATITUDE_VALIDATION: 'Not a valid latitude',
 };
 
 export default messages;

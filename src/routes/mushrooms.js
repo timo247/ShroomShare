@@ -10,6 +10,8 @@ import auth from '../middlewares/authMiddlewares.js';
 import useRouter from '../helpers/useRouter.js';
 import Image from '../schemas/images.js';
 import config from '../../config.js';
+import validateGeoJsonCoordinates from '../helpers/useValidateGeoJsonCoordinates.js';
+import validateDate from '../helpers/useValidateDate.js';
 
 const router = express.Router();
 const errorLogger = config.debug.apiErrors;
@@ -23,6 +25,14 @@ router.patch('/:id', auth.authenticateUser, async (req, res, next) => {
     }
     if (req.body.picture) {
       if (!isBase64(req.body.picture)) return useAuth.send(res, msg.ERROR_IMG_BASE64);
+    }
+    if (req.body.date) {
+      if (!validateDate(req.body.date)) return useAuth.send(res, msg.ERROR_DATE_FORMAT);
+    }
+    if (req.body.geolocalisation) {
+      if (!validateGeoJsonCoordinates(req.body.geolocalisation)) {
+        return useAuth.send(res, msg.ERROR_DATE_FORMAT);
+      }
     }
     const params = req.body;
     if (params.picture) {

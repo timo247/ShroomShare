@@ -10,14 +10,14 @@ import Mushroom from '../schemas/mushroom.js';
 
 connection();
 await Promise.all([
-  //User.deleteMany(),
-  //Specy.deleteMany(),
-  //Image.deleteMany(),
+  User.deleteMany(),
+  Specy.deleteMany(),
+  Image.deleteMany(),
   Mushroom.deleteMany(),
 ]);
 // call seeder here
-//await userSeeder();
-//await speciesSeeder();
+await userSeeder();
+await speciesSeeder();
 await mushroomSeeder();
 await mongoose.connection.close();
 process.exit();
