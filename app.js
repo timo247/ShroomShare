@@ -8,6 +8,7 @@ import indexRouter from './src/routes/index.js';
 import usersRouter from './src/routes/users.js';
 import authRouter from './src/routes/auth.js';
 import speciesRouter from './src/routes/species.js';
+import mushroomRouter from './src/routes/mushrooms.js';
 import config from './config.js';
 import connect from './src/helpers/useDbConnector.js';
 import msg, { RESSOURCES as R } from './src/data/messages.js';
@@ -47,6 +48,7 @@ app.use(`/${config.apiName}`, indexRouter);
 app.use(`/${config.apiName}/auth`, authRouter);
 app.use(`/${config.apiName}/users`, usersRouter);
 app.use(`/${config.apiName}/species`, speciesRouter);
+app.use(`/${config.apiName}/mushrooms`, mushroomRouter);
 
 app.use((req, res, next) => {
   next(createError(404));

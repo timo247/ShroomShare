@@ -39,6 +39,7 @@ const messages = {
   SUCCESS_RESSOURCE_DELETION: (name) => new Message(name, 'successfully deleted.', 200).getMessageWrapper(),
   ERROR_RESSOURCE_EXISTANCE: (name) => new Message(name, 'not found.', 404).getMessageWrapper(),
   ERROR_RESSOURCE_UNICITY: (name) => new Message(name, 'is already taken', 401, false).getMessageWrapper(),
+  ERROR_RESSOURCE_DUPLICATE: (name) => new Message(name, 'already exist', 409).getMessageWrapper(),
   //  Route auth
   // ==========================================================================
   ERROR_AUTH_LOGIN: { status: 401, msg: 'Username and/or password are/is invalid.' },
@@ -68,6 +69,10 @@ const messages = {
   ERROR_FIELD_REQUIRED: (name, status = 401) => ({ status, msg: `The body field '${name}' is required.` }),
   ERROR_PARAM_REQUIRED: (name, status = 401) => ({ status, msg: `The query param '${name}' is required.` }),
   ERROR_IMG_BASE64: 'Picture is not base64.',
+  ERROR_DATE_VALIDATION: 'date cannot be in futur',
+  ERROR_DURATION_VALIDATION: 'duration is too big',
+  ERROR_LONGITUDE_VALIDATION: 'not a valid longitude',
+  ERROR_LATITUDE_VALIDATION: 'not a valid latitude',
 };
 
 export default messages;
