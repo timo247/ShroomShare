@@ -4,7 +4,6 @@ import cleanUpDb from '../../helpers/useCleanUpDb.js';
 import usersSeeder from '../../seeders/usersSeeder.js';
 import config from '../../../config.js';
 import msg, { RESSOURCES as R } from '../../data/messages.js';
-import useAuth from '../../helpers/useAuth.js';
 import ApiTester from '../../helpers/ApiTester.js';
 import defineTest from '../../helpers/useDefineTest.js';
 import app from '../../../app.js';

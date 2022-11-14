@@ -6,6 +6,12 @@ import msg, { RESSOURCES as R } from '../../data/messages.js';
 import ApiTester from '../../helpers/ApiTester.js';
 import defineTest from '../../helpers/useDefineTest.js';
 
+/*
+ * TODO: GET /mushrooms
+ * TODO: POST /mushrooms
+ * TODO: PATCH /mushrooms/:id
+ */
+
 let tester;
 const prepare = async () => {
   await cleanUpDb();
@@ -16,10 +22,10 @@ const prepare = async () => {
 };
 
 // ==========================================================================
-//  GET /species
+//  GET /mushrooms
 // ==========================================================================
 
-describe('GET /species', () => {
+describe('GET /mushrooms', () => {
   beforeEach(prepare);
 
   defineTest(msg.SUCCESS_RESSOURCE_RETRIEVAL(R.SPECIES), 'without pictures', async (messageWrapper) => {
@@ -83,86 +89,14 @@ describe('GET /species', () => {
 });
 
 // ==========================================================================
-//  GET /species/:id
+//  POST /mushrooms
 // ==========================================================================
 
-describe('GET /species/:id', () => {
-  beforeEach(prepare);
-
-  defineTest(msg.SUCCESS_RESSOURCE_RETRIEVAL(R.SPECY), '', async (messageWrapper) => {
-    const validSpecyId = await ApiTester.getValidSpecyId(tester.userToken);
-    const res = await ApiTester.apiCall({
-      method: 'get',
-      path: `species/${validSpecyId}`,
-      messageWrapper,
-      token: tester.userToken,
-    });
-    expect(typeof res.body.specy.picture.value).toBe('string');
-    delete res.body.specy.picture.value;
-    expect(res.body).toEqual(
-      expect.objectContaining({
-        message: expect.stringContaining(messageWrapper.msg),
-        specy: expect.objectContaining({
-          description: expect.any(String),
-          id: expect.any(String),
-          name: expect.any(String),
-          pictureId: expect.any(String),
-          usage: expect.any(String),
-          picture: expect.objectContaining({
-            resource_id: expect.any(String),
-            collectionName: expect.any(String),
-            date: expect.any(String),
-            id: expect.any(String),
-          }),
-        }),
-      }),
-    );
-  });
-
-  defineTest(msg.ERROR_RESSOURCE_EXISTANCE(R.SPECY), 'invalid mongoose id', async (messageWrapper) => {
-    const validSpecyId = await ApiTester.getValidSpecyId(tester.userToken);
-    const unvalidSpecyId = validSpecyId.slice(0, -2);
-
-    const res = await ApiTester.apiCall({
-      method: 'get',
-      path: `species/${unvalidSpecyId}`,
-      messageWrapper,
-      token: tester.userToken,
-    });
-    expect(res.body).toEqual(
-      expect.objectContaining({
-        message: expect.stringContaining(messageWrapper.msg),
-      }),
-    );
-  });
-
-  defineTest(msg.ERROR_RESSOURCE_EXISTANCE(R.SPECY), 'id is not attributed to a specy', async (messageWrapper) => {
-    const validSpecyId = await ApiTester.getValidSpecyId(tester.userToken);
-    const unvalidSpecyId = ApiTester.shuffleString(validSpecyId);
-
-    const res = await ApiTester.apiCall({
-      method: 'get',
-      path: `species/${unvalidSpecyId}`,
-      messageWrapper,
-      token: tester.userToken,
-    });
-    expect(res.body).toEqual(
-      expect.objectContaining({
-        message: expect.stringContaining(messageWrapper.msg),
-      }),
-    );
-  });
-});
-
-// ==========================================================================
-//  POST /species
-// ==========================================================================
-
-describe('POST /species', () => {
+describe('POST /mushrooms', () => {
   beforeEach(prepare);
 
   defineTest(msg.SUCCESS_RESSOURCE_CREATION(R.SPECY), 'create a regular specy', async (messageWrapper) => {
-    const picture = ApiTester.createPicture();
+    const picture = createPicture();
     const res = await ApiTester.apiCall({
       method: 'post',
       path: 'species',
@@ -218,7 +152,7 @@ describe('POST /species', () => {
   });
 
   defineTest(msg.ERROR_RESSOURCE_UNICITY('name'), '', async (messageWrapper) => {
-    const picture = ApiTester.createPicture();
+    const picture = createPicture();
     const res = await ApiTester.apiCall({
       method: 'post',
       path: 'species',
@@ -260,40 +194,47 @@ describe('POST /species', () => {
 });
 
 // ==========================================================================
-//  PATCH /species/:id
+//  PATCH /mushrooms/:id
 // ==========================================================================
 
-describe('PATCH /species/:id', () => {
+describe('PATCH /mushrooms/:id', () => {
   beforeEach(prepare);
 
   defineTest(msg.SUCCESS_RESSOURCE_MODIFICATION(R.SPECY), '', async (messageWrapper) => {
-    const validSpecyId = await ApiTester.getValidSpecyId(tester.adminToken);
-    const newName = 'Morille';
+    const validMushroomId = await ApiTester.getValidSpecyId(tester.adminToken);
+    const newDate = Date.now();
+    const newDescription = '...';
+    const newPicture = ApiTester.createPicture();
     const res = await ApiTester.apiCall({
       method: 'patch',
-      path: `species/${validSpecyId}`,
+      path: `species/${validMushroomId}`,
       body: {
-        name: newName,
+        date: newDate,
+        description: newDescription,
+        picture: newPicture,
       },
       token: tester.adminToken,
       messageWrapper,
     });
-    expect(typeof res.body.specy.picture.value).toBe('string');
-    delete res.body.specy.picture.value;
+    expect(typeof res.body.mushroom.picture.value).toBe('string');
+    delete res.body.mushroom.picture.value;
     expect(res.body).toEqual(
       expect.objectContaining({
         message: expect.stringContaining(messageWrapper.msg),
-        specy: expect.objectContaining({
-          description: expect.any(String),
+        mushroom: expect.objectContaining({
+          description: expect.stringContaining(newDesciption),
           id: expect.any(String),
-          name: expect.any(String),
-          pictureId: expect.any(String),
-          usage: expect.any(String),
+          specy_id: expect.any(String),
+          user_id: expect.any(String),
+          date: expect.stringContaining(newDate),
           picture: expect.objectContaining({
             resource_id: expect.any(String),
             collectionName: expect.any(String),
             date: expect.any(String),
             id: expect.any(String),
+          }),
+          location: expect.objectContaining({
+            // TODO: implement this
           }),
         }),
       }),
@@ -301,12 +242,12 @@ describe('PATCH /species/:id', () => {
   });
 
   defineTest(msg.ERROR_RESSOURCE_EXISTANCE(R.SPECY), 'invalid mongoose id', async (messageWrapper) => {
-    const validSpecyId = await ApiTester.getValidSpecyId(tester.adminToken);
-    const unvalidSpecyId = validSpecyId.slice(0, -2);
+    const validMushroomId = await ApiTester.getValidSpecyId(tester.adminToken);
+    const unvalidMushroomId = validMushroomId.slice(0, -2);
 
     const res = await ApiTester.apiCall({
       method: 'patch',
-      path: `species/${unvalidSpecyId}`,
+      path: `mushrooms/${unvalidMushroomId}`,
       messageWrapper,
       token: tester.adminToken,
     });
@@ -318,10 +259,10 @@ describe('PATCH /species/:id', () => {
   });
 
   defineTest(msg.ERROR_IMG_BASE64, '', async (messageWrapper) => {
-    const validSpecyId = await ApiTester.getValidSpecyId(tester.adminToken);
+    const validMushroomId = await ApiTester.getValidMushroomId(tester.adminToken);
     const res = await ApiTester.apiCall({
       method: 'patch',
-      path: `species/${validSpecyId}`,
+      path: `mushrooms/${validMushroomId}`,
       body: {
         name: 'Bollet de test',
         picture: 'dafkjjafljfaj',
@@ -338,20 +279,20 @@ describe('PATCH /species/:id', () => {
 });
 
 // ==========================================================================
-//  DELETE /users/:id
+//  DELETE /mushrooms/:id
 // ==========================================================================
 
-describe('DELETE /species/:id', () => {
+describe('DELETE /mushrooms/:id', () => {
   beforeEach(prepare);
 
-  defineTest(msg.SUCCESS_RESSOURCE_DELETION(R.SPECY), '', async (messageWrapper) => {
-    const validSpecyId = await ApiTester.getValidSpecyId(tester.adminToken);
+  defineTest(msg.SUCCESS_RESSOURCE_DELETION(R.MUSHROOM), '', async (messageWrapper) => {
+    const validMushroomId = await ApiTester.getValidMushroomId(tester.userToken);
 
     const res = await ApiTester.apiCall({
       method: 'delete',
-      path: `species/${validSpecyId}`,
+      path: `species/${validMushroomId}`,
       messageWrapper,
-      token: tester.adminToken,
+      token: tester.userToken,
     });
     expect(res.body).toEqual(
       expect.objectContaining({
@@ -361,12 +302,28 @@ describe('DELETE /species/:id', () => {
   });
 
   defineTest(msg.ERROR_RESSOURCE_EXISTANCE(R.SPECY), 'invalid mongoose id', async (messageWrapper) => {
-    const validSpecyId = await ApiTester.getValidUserId(tester.adminToken);
-    const unvalidSpecyId = validSpecyId.slice(0, -2);
+    const validMushroomId = await ApiTester.getValidMushroomId(tester.userToken);
+    const unvalidMushroomId = validMushroomId.slice(0, -2);
 
     const res = await ApiTester.apiCall({
       method: 'delete',
-      path: `species/${unvalidSpecyId}`,
+      path: `mushrooms/${unvalidMushroomId}`,
+      messageWrapper,
+      token: tester.userToken,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(messageWrapper.msg),
+      }),
+    );
+  });
+
+  defineTest(msg.ERROR_OWNERRIGHT_GRANTATION, '', async (messageWrapper) => {
+    const validMushroomId = await ApiTester.getValidMushroomId(tester.userToken);
+
+    const res = await ApiTester.apiCall({
+      method: 'delete',
+      path: `mushrooms/${validMushroomId}`,
       messageWrapper,
       token: tester.adminToken,
     });

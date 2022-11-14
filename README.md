@@ -223,14 +223,15 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
 
 ```
 {
-    specy_id: Number,
-    user_id: Number,
+    species_id: Number,
     picture: File<JPG|PNG>,
     description?: String,
     date: Date,
-    location: {
-        lat: String,
-        long: String,
+    geolocalisation: {
+      location: {
+       type: enum [Point], 
+      },
+      coordinates: number[]
     }
 }
 ```
@@ -240,15 +241,26 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
 ```json
 {
   "message": "Mushroom added",
-  "specy": {
-    "sepcy_id": "1",
+  "mushroom": {
+    "species_id": "1",
     "user_id": "1",
     "picture": "https://...",
     "description": "This is a Amanita phalloides...",
     "date": "2022.01.01",
-    "location": {
-      "lat": "...",
-      "long": "..."
+    "picture": {
+      "value": "data:image/undefinedbase64, ... ",
+      "resource_id": "636b97a08f7ef3fb6243e92f",
+      "collectionName": "species",
+      "date": "2022-11-09T12:05:51.097Z",
+      "id": "636b97a08f7ef3fb6243e92e"
+    },
+    "geolocalisation": {
+      "location": {
+       "type": "Point", 
+      },
+      "coordinates": [
+        "46.616517,6.234434,..."
+      ]
     }
   }
 }
@@ -274,14 +286,15 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
 
 ```
 {
-    specy_id?: Number,
-    user_id?: Number,
+    species_id?: Number,
     picture?: File<JPG|PNG>,
     description?: String,
     date?: Date,
-    location?: {
-        lat: Number,
-        long: Number
+    geolocalisation?: {
+      location: {
+       type: enum [Point], 
+      },
+      coordinates: number[]
     }
 }
 ```
@@ -291,14 +304,25 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
 ```json
 {
   "message": "Mushroom updated",
-  "specy": {
-    "sepcy_id": "1",
+  "mushroom": {
+    "species_id": "1",
     "picture": "https://...",
     "description": "This is a Amanita phalloides...",
     "date": "2022.01.01",
-    "location": {
-      "lat": "...",
-      "long": "..."
+    "picture": {
+      "value": "data:image/undefinedbase64, ... ",
+      "resource_id": "636b97a08f7ef3fb6243e92f",
+      "collectionName": "species",
+      "date": "2022-11-09T12:05:51.097Z",
+      "id": "636b97a08f7ef3fb6243e92e"
+    },
+    "geolocalisation": {
+      "location": {
+       "type": "Point", 
+      },
+      "coordinates": [
+        "46.616517,6.234434,..."
+      ]
     }
   }
 }
@@ -313,6 +337,7 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
 - `?location={ lat:Float, long:Float }`: Coordonnées GPS
 - `?species=String`: Espèce(s)
 - `?user=Integer`: ID Utilisateur
+- `?showPictures=Boolean`: affiche ou non les images
 - `&total=Boolean`: Somme des champignons par utilisateur (Si TRUE)
 - `?usage=String`: Usage
 - `?from=Date`: Date de début
@@ -325,15 +350,26 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
 ```json
 {
   "message": "Mushrooms retrieved",
-  "species": [
+  "mushroom": [
     {
       "sepcy_id": "1",
       "picture": "https://...",
       "description": "This is a Amanita phalloides...",
       "date": "2022.01.01",
-      "location": {
-        "lat": "...",
-        "long": "..."
+      "picture": {
+        "value": "data:image/undefinedbase64, ... ",
+        "resource_id": "636b97a08f7ef3fb6243e92f",
+        "collectionName": "species",
+        "date": "2022-11-09T12:05:51.097Z",
+        "id": "636b97a08f7ef3fb6243e92e"
+      },
+      "geolocalisation": {
+        "location": {
+        "type": "Point", 
+        },
+        "coordinates": [
+          "46.616517,6.234434,..."
+        ]
       }
     }
   ]
