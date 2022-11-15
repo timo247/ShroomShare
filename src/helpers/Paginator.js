@@ -17,7 +17,12 @@ export default class Paginator {
     Paginator.#isValidParam(currentPage, 'currentPage');
 
     this.pageSize = Number(pageSize) || Paginator.#defaultPageSize;
-    this.lastPage = Math.trunc(numberOfItems / this.pageSize);
+    this.lastPage = (() => {
+      const floatValue = numberOfItems / this.pageSize;
+      const integerValue = Math.trunc(numberOfItems / this.pageSize);
+      if (floatValue % integerValue !== 0) return integerValue + 1;
+      return integerValue;
+    })();
     this.currentPage = (() => {
       let value = Number(currentPage) || 1;
       if (value < 1) value = 1;

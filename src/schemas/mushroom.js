@@ -32,6 +32,17 @@ const mushroomSchema = new Schema({
 // Create a geospatial index on the location property.
 mushroomSchema.index({ location: '2dsphere' });
 
+mushroomSchema.set('toJSON', {
+  transform: transformJsonUser,
+});
+
+function transformJsonUser(doc, json, options) {
+  json.id = json['_id']; // eslint-disable-line
+  delete json['_id']; // eslint-disable-line
+  delete json['__v']; // eslint-disable-line
+  return json;
+}
+
 mongoose.model('Mushroom', mushroomSchema, 'mushrooms');
 const Mushroom = mongoose.model('Mushroom');
 

@@ -1,5 +1,6 @@
 import path from 'path';
 import fs from 'fs';
+import jwt from 'jsonwebtoken';
 import supertest from 'supertest';
 import app from '../../app.js';
 import config from '../../config.js';
@@ -56,7 +57,8 @@ export default class ApiTester {
   }
 
   static async getValidMushroomId(token) {
-    const response = await supertest(app).get(`/${config.apiName}/mushrooms`)
+    const userId = jwt.verify(token, config.secretKey).sub;
+    const response = await supertest(app).get(`/${config.apiName}/mushrooms/?userId=${userId}`)
       .set('Authorization', `Bearer ${token}`);
     return response.body.mushrooms[0].id;
   }

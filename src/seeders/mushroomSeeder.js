@@ -15,9 +15,8 @@ async function seeder() {
     max.push(index);
   }
   for (const i of max) {
-    const x = randomInt(1, 10);
     const y = randomInt(1, 6);
-    await createMushroom(x, y, i);
+    await createMushroom(i, y, i);
   }
 }
 
@@ -43,6 +42,7 @@ async function getLocation() {
 
 async function getUser(name) {
   const user = await User.findOne({ username: name });
+  if (!user) throw new Error('user not found');
   return user;
 }
 
