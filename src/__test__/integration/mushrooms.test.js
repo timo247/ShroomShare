@@ -349,17 +349,26 @@ describe('PATCH /mushrooms/:id', () => {
   beforeEach(prepare);
 
   defineTest(msg.SUCCESS_RESSOURCE_MODIFICATION(R.MUSHROOM), '', async (messageWrapper) => {
-    const validMushroomId = await ApiTester.getValidSpecyId(tester.adminToken);
-    const newDate = Date.now();
+    const validMushroomId = await ApiTester.getValidMushroomId(tester.adminToken);
     const newDescription = '...';
     const newPicture = ApiTester.createPicture();
+    const latitude = 46.616517;
+    const longitude = 6.213434;
     const res = await ApiTester.apiCall({
       method: 'patch',
-      path: `species/${validMushroomId}`,
+      path: `mushrooms/${validMushroomId}`,
       body: {
-        date: newDate,
         description: newDescription,
         picture: newPicture,
+        geolocalisation: {
+          location: {
+            type: 'Point',
+            coordinates: [
+              longitude,
+              latitude,
+            ],
+          },
+        },
       },
       token: tester.adminToken,
       messageWrapper,
@@ -370,22 +379,27 @@ describe('PATCH /mushrooms/:id', () => {
       expect.objectContaining({
         message: expect.stringContaining(messageWrapper.msg),
         mushroom: expect.objectContaining({
-          description: expect.stringContaining(newDesciption),
+          date: expect.any(String),
+          description: expect.stringContaining(newDescription),
           id: expect.any(String),
           specy_id: expect.any(String),
           user_id: expect.any(String),
-          date: expect.stringContaining(newDate),
+          picture_id: expect.any(String),
           picture: expect.objectContaining({
             specy_id: expect.any(String),
             collectionName: expect.any(String),
             date: expect.any(String),
             id: expect.any(String),
+            user_id: expect.any(String),
+            mushroom_id: expect.any(String),
           }),
           geolocalisation: expect.objectContaining({
             location: expect.objectContaining({
               type: expect.stringContaining('Point'),
+              coordinates: expect.arrayContaining([
+                latitude, longitude,
+              ]),
             }),
-            coordinates: expect.number(Array),
           }),
         }),
       }),
@@ -401,6 +415,33 @@ describe('PATCH /mushrooms/:id', () => {
       path: `mushrooms/${unvalidMushroomId}`,
       messageWrapper,
       token: tester.adminToken,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(messageWrapper.msg),
+      }),
+    );
+  });
+
+  defineTest(msg.ERROR_GEOJSON_FORMAT, '', async (messageWrapper) => {
+    const validMushroomId = await ApiTester.getValidSpecyId(tester.userToken);
+
+    const res = await ApiTester.apiCall({
+      method: 'patch',
+      path: `mushrooms/${validMushroomId}`,
+      messageWrapper,
+      token: tester.userToken,
+      body: {
+        geolocalisation: {
+          location: {
+            type: 'Point',
+            coordinates: [
+              100,
+              200,
+            ],
+          },
+        },
+      },
     });
     expect(res.body).toEqual(
       expect.objectContaining({

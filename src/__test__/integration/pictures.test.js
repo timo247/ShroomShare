@@ -25,7 +25,7 @@ describe('POST /pictures', () => {
   defineTest(msg.SUCCESS_RESSOURCE_RETRIEVAL(R.PICTURES), '', async (messageWrapper) => {
     const response = await supertest(app).get(`/${config.apiName}/species`)
       .set('Authorization', `Bearer ${tester.userToken}`);
-    const pictureIds = response.body.species.map((specy) => specy.pictureId);
+    const pictureIds = response.body.species.map((specy) => specy.picture_id);
     const res = await ApiTester.apiCall({
       method: 'post',
       path: 'pictures',
@@ -83,7 +83,7 @@ describe('POST /pictures', () => {
   defineTest(msg.ERROR_RESSOURCE_EXISTANCE(R.PICTURES), '', async (messageWrapper) => {
     const response = await supertest(app).get(`/${config.apiName}/species`)
       .set('Authorization', `Bearer ${tester.userToken}`);
-    const pictureIds = response.body.species.map((specy) => specy.pictureId);
+    const pictureIds = response.body.species.map((specy) => specy.picture_id);
     const unvalidId = ApiTester.shuffleString(pictureIds[0]);
     const res = await ApiTester.apiCall({
       method: 'post',
@@ -102,7 +102,7 @@ describe('POST /pictures', () => {
   defineTest(msg.SUCCESS_RESSOURCE_RETRIEVAL(R.PICTURES), 'unvalidIds + unknownIds', async (messageWrapper) => {
     const response = await supertest(app).get(`/${config.apiName}/species`)
       .set('Authorization', `Bearer ${tester.userToken}`);
-    const pictureIds = response.body.species.map((specy) => specy.pictureId);
+    const pictureIds = response.body.species.map((specy) => specy.picture_id);
     pictureIds[0] = pictureIds[0].slice(0, -2);
     pictureIds[1] = ApiTester.shuffleString(pictureIds[1]);
 

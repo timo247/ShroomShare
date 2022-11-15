@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 export const RESSOURCES = {
   USER: 'user',
   USERS: 'users',
@@ -46,34 +44,16 @@ const messages = {
   ERROR_RESSOURCE_DUPLICATE: (name) => new Message(name, 'already exist', 409).getMessageWrapper(),
   //  Route auth
   // ==========================================================================
-  ERROR_AUTH_LOGIN: {
-    status: 401,
-    msg: 'Username and/or password are/is invalid.',
-  },
-  ERROR_AUTH_PERMISSION_GRANTATION: {
-    status: 401,
-    msg: 'Permission not granted.',
-  },
-  ERROR_AUTH_HEADER_PRESENCE: {
-    status: 401,
-    msg: 'Authorization header is missing.',
-  },
-  ERROR_AUTH_BEARERTOKEN_FORMAT: {
-    status: 401,
-    msg: 'Authorization header is not a bearer token.',
-  },
+  ERROR_AUTH_LOGIN: { status: 401, msg: 'Username and/or password are/is invalid.' },
+  ERROR_AUTH_PERMISSION_GRANTATION: { status: 401, msg: 'Permission not granted.' },
+  ERROR_AUTH_HEADER_PRESENCE: { status: 401, msg: 'Authorization header is missing.' },
+  ERROR_AUTH_BEARERTOKEN_FORMAT: { status: 401, msg: 'Authorization header is not a bearer token.' },
   //  JWT tokens
   // ==========================================================================
-  ERROR_TOKEN_VALIDATION: {
-    status: 401,
-    msg: 'Your token is invalid or has expired.',
-  },
+  ERROR_TOKEN_VALIDATION: { status: 401, msg: 'Your token is invalid or has expired.' },
   ERROR_TOKEN_CREATION: { status: 401, msg: 'Token creation failed.' },
   INTERNALERROR_TOKEN_CREATION: { status: 500, msg: 'Unable to create token' },
-  INTERNALERROR_TOKEN_VALIDATION: {
-    status: 500,
-    msg: 'Unable to verify token',
-  },
+  INTERNALERROR_TOKEN_VALIDATION: { status: 500, msg: 'Unable to verify token' },
   SUCCESS_TOKEN_CREATION: { status: 201, msg: 'Token succesfully created.' },
   //  Schema validation
   // ==========================================================================
@@ -84,30 +64,26 @@ const messages = {
   CHAT_USER_DISCONNECTION: 'User disconnected.',
   CHAT_USER_CONNECTION: 'User connected.',
   CHAT_MESSAGE_RECEPTION: 'Message received. ',
+  //  Pictures
+  // ==========================================================================
+  ERROR_IMG_BASE64: { status: 401, msg: 'Picture is not base64.' },
+  ERROR_PICTURE_ID: (pictureId) => { return { status: 401, msg: `the picture_id '${pictureId}' is not a valid id.` }; },
+  ERROR_PICTURE_EXISTENCE: (pictureId) => { return { status: 401, msg: `the picture_id '${pictureId}' doesn't exist.` }; },
   //  Others
   // ==========================================================================
-  ERROR_OWNERRIGHT_GRANTATION: {
-    status: 404,
-    msg: 'You can only alter your own ressources.',
-  },
+  ERROR_OWNERRIGHT_GRANTATION: { status: 404, msg: 'You can only alter your own ressources.' },
   INTERNALERROR: { status: 500, msg: 'Internal server error.' },
-  ERROR_FIELD_REQUIRED: (name, status = 401) => ({
-    status,
-    msg: `The body field '${name}' is required.`,
-  }),
-  ERROR_PARAM_REQUIRED: (name, status = 401) => ({
-    status,
-    msg: `The query param '${name}' is required.`,
-  }),
-  ERROR_IMG_BASE64: { status: 401, msg: 'Picture is not base64.' },
+  ERROR_FIELD_REQUIRED: (name, status = 401) => ({ status, msg: `The body field '${name}' is required.` }),
+  ERROR_PARAM_REQUIRED: (name, status = 401) => ({ status, msg: `The query param '${name}' is required.` }),
   ERROR_DATE_FORMAT: { status: 401, msg: 'Date format is unvalid.' },
   ERROR_DATE_VALIDATION: { status: 401, msg: 'Date cannot be in futur.' },
   ERROR_DURATION_VALIDATION: { status: 401, msg: 'Duration is too big' },
   ERROR_LONGITUDE_VALIDATION: { status: 401, msg: 'Not a valid longitude' },
   ERROR_LATITUDE_VALIDATION: { status: 401, msg: 'Not a valid latitude' },
-  ERRRO_GEOJSON_FORMAT: { status: 401, msg: 'Not a valid latitude' },
+  ERROR_GEOJSON_FORMAT: { status: 401, msg: 'Latitude and/or longitude are/is not valid.' },
   ERROR_ROUTE_EXISTENCE: { status: 404, msg: 'This route doesn\'t exist.' },
   ERROR_METHOD_EXISTENCE: { status: 404, msg: 'This method is not available for this route.' },
+  ERROR_EMPTY_ARRAY: (arrayName) => { return { status: 401, msg: `The array '${arrayName}' can't be empty.` }; },
 };
 
 export default messages;

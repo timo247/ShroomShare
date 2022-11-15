@@ -85,7 +85,7 @@ async function createMushroom(species, coordinates, pictureId, mushroomId, userI
   const mushroom = new Mushroom({
     _id: mushroomId,
     user_id: userId,
-    species_id: species.id,
+    specy_id: species.id,
     picture_id: pictureId,
     description: `J'ai trouvé ce magnifique spécimen ${species.name} en bordure de forêt`,
     date: new Date(),

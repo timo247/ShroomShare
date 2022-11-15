@@ -181,8 +181,8 @@ router.patch('/:id', auth.authenticateUser, async (req, res, next) => {
     if (req.body.date) {
       if (!validateDate(req.body.date)) return useAuth.send(res, msg.ERROR_DATE_FORMAT);
     }
-    if (req.body.geolocalisation) {
-      if (!validateGeoJsonCoordinates(req.body.geolocalisation)) {
+    if (req.body.geolocalisation.location.coordinates) {
+      if (!validateGeoJsonCoordinates(req.body.geolocalisation.location.coordinates)) {
         return useAuth.send(res, msg.ERROR_GEOJSON_FORMAT);
       }
     }
@@ -193,14 +193,14 @@ router.patch('/:id', auth.authenticateUser, async (req, res, next) => {
         value: req.params.picture,
       };
       delete params.picture;
-      await Image.findOneAndUpdate({ specy_id: id }, picture);
+      await Image.findOneAndUpdate({ mushroom_id: id }, picture);
     }
     await Mushroom.findByIdAndUpdate(id, params);
-    const modifiedMushroom = await Specy.findOne({ _id: id });
-    const modifiedPicture = await Image.findOne({ specy_id: id });
+    const modifiedMushroom = await Mushroom.findOne({ _id: id });
+    const modifiedPicture = await Image.findOne({ mushroom_id: id });
     const newMushroom = JSON.parse(JSON.stringify(modifiedMushroom));
     newMushroom.picture = modifiedPicture;
-    req.body = useAuth.setBody({ specy: newMushroom });
+    req.body = useAuth.setBody({ mushroom: newMushroom });
     useAuth.send(res, msg.SUCCESS_RESSOURCE_MODIFICATION(R.MUSHROOM), req.body);
   } catch (error) {
     return next(error);
