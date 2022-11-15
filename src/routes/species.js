@@ -57,7 +57,7 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
     });
     species = species.slice(pages.firstIndex, pages.lastIndex);
     if (showPictures === 'true') {
-      const ids = species.map((specy) => mongoose.Types.ObjectId(specy.pictureId)); //eslint-disable-line
+      const ids = species.map((specy) => mongoose.Types.ObjectId(specy.picture_id)); //eslint-disable-line
       const speciesMap = new Map();
       species.forEach((specy) => {
         speciesMap.set(specy['id'].toString(), specy); //eslint-disable-line
@@ -75,9 +75,9 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
         return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.PICTURE), req.body);
       }
       pictures.forEach((picture) => {
-        const specyWithPicture = JSON.parse(JSON.stringify(speciesMap.get(picture.resource_id.toString()))); //eslint-disable-line
+        const specyWithPicture = JSON.parse(JSON.stringify(speciesMap.get(picture.specy_id.toString()))); //eslint-disable-line
         specyWithPicture.picture = picture;
-        speciesMap.set(picture.resource_id.toString(), specyWithPicture); //eslint-disable-line
+        speciesMap.set(picture.specy_id.toString(), specyWithPicture); //eslint-disable-line
       });
       species = Array.from(speciesMap.values());
     }
@@ -123,7 +123,7 @@ router.get('/:id', auth.authenticateUser, async (req, res, next) => {
     if (!specy) {
       return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.SPECY));
     }
-    const picture = await Image.findOne({ _id: specy.pictureId });
+    const picture = await Image.findOne({ _id: specy.picture_id });
     if (!picture) {
       req.body = useAuth.setBody({ specy });
       return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.PICTURE), req.body);
@@ -168,14 +168,14 @@ router.post('/', auth.authenticateAdmin, async (req, res, next) => {
     const pictureId = new mongoose.Types.ObjectId();
     const specyId = new mongoose.Types.ObjectId();
     req.body['_id'] = specyId; //eslint-disable-line
-    req.body.pictureId = pictureId;
+    req.body.picture_id = pictureId;
     const picture = req.body.picture;
     delete req.body.picture;
     const specy = new Specy(req.body);
     const newPicture = new Image({
       _id: pictureId,
       value: picture,
-      resource_id: specyId,
+      specy_id: specyId,
     });
     const savedSpecy = await specy.save();
     const newSpecy = JSON.parse(JSON.stringify(savedSpecy));
@@ -225,11 +225,11 @@ router.patch('/:id', auth.authenticateAdmin, async (req, res, next) => {
         value: req.params.picture,
       };
       delete params.picture;
-      await Image.findOneAndUpdate({ resource_id: id }, picture);
+      await Image.findOneAndUpdate({ specy_id: id }, picture);
     }
     await Specy.findByIdAndUpdate(id, params);
     const modifiedSpecy = await Specy.findOne({ _id: id });
-    const modifiedPicture = await Image.findOne({ resource_id: id });
+    const modifiedPicture = await Image.findOne({ specy_id: id });
     const newSpecy = JSON.parse(JSON.stringify(modifiedSpecy));
     newSpecy.picture = modifiedPicture;
     req.body = useAuth.setBody({ specy: newSpecy });
@@ -268,7 +268,7 @@ router.delete('/:id', auth.authenticateAdmin, async (req, res, next) => {
     const specyToDelete = await Specy.findOne({ _id: id });
     if (!specyToDelete) return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.SPECY));
     await Specy.deleteOne({ _id: id });
-    await Image.deleteOne({ resource_id: id });
+    await Image.deleteOne({ specy_id: id });
     req.body = useAuth.setBody();
     useAuth.send(res, msg.SUCCESS_RESSOURCE_DELETION(R.SPECY), req.body);
   } catch (error) {

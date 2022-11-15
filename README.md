@@ -90,11 +90,11 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
     "name": "Amanite phalloides",
     "description": "The Amanita phalloides is a ...",
     "usage": "non-commestible",
-    "pictureId": "636b97a08f7ef3fb6243e92e",
+    "picture_id": "636b97a08f7ef3fb6243e92e",
     "id": "636b97a08f7ef3fb6243e92f",
     "picture": {
       "value": "data:image/undefinedbase64, ... ",
-      "resource_id": "636b97a08f7ef3fb6243e92f",
+      "specy_id": "636b97a08f7ef3fb6243e92f",
       "collectionName": "species",
       "date": "2022-11-09T12:05:51.097Z",
       "id": "636b97a08f7ef3fb6243e92e"
@@ -128,11 +128,11 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
     "name": "Amanite phalloides",
     "description": "The Amanita phalloides is a ...",
     "usage": "non-commestible",
-    "pictureId": "636b97a08f7ef3fb6243e92e",
+    "picture_id": "636b97a08f7ef3fb6243e92e",
     "id": "636b97a08f7ef3fb6243e92f",
     "picture": {
       "value": "data:image/undefinedbase64, ... ",
-      "resource_id": "636b97a08f7ef3fb6243e92f",
+      "specy_id": "636b97a08f7ef3fb6243e92f",
       "collectionName": "species",
       "date": "2022-11-09T12:05:51.097Z",
       "id": "636b97a08f7ef3fb6243e92e"
@@ -173,11 +173,11 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
       "name": "Amanite phalloides",
       "description": "The Amanita phalloides is a ...",
       "usage": "non-commestible",
-      "pictureId": "636b97a08f7ef3fb6243e92e",
+      "picture_id": "636b97a08f7ef3fb6243e92e",
       "id": "636b97a08f7ef3fb6243e92f",
       "picture": {
         "value": "data:image/undefinedbase64, ... ",
-        "resource_id": "636b97a08f7ef3fb6243e92f",
+        "specy_id": "636b97a08f7ef3fb6243e92f",
         "collectionName": "species",
         "date": "2022-11-09T12:05:51.097Z",
         "id": "636b97a08f7ef3fb6243e92e"
@@ -200,11 +200,11 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
     "name": "Amanite phalloides",
     "description": "The Amanita phalloides is a ...",
     "usage": "non-commestible",
-    "pictureId": "636b97a08f7ef3fb6243e92e",
+    "picture_id": "636b97a08f7ef3fb6243e92e",
     "id": "636b97a08f7ef3fb6243e92f",
     "picture": {
       "value": "data:image/undefinedbase64, ... ",
-      "resource_id": "636b97a08f7ef3fb6243e92f",
+      "specy_id": "636b97a08f7ef3fb6243e92f",
       "collectionName": "species",
       "date": "2022-11-09T12:05:51.097Z",
       "id": "636b97a08f7ef3fb6243e92e"
@@ -249,7 +249,7 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
     "date": "2022.01.01",
     "picture": {
       "value": "data:image/undefinedbase64, ... ",
-      "resource_id": "636b97a08f7ef3fb6243e92f",
+      "specy_id": "636b97a08f7ef3fb6243e92f",
       "collectionName": "species",
       "date": "2022-11-09T12:05:51.097Z",
       "id": "636b97a08f7ef3fb6243e92e"
@@ -312,7 +312,7 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
     "date": "2022.01.01",
     "picture": {
       "value": "data:image/undefinedbase64, ... ",
-      "resource_id": "636b97a08f7ef3fb6243e92f",
+      "specy_id": "636b97a08f7ef3fb6243e92f",
       "collectionName": "species",
       "date": "2022-11-09T12:05:51.097Z",
       "id": "636b97a08f7ef3fb6243e92e"
@@ -360,7 +360,7 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
       "date": "2022.01.01",
       "picture": {
         "value": "data:image/undefinedbase64, ... ",
-        "resource_id": "636b97a08f7ef3fb6243e92f",
+        "specy_id": "636b97a08f7ef3fb6243e92f",
         "collectionName": "species",
         "date": "2022-11-09T12:05:51.097Z",
         "id": "636b97a08f7ef3fb6243e92e"
@@ -511,7 +511,7 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
   "pictures": [
      {
         "value": "data:image/jpgbase64, /9j/4AAQSkZJRgABAQAAAQABAAD/",
-        "resource_id": "636cca7ec8fff49b7d347e5d",
+        "specy_id": "636cca7ec8fff49b7d347e5d",
         "collectionName": "species",
         "date": "2022-11-10T09:55:08.571Z",
         "id": "636cca7ec8fff49b7d347e5c"

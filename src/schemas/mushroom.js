@@ -4,11 +4,28 @@ import validateGeoJsonCoordinates from '../helpers/useValidateGeoJsonCoordinates
 const Schema = mongoose.Schema;
 
 const mushroomSchema = new Schema({
-  species_id: { type: Schema.Types.ObjectId, ref: 'species' },
-  user_id: { type: Schema.Types.ObjectId, ref: 'user' },
-  picture: { type: String, required: true },
-  description: { type: String, required: false },
-  date: { type: Date, required: true, default: Date.now },
+  species_id: {
+    type: Schema.Types.ObjectId,
+    ref: 'species',
+  },
+  user_id: {
+    type: Schema.Types.ObjectId,
+    ref: 'users',
+  },
+  picture_id: {
+    type: Schema.Types.ObjectId,
+    ref: 'images',
+    required: false,
+  },
+  description: {
+    type: String,
+    required: false,
+  },
+  date: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
   geolocalisation: {
     // store geospatial information as GeoJSON object
     location: {

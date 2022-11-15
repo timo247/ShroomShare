@@ -1,4 +1,5 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import isBase64 from '../helpers/useValidateBase64.js';
 import Specy from '../schemas/species.js';
 import Mushroom from '../schemas/mushroom.js';
@@ -13,6 +14,7 @@ import validateGeoJsonCoordinates from '../helpers/useValidateGeoJsonCoordinates
 import validateDate from '../helpers/useValidateDate.js';
 import User from '../schemas/user.js';
 
+// TOOD: images: ajouter un champ specy_id
 const router = express.Router();
 const errorLogger = config.debug.apiErrors;
 
@@ -70,9 +72,6 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
       if (!existingUserId) return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
       dynamicQuery = dynamicQuery.where('user_id').equals(queryUserId);
     }
-    if (!showPictures) {
-      dynamicQuery = dynamicQuery.select('-picture');
-    }
     let data = await dynamicQuery;
     const pages = new Paginator({
       numberOfItems: data.length,
@@ -80,6 +79,30 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
       currentPage: req.query?.currentPage,
     });
     data = data.slice(pages.firstIndex, pages.lastIndex);
+    if (showPictures) {
+      const ids = data.map((mush) => mongoose.Types.ObjectId(mush.picture_id)); //eslint-disable-line
+      const mushroomsMap = new Map();
+      data.forEach((mush) => {
+        mushroomsMap.set(mush.id, mush);
+      });
+      const pictures = await Image.find({
+        _id: { $in: ids },
+      });
+      pictures.forEach((picture) => {
+        const mushroomWithPicture = JSON.parse(JSON.stringify(mushroomsMap.get(picture.specy_id.toString()))); //eslint-disable-line
+        mushroomWithPicture.picture = picture;
+        mushroomsMap.set(picture.specy_id.toString(), mushroomWithPicture); //eslint-disable-line
+      });
+      const mushrooms = Array.from(speciesMap.values());
+
+      req.body = useAuth.setBody({
+        currentPage: pages.currentPage,
+        pageSize: pages.pageSize,
+        lastPage: pages.lastPage,
+        mushrooms,
+      });
+      useAuth.send(res, msg.SUCCESS_RESSOURCE_RETRIEVAL(R.MUSHROOMS), req.body);
+    }
     req.body = useAuth.setBody({
       currentPage: pages.currentPage,
       pageSize: pages.pageSize,
@@ -170,11 +193,11 @@ router.patch('/:id', auth.authenticateUser, async (req, res, next) => {
         value: req.params.picture,
       };
       delete params.picture;
-      await Image.findOneAndUpdate({ resource_id: id }, picture);
+      await Image.findOneAndUpdate({ specy_id: id }, picture);
     }
     await Mushroom.findByIdAndUpdate(id, params);
     const modifiedMushroom = await Specy.findOne({ _id: id });
-    const modifiedPicture = await Image.findOne({ resource_id: id });
+    const modifiedPicture = await Image.findOne({ specy_id: id });
     const newMushroom = JSON.parse(JSON.stringify(modifiedMushroom));
     newMushroom.picture = modifiedPicture;
     req.body = useAuth.setBody({ specy: newMushroom });
@@ -196,7 +219,7 @@ router.delete('/:id', auth.authenticateUser, async (req, res, next) => {
     const areIdsIdentical = String(req.currentUserId) === String(mushroomOwnerId);
     if (!areIdsIdentical) return useAuth.send(res, msg.ERROR_OWNERRIGHT_GRANTATION);
     await Mushroom.deleteOne({ _id: id });
-    await Image.deleteOne({ resource_id: id });
+    await Image.deleteOne({ specy_id: id });
     req.body = useAuth.setBody();
     useAuth.send(res, msg.SUCCESS_RESSOURCE_DELETION(R.MUSHROOM), req.body);
   } catch (error) {

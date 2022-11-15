@@ -19,11 +19,11 @@
  *               type: string
  *              usage:
  *               type: string
- *               enum: 
+ *               enum:
  *                    - commestible
  *                    - non-commestible
  *              picture:
- *               type: string 
+ *               type: string
  */
 
 // =================================================
@@ -45,10 +45,10 @@
  *                      type: string
  *                     description:
  *                      type: string
- *                      enum: 
+ *                      enum:
  *                           - commestible
  *                           - non-commestible
- *                     pictureId:
+ *                     picture_id:
  *                      type: string
  *                     id:
  *                      type: string
@@ -57,7 +57,7 @@
  *                      properties:
  *                        value:
  *                         type: string
- *                        resource_id:
+ *                        specy_id:
  *                         type: string
  *                        collectionName:
  *                         type: string
@@ -65,7 +65,7 @@
  *                         type: string
  *                        id:
  *                         type: string
- *                       
+ *
  */
 
 // =================================================
@@ -99,11 +99,11 @@
  *              name: Bolet
  *              description: Bolet qui apparaît dans la foret
  *              usage: commestible
- *              pictureId: 5f9fcvdfvfbbbnsf9f9vsvvfs9f9f9f9f9f
+ *              picture_id: 5f9fcvdfvfbbbnsf9f9vsvvfs9f9f9f9f9f
  *              id: 5f9f9f9f9f9f9f9f9f9f9f9f
  *           picture:
  *             value: data:image/undefinedbase64,...
- *             resource_id: 5f9f9fvavrnztjsaabstwgb356736gv3ff9f9f9f9f9f9f
+ *             specy_id: 5f9f9fvavrnztjsaabstwgb356736gv3ff9f9f9f9f9f9f
  *             collectionName: species
  *             date: 2020-10-29T15:00:00.000Z
  *             id: 5f9f9jv43jt6354zbqhf9f9f9f
@@ -157,10 +157,10 @@
  *                      type: string
  *                     description:
  *                      type: string
- *                      enum: 
+ *                      enum:
  *                           - commestible
  *                           - non-commestible
- *                     pictureId:
+ *                     picture_id:
  *                      type: string
  *                     id:
  *                      type: string
@@ -169,7 +169,7 @@
  *                      properties:
  *                        value:
  *                         type: string
- *                        resource_id:
+ *                        specy_id:
  *                         type: string
  *                        collectionName:
  *                         type: string
@@ -195,11 +195,11 @@
  *                  name: Bolet
  *                  description: Bolet qui apparaît dans la foret
  *                  usage: commestible
- *                  pictureId: 5f9fcvdfvfbbbnsf9f9vsvvfs9f9f9f9f9f
+ *                  picture_id: 5f9fcvdfvfbbbnsf9f9vsvvfs9f9f9f9f9f
  *                  id: 5f9f9f9f9f9f9f9f9f9f9f9f
  *                  picture:
  *                      value: data:image/undefinedbase64,...
- *                      resource_id: 5f9f9fvavrnztjsaabstwgb356736gv3ff9f9f9f9f9f9f
+ *                      specy_id: 5f9f9fvavrnztjsaabstwgb356736gv3ff9f9f9f9f9f9f
  *                      collectionName: species
  *                      date: 2020-10-29T15:00:00.000Z
  *                      id: 5f9f9jv43jt6354zbqhf9f9f9f
@@ -229,11 +229,11 @@
  *               type: string
  *              usage:
  *               type: string
- *               enum: 
+ *               enum:
  *                    - commestible
  *                    - non-commestible
  *              picture:
- *               type: string 
+ *               type: string
  */
 
 // =================================================
@@ -256,10 +256,10 @@
  *                      type: string
  *                     description:
  *                      type: string
- *                      enum: 
+ *                      enum:
  *                           - commestible
  *                           - non-commestible
- *                     pictureId:
+ *                     picture_id:
  *                      type: string
  *                     id:
  *                      type: string
@@ -268,7 +268,7 @@
  *                      properties:
  *                        value:
  *                         type: string
- *                        resource_id:
+ *                        specy_id:
  *                         type: string
  *                        collectionName:
  *                         type: string
@@ -309,11 +309,11 @@
  *                  name: Bolet
  *                  description: Bolet qui apparaît dans la foret
  *                  usage: commestible
- *                  pictureId: 5f9fcvdfvfbbbnsf9f9vsvvfs9f9f9f9f9f
+ *                  picture_id: 5f9fcvdfvfbbbnsf9f9vsvvfs9f9f9f9f9f
  *                  id: 5f9f9f9f9f9f9f9f9f9f9f9f
  *                  picture:
  *                      value: data:image/undefinedbase64,...
- *                      resource_id: 5f9f9fvavrnztjsaabstwgb356736gv3ff9f9f9f9f9f9f
+ *                      specy_id: 5f9f9fvavrnztjsaabstwgb356736gv3ff9f9f9f9f9f9f
  *                      collectionName: species
  *                      date: 2020-10-29T15:00:00.000Z
  *                      id: 5f9f9jv43jt6354zbqhf9f9f9f
@@ -404,10 +404,10 @@
 *                      type: string
 *                    description:
 *                      type: string
-*                    enum: 
+*                    enum:
 *                      - commestible
 *                      - non-commestible
-*                    pictureId:
+*                    picture_id:
 *                      type: string
 *                    id:
 *                      type: string
@@ -416,7 +416,7 @@
 *                      properties:
 *                        value:
 *                         type: string
-*                        resource_id:
+*                        specy_id:
 *                         type: string
 *                        collectionName:
 *                         type: string
@@ -443,11 +443,11 @@
  *                - name: Bolet
  *                  description: Bolet qui apparaît dans la foret
  *                  usage: commestible
- *                  pictureId: 5f9fcvdfvfbbbnsf9f9vsvvfs9f9f9f9f9f
+ *                  picture_id: 5f9fcvdfvfbbbnsf9f9vsvvfs9f9f9f9f9f
  *                  id: 5f9f9f9f9f9f9f9f9f9f9f9f
  *                  picture:
  *                      value: data:image/undefinedbase64,...
- *                      resource_id: 5f9f9fvavrnztjsaabstwgb356736gv3ff9f9f9f9f9f9f
+ *                      specy_id: 5f9f9fvavrnztjsaabstwgb356736gv3ff9f9f9f9f9f9f
  *                      collectionName: species
  *                      date: 2020-10-29T15:00:00.000Z
  *                      id: 5f9f9jv43jt6354zbqhf9f9f9f

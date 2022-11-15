@@ -35,7 +35,7 @@ async function createSpecy(specyFromFile, specyId, pictureId) {
     name: specyFromFile.name,
     description: specyFromFile.description,
     usage: specyFromFile.usage,
-    pictureId,
+    picture_id: pictureId,
   });
   try {
     await specy.save();
@@ -51,7 +51,7 @@ async function createImg(imgPath, specyId, pictureId) {
   const image = new Image({
     _id: pictureId,
     value: imgBase64,
-    resource_id: specyId,
+    specy_id: specyId,
     collectionName: 'species',
   });
   try {

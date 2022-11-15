@@ -39,7 +39,7 @@ describe('POST /pictures', () => {
         pictures: expect.arrayContaining([
           expect.objectContaining({
             value: expect.any(String),
-            resource_id: expect.any(String),
+            specy_id: expect.any(String),
             date: expect.any(String),
             id: expect.any(String),
             collectionName: expect.any(String),
@@ -123,7 +123,7 @@ describe('POST /pictures', () => {
         pictures: expect.arrayContaining([
           expect.objectContaining({
             value: expect.any(String),
-            resource_id: expect.any(String),
+            specy_id: expect.any(String),
             date: expect.any(String),
             id: expect.any(String),
             collectionName: expect.any(String),

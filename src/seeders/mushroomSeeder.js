@@ -5,18 +5,29 @@ import User from '../schemas/user.js';
 import Species from '../schemas/species.js';
 import Mushroom from '../schemas/mushroom.js';
 import tobase64 from '../helpers/useToBase64.js';
+import isBase64 from '../helpers/useValidateBase64.js';
+import Image from '../schemas/images.js';
 
 let location;
+let speciesList;
 
 async function seeder() {
   location = await getLocation();
+  speciesList = await getCsvData();
   const max = [];
   for (let index = 1; index < 10; index++) {
     max.push(index);
   }
   for (const i of max) {
+    const pictureId = new Mongoose.Types.ObjectId();
+    const mushroomId = new Mongoose.Types.ObjectId();
     const y = randomInt(1, 6);
-    await createMushroom(i, y, i);
+    const userId = (await getUser(`user0${i}`)).id;
+    const species = (await getSpecies(speciesList[i + y].name));
+    const coordinates = location[i - 1].split(',');
+    const imagePath = `./src/data/images/mushroomSeederImg/${y}.jpg`;
+    await createMushroom(species, coordinates, pictureId, mushroomId, userId);
+    await createImg(imagePath, species.id, pictureId, userId, mushroomId);
   }
 }
 
@@ -51,18 +62,31 @@ async function getSpecies(speciesName) {
   return species;
 }
 
-async function createMushroom(x, y, i) {
-  const generatedId = new Mongoose.Types.ObjectId();
-  const specieslist = await getCsvData();
-  const user = await getUser(`user0${x}`);
-  const species = await getSpecies(specieslist[x + y].name);
-  const imagePath = `./src/data/images/mushroomSeederImg/${y}.jpg`;
-  const coordinates = location[i - 1].split(',');
+async function createImg(imgPath, specyId, pictureId, userId, mushroomId) {
+  const extension = imgPath.split('.')[1];
+  const imgBase64 = tobase64(imgPath, extension);
+  if (!isBase64(imgBase64)) throw new Error('picture is not base64');
+  const image = new Image({
+    _id: pictureId,
+    value: imgBase64,
+    specy_id: specyId,
+    mushroom_id: mushroomId,
+    collectionName: 'mushrooms',
+    user_id: userId,
+  });
+  try {
+    await image.save();
+  } catch (err) {
+    console.warn('Can\t save image');
+  }
+}
+
+async function createMushroom(species, coordinates, pictureId, mushroomId, userId) {
   const mushroom = new Mushroom({
-    _id: generatedId,
-    user_id: user.id,
+    _id: mushroomId,
+    user_id: userId,
     species_id: species.id,
-    picture: tobase64(imagePath),
+    picture_id: pictureId,
     description: `J'ai trouvé ce magnifique spécimen ${species.name} en bordure de forêt`,
     date: new Date(),
     geolocalisation: {
