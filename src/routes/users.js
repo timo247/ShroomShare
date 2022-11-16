@@ -20,11 +20,11 @@ const router = express.Router();
  *      summary: Get all users
  *      parameters:
  *        - in: query
- *          name: Numéro de la page
+ *          name: page
  *          type: integer
  *          description: Choississez le numéro de la page à afficher.(pas de page zéro et négative)
  *        - in: query
- *          name: Nombre d'éléments par page
+ *          name: PageSize
  *          type: integer
  *          description: Nombre déléments que vous voulez sur la page.
  *      responses:
@@ -105,7 +105,7 @@ router.get('/:id', auth.authenticateUser, async (req, res, next) => {
  *      requestBody:
  *        $ref: '#/components/requestBodies/UserBody'
  *      responses:
- *        2001:
+ *        201:
  *          content:
  *           application/json:
  *              schema:
@@ -235,3 +235,11 @@ router.delete('/', auth.authenticateAdmin, async (req, res, next) => {
 });
 
 export default router;
+
+
+
+
+
+
+
+

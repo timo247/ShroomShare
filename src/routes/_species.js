@@ -45,7 +45,12 @@
  *                      type: string
  *                     description:
  *                      type: string
+<<<<<<< HEAD
  *                      enum:
+=======
+ *                     usage:
+ *                      enum: 
+>>>>>>> 2df563101bec02f1e816d70cbbf29b78ff9f8e45
  *                           - commestible
  *                           - non-commestible
  *                     picture_id:
@@ -101,12 +106,21 @@
  *              usage: commestible
  *              picture_id: 5f9fcvdfvfbbbnsf9f9vsvvfs9f9f9f9f9f
  *              id: 5f9f9f9f9f9f9f9f9f9f9f9f
+<<<<<<< HEAD
  *           picture:
  *             value: data:image/undefinedbase64,...
  *             specy_id: 5f9f9fvavrnztjsaabstwgb356736gv3ff9f9f9f9f9f9f
  *             collectionName: species
  *             date: 2020-10-29T15:00:00.000Z
  *             id: 5f9f9jv43jt6354zbqhf9f9f9f
+=======
+ *              picture:
+ *                  value: data:image/undefinedbase64,...
+ *                  resource_id: 5f9f9fvavrnztjsaabstwgb356736gv3ff9f9f9f9f9f9f
+ *                  collectionName: species
+ *                  date: 2020-10-29T15:00:00.000Z
+ *                  id: 5f9f9jv43jt6354zbqhf9f9f9f
+>>>>>>> 2df563101bec02f1e816d70cbbf29b78ff9f8e45
  */
 // =================================================
 // Request Body
@@ -157,7 +171,12 @@
  *                      type: string
  *                     description:
  *                      type: string
+<<<<<<< HEAD
  *                      enum:
+=======
+ *                     usage:
+ *                      enum: 
+>>>>>>> 2df563101bec02f1e816d70cbbf29b78ff9f8e45
  *                           - commestible
  *                           - non-commestible
  *                     picture_id:
@@ -256,7 +275,12 @@
  *                      type: string
  *                     description:
  *                      type: string
+<<<<<<< HEAD
  *                      enum:
+=======
+ *                     usage:
+ *                      enum: 
+>>>>>>> 2df563101bec02f1e816d70cbbf29b78ff9f8e45
  *                           - commestible
  *                           - non-commestible
  *                     picture_id:
@@ -404,10 +428,18 @@
 *                      type: string
 *                    description:
 *                      type: string
+<<<<<<< HEAD
 *                    enum:
 *                      - commestible
 *                      - non-commestible
 *                    picture_id:
+=======
+*                    usage:
+*                      enum: 
+*                       - commestible
+*                       - non-commestible
+*                    pictureId:
+>>>>>>> 2df563101bec02f1e816d70cbbf29b78ff9f8e45
 *                      type: string
 *                    id:
 *                      type: string

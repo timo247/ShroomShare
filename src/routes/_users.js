@@ -90,8 +90,9 @@
  *            SpecifUserExample:
  *               value:
  *                 message: "Success: Specif user retrieved"
- *                 username: John2022
- *                 admin: false
+ *                 user:
+ *                  username: John2022
+ *                  admin: false
  */
 
 // ==========================================================
@@ -157,8 +158,8 @@
  *               format: email
  *              admin:
  *               type: boolean
- *           token:
- *            type: string
+ *          token:
+ *           type: string
  */
 
 // =========================================================

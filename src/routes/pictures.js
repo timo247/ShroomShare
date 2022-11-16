@@ -10,6 +10,27 @@ import useRouter from '../helpers/useRouter.js';
 const router = express.Router();
 const errorLogger = config.debug.apiErrors;
 
+/**
+ * @swagger
+ * /pictures:
+ *    post:
+ *      tags:
+ *        - Pictures
+ *      summary: Retrieve all pictures
+ *      requestBody:
+ *       $ref: '#/components/requestBodies/RetrievePicturesBody'
+ *      responses:
+ *       201:
+ *        content:
+ *          application/json:
+ *           schema:
+ *            type: object
+ *            $ref: '#/components/schema/RetrievedPictureSchema'
+ *           examples:
+ *            CreatedMushroomExample:
+ *             $ref: '#/components/examples/RetrievedPictureExample'
+ */
+
 // Retrieves all pictures
 router.post('/', auth.authenticateUser, async (req, res, next) => {
   try {

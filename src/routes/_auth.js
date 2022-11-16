@@ -16,8 +16,12 @@
  *         properties:
  *           username:
  *             type: string
+ *             MaxLength: 20
+ *             MinLength: 4
  *           password:
  *             type: string
+ *             MaxLength: 100
+ *             MinLength: 8
  */
 
 // Schema: CredentialOkSchema
@@ -50,9 +54,7 @@
  *   components:
  *     requestBodies:
  *       CredentialBody:
- *         description: <br>
- *           - __username:__ required - between 4 and 50 characters<br>
- *           - __password:__ required - between 4 and 50 characters<br>
+ *         description: User authentification object
  *         required: true
  *         content:
  *           application/json:
