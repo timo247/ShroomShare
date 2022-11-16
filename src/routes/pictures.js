@@ -13,7 +13,8 @@ const errorLogger = config.debug.apiErrors;
 // Retrieves all pictures
 router.post('/', auth.authenticateUser, async (req, res, next) => {
   try {
-    useRouter.checkForRequiredParams(req, res, ['ids']);
+    const errorsMessages = useRouter.checkForRequiredParams(req, res, ['ids']);
+    if (errorsMessages) return useAuth.send(res, errorsMessages);
     if (req.body.ids.length === 0) return useAuth.send(res, msg.ERROR_EMPTY_ARRAY('ids'));
     const validIds = [];
     const unvalidIds = [];

@@ -14,7 +14,6 @@ import validateGeoJsonCoordinates from '../helpers/useValidateGeoJsonCoordinates
 import validateDate from '../helpers/useValidateDate.js';
 import User from '../schemas/user.js';
 
-// TOOD: images: ajouter un champ specy_id
 const router = express.Router();
 const errorLogger = config.debug.apiErrors;
 
@@ -115,41 +114,21 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
   }
 });
 
-// Retrieve specific mushroom
-router.get('/:id', auth.authenticateUser, async (req, res, next) => {
-  try {
-    const id = req.params.id;
-    if (!useRouter.isValidMongooseId(id)) {
-      return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
-    }
-    const mushroom = await Mushroom.findOne({ _id: id });
-    if (!mushroom) {
-      return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.MUSHROOM));
-    }
-    req.body = useAuth.setBody({ mushroom });
-    useAuth.send(res, msg.SUCCESS_RESSOURCE_RETRIEVAL(R.MUSHROOM), req.body);
-  } catch (error) {
-    return next(error);
-  }
-});
-
 // Add new mushroom
 router.post('/', auth.authenticateUser, async (req, res, next) => {
   try {
-    const payload = useAuth.getPayloadFromToken(req);
-    const loggedUserId = payload?.sub;
-    const currentSpecies = await Species.find({ name: req.body.speciesId });
-    if (!currentSpecies) {
-      // return useAuth.send(res, )
+    const errorMessages = useRouter.checkForRequiredParams(req, res, ['date', 'description', 'specy_id', 'picture', 'geolocalisation']);
+    if (errorMessages) return useAuth.send(res, errorMessages);
+    const currentSpecy = await Specy.findOne({ id: req.body.specy_id });
+    if (!currentSpecy) return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.SPECY));
+    if (!isBase64(req.body.picture)) return useAuth.send(res, msg.ERROR_IMG_BASE64);
+    if (!validateDate(req.body.date)) return useAuth.send(res, msg.ERROR_DATE_FORMAT);
+    if (!validateGeoJsonCoordinates(req.body.geolocalisation.location.coordinates)) {
+      return useAuth.send(res, msg.ERROR_GEOJSON_FORMAT);
     }
-    const picture = req.body.picture;
-    const generatedId = new Mongoose.Types.ObjectId();
-    if (!isBase64(picture)) return useAuth.send(res, msg.ERROR_IMG_BASE64);
-
     const mushroom = new Mushroom({
-      _id: generatedId,
-      user_id: loggedUserId,
-      species_id: currentSpecies.id,
+      user_id: req.currentUserId,
+      species_id: currentSpecy.id,
       picture: req.body.picture,
       description: req.body.description,
       date: req.body.date,

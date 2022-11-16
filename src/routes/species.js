@@ -161,7 +161,8 @@ router.get('/:id', auth.authenticateUser, async (req, res, next) => {
 // Add a new specy
 router.post('/', auth.authenticateAdmin, async (req, res, next) => {
   try {
-    useRouter.checkForRequiredParams(req, res, ['name', 'description', 'usage', 'picture']);
+    const errorsMessage = useRouter.checkForRequiredParams(req, res, ['name', 'description', 'usage', 'picture']);
+    if (errorsMessage) return useAuth.send(res, errorsMessage);
     const alreadyExistingName = await Specy.findOne({ name: req.body.name });
     if (alreadyExistingName) return useAuth.send(res, msg.ERROR_RESSOURCE_UNICITY('name'));
     if (!isBase64(req.body.picture)) return useAuth.send(res, msg.ERROR_IMG_BASE64);

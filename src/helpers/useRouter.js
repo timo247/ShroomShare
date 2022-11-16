@@ -13,7 +13,7 @@ const useRouter = {
     });
     if (missingParametersMessages.length > 0) {
       const message = { status: statusCode, msg: missingParametersMessages };
-      useAuth.send(res, message);
+      return message;
     }
   },
   isValidMongooseId: (id) => id.match(/^[0-9a-fA-F]{24}$/),

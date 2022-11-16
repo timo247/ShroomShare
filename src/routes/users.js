@@ -119,7 +119,8 @@ router.get('/:id', auth.authenticateUser, async (req, res, next) => {
 // Create a new user
 router.post('/', async (req, res, next) => {
   try {
-    useRouter.checkForRequiredParams(req, res, ['password', 'username', 'email']);
+    const errorMessages = useRouter.checkForRequiredParams(req, res, ['password', 'username', 'email']);
+    if (errorMessages) return useAuth.send(res, errorMessages);
     req.body.password = await bcrypt.hash(req.body.password, config.bcryptCostFactor);
     const payload = useAuth.getPayloadFromToken(req);
     req.body.admin = payload?.scope === 'admin';

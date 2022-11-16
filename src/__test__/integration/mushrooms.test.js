@@ -194,152 +194,173 @@ const prepare = async () => {
 //   });
 // });
 
-// // ==========================================================================
-// //  POST /mushrooms
-// // ==========================================================================
+// ==========================================================================
+//  POST /mushrooms
+// ==========================================================================
 
-// describe('POST /mushrooms', () => {
-//   beforeEach(prepare);
+describe('POST /mushrooms', () => {
+  beforeEach(prepare);
 
-//   defineTest(msg.SUCCESS_RESSOURCE_CREATION(R.MUSHROOM), '', async (messageWrapper) => {
-//     const picture = createPicture();
-//     const newDate = String(date.now());
-//     const res = await ApiTester.apiCall({
-//       method: 'post',
-//       path: 'mushrooms',
-//       body: {
-//         description: '...',
-//         species_id: 1,
-//         picture,
-//         date: newDate,
-//         geolocalisation: {
-//           location: 'Point',
-//           coordinates: [46.616517, 6.234434],
-//         },
-//       },
-//       messageWrapper,
-//       token: tester.userToken,
-//     });
-//     expect(typeof res.body.mushroom.picture.value).toBe('string');
-//     delete res.body.mushroom.picture.value;
-//     expect(res.body).toEqual(
-//       expect.objectContaining({
-//         message: expect.stringContaining(messageWrapper.msg),
-//         mushroom: expect.objectContaining({
-//           species_id: expect.stringContaining('1'),
-//           description: expect.stringContaining('...'),
-//           user_id: expect.any(String),
-//           date: expect.stringContaining(newDate),
-//           id: expect.any(String),
-//           picture: expect.objectContaining({
-//             specy_id: expect.any(String),
-//             date: expect.any(String),
-//             id: expect.any(String),
-//             collectionName: expect.any(String),
-//           }),
-//         }),
-//       }),
-//     );
-//   });
+  defineTest(msg.SUCCESS_RESSOURCE_CREATION(R.MUSHROOM), '', async (messageWrapper) => {
+    const picture = ApiTester.createPicture();
+    const specyId = ApiTester.getValidSpecyId(tester.userToken);
+    const newDate = String(Date.now());
+    const res = await ApiTester.apiCall({
+      method: 'post',
+      path: 'mushrooms',
+      body: {
+        description: '...',
+        specy_id: specyId,
+        picture,
+        date: newDate,
+        geolocalisation: {
+          location: {
+            type: 'Point',
+            coordinates: [46.616517, 6.234434],
+          },
+        },
+      },
+      messageWrapper,
+      token: tester.userToken,
+    });
+    expect(typeof res.body.mushroom.picture.value).toBe('string');
+    delete res.body.mushroom.picture.value;
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(messageWrapper.msg),
+        mushroom: expect.objectContaining({
+          species_id: expect.stringContaining('1'),
+          description: expect.stringContaining('...'),
+          user_id: expect.any(String),
+          date: expect.stringContaining(newDate),
+          id: expect.any(String),
+          picture: expect.objectContaining({
+            specy_id: expect.any(String),
+            date: expect.any(String),
+            id: expect.any(String),
+            collectionName: expect.any(String),
+          }),
+          geolocalisation: expect.objectContaining({
+            location: expect.objectContaining({
+              type: expect.stringContaining('Point'),
+              coordinates: expect.arrayContaining([
+                latitude, longitude,
+              ]),
+            }),
+          }),
+        }),
+      }),
+    );
+  });
 
-//   defineTest(msg.ERROR_FIELD_REQUIRED('X'), 'missing fields', async (messageWrapper) => {
-//     const newDate = String(date.now());
-//     const res = await ApiTester.apiCall({
-//       method: 'post',
-//       path: 'mushrooms',
-//       body: {
-//         description: '...',
-//         species_id: 1,
-//         date: newDate,
-//       },
-//       messageWrapper,
-//       token: tester.userToken,
-//     });
-//     expect(res.body).toEqual(
-//       expect.objectContaining({
-//         messages: expect.arrayContaining([
-//           msg.ERROR_FIELD_REQUIRED('picture').msg,
-//           msg.ERROR_FIELD_REQUIRED('geolocalisation').msg,
-//         ]),
-//       }),
-//     );
-//   });
+  defineTest(msg.ERROR_FIELD_REQUIRED('X'), 'missing fields', async (messageWrapper) => {
+    const newDate = String(Date.now());
+    const res = await ApiTester.apiCall({
+      method: 'post',
+      path: 'mushrooms',
+      body: {
+        description: '...',
+        date: newDate,
+      },
+      messageWrapper,
+      token: tester.userToken,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        messages: expect.arrayContaining([
+          msg.ERROR_FIELD_REQUIRED('picture').msg,
+          msg.ERROR_FIELD_REQUIRED('geolocalisation').msg,
+          msg.ERROR_FIELD_REQUIRED('specy_id').msg,
+        ]),
+      }),
+    );
+  });
 
-//   defineTest(msg.ERROR_IMG_BASE64, '', async (messageWrapper) => {
-//     const newDate = String(date.now());
-//     const res = await ApiTester.apiCall({
-//       method: 'post',
-//       path: 'species',
-//       body: {
-//         description: '...',
-//         species_id: 1,
-//         picture: 'adfakfj',
-//         date: newDate,
-//         geolocalisation: {
-//           location: 'Point',
-//           coordinates: [46.616517, 6.234434],
-//         },
-//       },
-//       messageWrapper,
-//       token: tester.userToken,
-//     });
-//     expect(res.body).toEqual(
-//       expect.objectContaining({
-//         message: expect.stringContaining(messageWrapper.msg),
-//       }),
-//     );
-//   });
+  defineTest(msg.ERROR_IMG_BASE64, '', async (messageWrapper) => {
+    const newDate = String(Date.now());
+    const specyId = ApiTester.getValidSpecyId(tester.userToken);
+    const res = await ApiTester.apiCall({
+      method: 'post',
+      path: 'mushrooms',
+      body: {
+        description: '...',
+        specy_id: specyId,
+        picture: 'adfakfj',
+        date: newDate,
+        geolocalisation: {
+          location: {
+            type: 'Point',
+            coordinates: [46.616517, 6.234434],
+          },
+        },
+      },
+      messageWrapper,
+      token: tester.userToken,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(messageWrapper.msg),
+      }),
+    );
+  });
 
-//   defineTest(msg.ERROR_DATE_FORMAT, '', async (messageWrapper) => {
-//     const picture = createPicture();
-//     const res = await ApiTester.apiCall({
-//       method: 'post',
-//       path: 'species',
-//       body: {
-//         description: '...',
-//         species_id: 1,
-//         picture,
-//         date: 'gg',
-//         geolocalisation: {
-//           location: 'Point',
-//           coordinates: [46.616517, 6.234434],
-//         },
-//       },
-//       messageWrapper,
-//       token: tester.userToken,
-//     });
-//     expect(res.body).toEqual(
-//       expect.objectContaining({
-//         message: expect.stringContaining(messageWrapper.msg),
-//       }),
-//     );
-//   });
+  defineTest(msg.ERROR_DATE_FORMAT, '', async (messageWrapper) => {
+    const picture = ApiTester.createPicture();
+    const specyId = ApiTester.getValidSpecyId(tester.userToken);
+    const res = await ApiTester.apiCall({
+      method: 'post',
+      path: 'mushrooms',
+      body: {
+        description: '...',
+        specy_id: specyId,
+        picture,
+        date: 'gg',
+        geolocalisation: {
+          location: {
+            type: 'Point',
+            coordinates: [46.616517, 6.234434],
+          },
+        },
+      },
+      messageWrapper,
+      token: tester.userToken,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(messageWrapper.msg),
+      }),
+    );
+  });
 
-//   defineTest(msg.ERRRO_GEOJSON_FORMAT, '', async (messageWrapper) => {
-//     const newDate = String(date.now());
-//     const res = await ApiTester.apiCall({
-//       method: 'post',
-//       path: 'species',
-//       body: {
-//         description: '...',
-//         species_id: 1,
-//         picture: 'adfakfj',
-//         date: newDate,
-//         geolocalisation: {
-//           location: 'Point',
-//           coordinates: [null, null],
-//         },
-//       },
-//       messageWrapper,
-//       token: tester.userToken,
-//     });
-//     expect(res.body).toEqual(
-//       expect.objectContaining({
-//         message: expect.stringContaining(messageWrapper.msg),
-//       }),
-//     );
-//   });
-// });
+  defineTest(msg.ERROR_GEOJSON_FORMAT, '', async (messageWrapper) => {
+    const newDate = String(Date.now());
+    const picture = ApiTester.createPicture();
+    const specyId = ApiTester.getValidSpecyId(tester.userToken);
+    const res = await ApiTester.apiCall({
+      method: 'post',
+      path: 'mushrooms',
+      body: {
+        description: '...',
+        specy_id: specyId,
+        picture,
+        date: newDate,
+        geolocalisation: {
+          location: {
+            type: 'Point',
+            coordinates: [100, 200],
+          },
+        },
+      },
+      messageWrapper,
+      token: tester.userToken,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(messageWrapper.msg),
+      }),
+    );
+  });
+});
 
 // ==========================================================================
 //  PATCH /mushrooms/:id
