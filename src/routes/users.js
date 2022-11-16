@@ -235,11 +235,3 @@ router.delete('/', auth.authenticateAdmin, async (req, res, next) => {
 });
 
 export default router;
-
-
-
-
-
-
-
-

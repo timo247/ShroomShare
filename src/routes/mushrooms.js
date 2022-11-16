@@ -19,110 +19,6 @@ const errorLogger = config.debug.apiErrors;
 
 /**
  * @swagger
- * /mushrooms/:id:
- *    patch:
- *      tags:
- *        - Mushrooms
- *      summary:  Update a mushroom
- *      requestBody:
- *       $ref: '#/components/requestBodies/UpdateMushroomBody'
- *      responses:
- *       200:
- *        content:
- *          application/json:
- *           schema:
- *            type: object
- *            $ref: '#/components/schema/UpdatedMushroomSchema'
- *           examples:
- *            CreatedMushroomExample:
- *             $ref: '#/components/examples/UpdatedMushroomExample'
- */
-
-// Update a mushroom
-router.patch('/:id', auth.authenticateUser, async (req, res, next) => {
-  try {
-    const id = req.params.id;
-    if (!useRouter.isValidMongooseId(id)) {
-      return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.MUSHROOM));
-    }
-    if (req.body.picture) {
-      if (!isBase64(req.body.picture)) return useAuth.send(res, msg.ERROR_IMG_BASE64);
-    }
-    if (req.body.date) {
-      if (!validateDate(req.body.date)) return useAuth.send(res, msg.ERROR_DATE_FORMAT);
-    }
-    if (req.body.geolocalisation) {
-      if (!validateGeoJsonCoordinates(req.body.geolocalisation)) {
-        return useAuth.send(res, msg.ERROR_GEOJSON_FORMAT);
-      }
-    }
-    const params = req.body;
-    if (params.picture) {
-      const picture = {
-        date: Date.now(),
-        value: req.params.picture,
-      };
-      delete params.picture;
-      await Image.findOneAndUpdate({ resource_id: id }, picture);
-    }
-    await Mushroom.findByIdAndUpdate(id, params);
-    const modifiedMushroom = await Specy.findOne({ _id: id });
-    const modifiedPicture = await Image.findOne({ resource_id: id });
-    const newMushroom = JSON.parse(JSON.stringify(modifiedMushroom));
-    newMushroom.picture = modifiedPicture;
-    req.body = useAuth.setBody({ specy: newMushroom });
-    useAuth.send(res, msg.SUCCESS_RESSOURCE_MODIFICATION(R.MUSHROOM), req.body);
-  } catch (error) {
-    return next(error);
-  }
-});
-
-
-/**
- * @swagger
- * /mushrooms/:id:
- *    delete:
- *      tags:
- *        - Mushrooms
- *      summary: Delete a mushroom
- *      responses:
- *       200:
- *        content:
- *          application/json:
- *           schema:
- *            type: object
- *            $ref: '#/components/schema/DeletedMushroomSchema'
- *           examples:
- *            CreatedMushroomExample:
- *             $ref: '#/components/examples/DeletedMushroomExample'
- */
-
-// delete a mushroom
-router.delete('/:id', auth.authenticateUser, async (req, res, next) => {
-  try {
-    const id = req.params.id;
-    if (!useRouter.isValidMongooseId(id)) {
-      return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.MUSHROOM));
-    }
-    const mushroomOwnerId = await Mushroom.find({ _id: id }).user_id;
-    const pictureOwnerId = await Picture.find({ _id: id }).resource_id;
-    const areIdsIdentical1 = String(req.currentUserId) === String(mushroomOwnerId);
-    const areIdsIdentical2 = String(req.currentUserId) === String(pictureOwnerId);
-    if (!areIdsIdentical1) return useAuth.send(res, msg.ERROR_OWNERRIGHT_GRANTATION);
-    if (!areIdsIdentical2) return useAuth.send(res, msg.ERROR_OWNERRIGHT_GRANTATION);
-    const mushroomToDelete = await Mushroom.findOne({ _id: id });
-    if (!mushroomToDelete) return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.MUSHROOM));
-    await Mushroom.deleteOne({ _id: id });
-    await Image.deleteOne({ resource_id: id });
-    req.body = useAuth.setBody();
-    useAuth.send(res, msg.SUCCESS_RESSOURCE_DELETION(R.MUSHROOM), req.body);
-  } catch (error) {
-    return next(err);
-  }
-});
-
-/**
- * @swagger
  * /mushrooms:
  *    get:
  *      tags:
@@ -278,6 +174,27 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
   }
 });
 
+/**
+ * @swagger
+ * /mushrooms:
+ *    post:
+ *      tags:
+ *        - Mushrooms
+ *      summary: Add a new mushroom
+ *      requestBody:
+ *       $ref: '#/components/requestBodies/CreateMushroomBody'
+ *      responses:
+ *       201:
+ *        content:
+ *          application/json:
+ *           schema:
+ *            type: object
+ *            $ref: '#/components/schema/CreatedMushroomSchema'
+ *           examples:
+ *            CreatedMushroomExample:
+ *             $ref: '#/components/examples/CreatedMushroomExample'
+ */
+
 // Add new mushroom
 router.post('/', auth.authenticateUser, async (req, res, next) => {
   try {
@@ -310,6 +227,27 @@ router.post('/', auth.authenticateUser, async (req, res, next) => {
     return next(error);
   }
 });
+
+/**
+ * @swagger
+ * /mushrooms/:id:
+ *    patch:
+ *      tags:
+ *        - Mushrooms
+ *      summary:  Update a mushroom
+ *      requestBody:
+ *       $ref: '#/components/requestBodies/UpdateMushroomBody'
+ *      responses:
+ *       200:
+ *        content:
+ *          application/json:
+ *           schema:
+ *            type: object
+ *            $ref: '#/components/schema/UpdatedMushroomSchema'
+ *           examples:
+ *            CreatedMushroomExample:
+ *             $ref: '#/components/examples/UpdatedMushroomExample'
+ */
 
 // Update a mushroom
 router.patch('/:id', auth.authenticateUser, async (req, res, next) => {
@@ -352,27 +290,25 @@ router.patch('/:id', auth.authenticateUser, async (req, res, next) => {
 
 /**
  * @swagger
- * /mushrooms:
- *    post:
+ * /mushrooms/:id:
+ *    delete:
  *      tags:
  *        - Mushrooms
- *      summary: Add a new mushroom
- *      requestBody:
- *       $ref: '#/components/requestBodies/CreateMushroomBody'
+ *      summary: Delete a mushroom
  *      responses:
- *       201:
+ *       200:
  *        content:
  *          application/json:
  *           schema:
  *            type: object
- *            $ref: '#/components/schema/CreatedMushroomSchema'
+ *            $ref: '#/components/schema/DeletedMushroomSchema'
  *           examples:
  *            CreatedMushroomExample:
- *             $ref: '#/components/examples/CreatedMushroomExample'
+ *             $ref: '#/components/examples/DeletedMushroomExample'
  */
 
-// Add new mushroom
-router.post('/', auth.authenticateUser, async (req, res, next) => {
+// delete a mushroom
+router.delete('/:id', auth.authenticateUser, async (req, res, next) => {
   try {
     const id = req.params.id;
     if (!useRouter.isValidMongooseId(id)) {
