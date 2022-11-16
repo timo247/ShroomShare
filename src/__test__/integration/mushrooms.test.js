@@ -203,8 +203,10 @@ describe('POST /mushrooms', () => {
 
   defineTest(msg.SUCCESS_RESSOURCE_CREATION(R.MUSHROOM), '', async (messageWrapper) => {
     const picture = ApiTester.createPicture();
-    const specyId = ApiTester.getValidSpecyId(tester.userToken);
-    const newDate = String(Date.now());
+    const specyId = await ApiTester.getValidSpecyId(tester.userToken);
+    const newDate = Date.now();
+    const latitude = 46.616517;
+    const longitude = 6.234434;
     const res = await ApiTester.apiCall({
       method: 'post',
       path: 'mushrooms',
@@ -216,7 +218,7 @@ describe('POST /mushrooms', () => {
         geolocalisation: {
           location: {
             type: 'Point',
-            coordinates: [46.616517, 6.234434],
+            coordinates: [latitude, longitude],
           },
         },
       },
@@ -229,10 +231,10 @@ describe('POST /mushrooms', () => {
       expect.objectContaining({
         message: expect.stringContaining(messageWrapper.msg),
         mushroom: expect.objectContaining({
-          species_id: expect.stringContaining('1'),
+          specy_id: expect.stringContaining(String(specyId)),
           description: expect.stringContaining('...'),
           user_id: expect.any(String),
-          date: expect.stringContaining(newDate),
+          date: expect.any(String),
           id: expect.any(String),
           picture: expect.objectContaining({
             specy_id: expect.any(String),
@@ -254,7 +256,7 @@ describe('POST /mushrooms', () => {
   });
 
   defineTest(msg.ERROR_FIELD_REQUIRED('X'), 'missing fields', async (messageWrapper) => {
-    const newDate = String(Date.now());
+    const newDate = Date.now();
     const res = await ApiTester.apiCall({
       method: 'post',
       path: 'mushrooms',
@@ -277,8 +279,8 @@ describe('POST /mushrooms', () => {
   });
 
   defineTest(msg.ERROR_IMG_BASE64, '', async (messageWrapper) => {
-    const newDate = String(Date.now());
-    const specyId = ApiTester.getValidSpecyId(tester.userToken);
+    const newDate = Date.now();
+    const specyId = await ApiTester.getValidSpecyId(tester.userToken);
     const res = await ApiTester.apiCall({
       method: 'post',
       path: 'mushrooms',
@@ -306,7 +308,7 @@ describe('POST /mushrooms', () => {
 
   defineTest(msg.ERROR_DATE_FORMAT, '', async (messageWrapper) => {
     const picture = ApiTester.createPicture();
-    const specyId = ApiTester.getValidSpecyId(tester.userToken);
+    const specyId = await ApiTester.getValidSpecyId(tester.userToken);
     const res = await ApiTester.apiCall({
       method: 'post',
       path: 'mushrooms',
@@ -333,9 +335,9 @@ describe('POST /mushrooms', () => {
   });
 
   defineTest(msg.ERROR_GEOJSON_FORMAT, '', async (messageWrapper) => {
-    const newDate = String(Date.now());
+    const newDate = Date.now();
     const picture = ApiTester.createPicture();
-    const specyId = ApiTester.getValidSpecyId(tester.userToken);
+    const specyId = await ApiTester.getValidSpecyId(tester.userToken);
     const res = await ApiTester.apiCall({
       method: 'post',
       path: 'mushrooms',

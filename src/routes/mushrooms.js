@@ -207,10 +207,23 @@ router.post('/', auth.authenticateUser, async (req, res, next) => {
     if (!validateGeoJsonCoordinates(req.body.geolocalisation.location.coordinates)) {
       return useAuth.send(res, msg.ERROR_GEOJSON_FORMAT);
     }
-    const mushroom = new Mushroom({
+
+    const pictureId = new mongoose.Types.ObjectId();
+    const mushroomId = new mongoose.Types.ObjectId();
+
+    const picture = new Image({
+      _id: pictureId,
+      value: req.body.picture,
+      specy_id: req.body.specy_id,
+      collectionName: 'mushrooms',
       user_id: req.currentUserId,
-      species_id: currentSpecy.id,
-      picture: req.body.picture,
+      mushroom_id: mushroomId,
+    });
+    const mushroom = new Mushroom({
+      _id: mushroomId,
+      user_id: req.currentUserId,
+      specy_id: req.body.specy_id,
+      picture_id: pictureId,
       description: req.body.description,
       date: req.body.date,
       geolocalisation: {
@@ -220,7 +233,10 @@ router.post('/', auth.authenticateUser, async (req, res, next) => {
         },
       },
     });
-    const savedMushroom = await mushroom.save();
+    let savedMushroom = await mushroom.save();
+    const savedPicture = await picture.save();
+    savedMushroom = JSON.parse(JSON.stringify(savedMushroom));
+    savedMushroom.picture = savedPicture;
     req.body = useAuth.setBody({ mushroom: savedMushroom });
     useAuth.send(res, msg.SUCCESS_RESSOURCE_CREATION(R.MUSHROOM), req.body);
   } catch (error) {
