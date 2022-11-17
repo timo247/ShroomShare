@@ -69,6 +69,12 @@ const messages = {
   ERROR_IMG_BASE64: { status: 401, msg: 'Picture is not base64.' },
   ERROR_PICTURE_ID: (pictureId) => { return { status: 401, msg: `the picture_id '${pictureId}' is not a valid id.` }; },
   ERROR_PICTURE_EXISTENCE: (pictureId) => { return { status: 401, msg: `the picture_id '${pictureId}' doesn't exist.` }; },
+  //  Geolocalisation
+  // ==========================================================================
+  ERROR_LONGITUDE_VALIDATION: { status: 401, msg: 'Not a valid longitude.' },
+  ERROR_LATITUDE_VALIDATION: { status: 401, msg: 'Not a valid latitude.' },
+  ERROR_GEOJSON_FORMAT: { status: 401, msg: 'Latitude and/or longitude are/is not valid.' },
+  ERROR_RADIUS_NAN: { status: 401, msg: 'The radius should be a number.' },
   //  Others
   // ==========================================================================
   ERROR_OWNERRIGHT_GRANTATION: { status: 404, msg: 'You can only alter your own ressources.' },
@@ -78,9 +84,6 @@ const messages = {
   ERROR_DATE_FORMAT: { status: 401, msg: 'Date format is unvalid.' },
   ERROR_DATE_VALIDATION: { status: 401, msg: 'Date cannot be in futur.' },
   ERROR_DURATION_VALIDATION: { status: 401, msg: 'Duration is too big' },
-  ERROR_LONGITUDE_VALIDATION: { status: 401, msg: 'Not a valid longitude' },
-  ERROR_LATITUDE_VALIDATION: { status: 401, msg: 'Not a valid latitude' },
-  ERROR_GEOJSON_FORMAT: { status: 401, msg: 'Latitude and/or longitude are/is not valid.' },
   ERROR_ROUTE_EXISTENCE: { status: 404, msg: 'This route doesn\'t exist.' },
   ERROR_METHOD_EXISTENCE: { status: 404, msg: 'This method is not available for this route.' },
   ERROR_EMPTY_ARRAY: (arrayName) => { return { status: 401, msg: `The array '${arrayName}' can't be empty.` }; },

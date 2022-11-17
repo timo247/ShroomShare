@@ -80,56 +80,50 @@ const errorLogger = config.debug.apiErrors;
 // Retrieves all mushrooms
 router.get('/', auth.authenticateUser, async (req, res, next) => {
   try {
-    let dynamicQuery = Mushroom.find();
     const showPictures = req.query?.showPictures;
-    const queryDate = req.query?.date;
-    const queryDuration = req.query?.duration;
-    const longitude = req.query?.longitude;
-    const latitude = req.query?.latitude;
+    const queryTo = req.query?.to;
+    const querySpecyId = req.query?.specyId;
+    const queryFrom = req.query?.from;
+    const long = req.query?.longitude;
+    const lat = req.query?.latitude;
     const queryUserId = req.query?.userId;
+    let radius = req.query?.radius;
     let dateMin = 0;
     let dateMax = Date.now();
-    let radius = req.query?.radius;
-    if (longitude) {
-      if (longitude < -180 || longitude > 90) {
-        return useAuth.send(res, msg.ERROR_LONGITUDE_VALIDATION);
-      }
-      if (latitude) {
-        if (latitude < -90 || latitude > 90) {
-          return useAuth.send(res, msg.ERROR_LATITUDE_VALIDATION);
-        }
-      }
-      if (!radius) {
-        radius = 10;
-      }
-      dynamicQuery = Mushroom.find({
-        'geolocalisation.location': {
-          $near: {
-            $geometry: {
-              type: 'Point',
-              coordinates: [longitude, latitude],
-            },
-            $minDistance: 0,
-            $maxDistance: radius,
-          },
-        },
+    let dynamicQuery = Mushroom.find();
+
+    if (long && lat) {
+      if (long < -180 || long > 90) return useAuth.send(res, msg.ERROR_LONGITUDE_VALIDATION);
+      if (lat < -90 || lat > 90) return useAuth.send(res, msg.ERROR_LATITUDE_VALIDATION);
+      if (!radius) radius = 1000;
+      if (isNaN(radius)) return useAuth.send(res, msg.ERROR_RADIUS_NAN);//eslint-disable-line
+      const query = await Mushroom.find().where('geolocalisation.location.coordinates').near({
+        center: [parseFloat(long), parseFloat(lat)],
+        spherical: true,
+        maxDistance: 5,
       });
+      // console.log({ query, radius });
     }
 
-    if (queryDate) {
-      if (queryDate > Date.now()) return useAuth.send(res, msg.ERROR_DATE_VALIDATION);
-      dateMax = queryDate;
+    if (queryTo) {
+      if (!validateDate(queryTo)) return useAuth.send(res, msg.ERROR_DATE_FORMAT);
+      dateMax = queryTo;
       dynamicQuery = dynamicQuery.where('date').lt(dateMax).sort('date');
     }
-    if (queryDuration) {
-      if (queryDuration > Date.now()) return useAuth.send(res, msg.ERROR_DURATION_VALIDATION);
-      dateMin = dateMax - queryDuration;
+    if (queryFrom) {
+      if (!validateDate(queryFrom)) return useAuth.send(res, msg.ERROR_DATE_FORMAT);
+      dateMin = dateMax - queryFrom;
       dynamicQuery = dynamicQuery.where('date').gt(dateMin).sort('date');
     }
     if (queryUserId) {
       const existingUserId = await User.findOne({ _id: queryUserId });
       if (!existingUserId) return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
       dynamicQuery = dynamicQuery.where('user_id').equals(queryUserId);
+    }
+    if (querySpecyId) {
+      const existingUserId = await Specy.findOne({ _id: querySpecyId });
+      if (!existingUserId) return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.SPECY));
+      dynamicQuery = dynamicQuery.where('specy_id').equals(querySpecyId);
     }
     let data = await dynamicQuery;
     const pages = new Paginator({
@@ -138,7 +132,7 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
       currentPage: req.query?.currentPage,
     });
     data = data.slice(pages.firstIndex, pages.lastIndex);
-    if (showPictures) {
+    if (showPictures === 'true') {
       const ids = data.map((mush) => mongoose.Types.ObjectId(mush.picture_id)); //eslint-disable-line
       const mushroomsMap = new Map();
       data.forEach((mush) => {
@@ -148,11 +142,11 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
         _id: { $in: ids },
       });
       pictures.forEach((picture) => {
-        const mushroomWithPicture = JSON.parse(JSON.stringify(mushroomsMap.get(picture.specy_id.toString()))); //eslint-disable-line
-        mushroomWithPicture.picture = picture;
-        mushroomsMap.set(picture.specy_id.toString(), mushroomWithPicture); //eslint-disable-line
+        const mushWithPic = JSON.parse(JSON.stringify(mushroomsMap.get(picture.mushroom_id.toString()))); //eslint-disable-line
+        mushWithPic.picture = picture;
+        mushroomsMap.set(picture.mushroom_id.toString(), mushWithPic); //eslint-disable-line
       });
-      const mushrooms = Array.from(speciesMap.values());
+      const mushrooms = Array.from(mushroomsMap.values());
 
       req.body = useAuth.setBody({
         currentPage: pages.currentPage,
@@ -160,7 +154,7 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
         lastPage: pages.lastPage,
         mushrooms,
       });
-      useAuth.send(res, msg.SUCCESS_RESSOURCE_RETRIEVAL(R.MUSHROOMS), req.body);
+      return useAuth.send(res, msg.SUCCESS_RESSOURCE_RETRIEVAL(R.MUSHROOMS), req.body);
     }
     req.body = useAuth.setBody({
       currentPage: pages.currentPage,

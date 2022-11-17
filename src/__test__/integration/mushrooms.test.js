@@ -22,177 +22,157 @@ const prepare = async () => {
 //  GET /mushrooms
 // ==========================================================================
 
-// describe('GET /mushrooms', () => {
-//   beforeEach(prepare);
+describe('GET /mushrooms', () => {
+  beforeEach(prepare);
 
-//   defineTest(msg.SUCCESS_RESSOURCE_RETRIEVAL(R.MUSHROOMS), 'without pictures', async (messageWrapper) => {
-//     const res = await ApiTester.apiCall({
-//       method: 'get',
-//       path: 'mushrooms/?showPictures=true',
-//       messageWrapper,
-//       token: tester.userToken,
-//     });
-//     expect(res.body).toEqual(
-//       expect.objectContaining({
-//         message: expect.stringContaining(messageWrapper.msg),
-//         currentPage: expect.any(Number),
-//         lastPage: expect.any(Number),
-//         pageSize: expect.any(Number),
-//         mushrooms: expect.arrayContaining([
-//           expect.objectContaining({
-//             description: expect.any(String),
-//             id: expect.any(String),
-//             species_id: expect.any(String),
-//             user_id: expect.any(String),
-//             date: expect.any(String),
-//             picture_id: expect.any(String),
-//           }),
-//         ]),
-//       }),
-//     );
-//   });
+  defineTest(msg.SUCCESS_RESSOURCE_RETRIEVAL(R.MUSHROOMS), 'without pictures', async (messageWrapper) => {
+    const res = await ApiTester.apiCall({
+      method: 'get',
+      path: 'mushrooms',
+      messageWrapper,
+      token: tester.userToken,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(messageWrapper.msg),
+        currentPage: expect.any(Number),
+        lastPage: expect.any(Number),
+        pageSize: expect.any(Number),
+        mushrooms: expect.arrayContaining([
+          expect.objectContaining({
+            specy_id: expect.any(String),
+            description: expect.any(String),
+            user_id: expect.any(String),
+            date: expect.any(String),
+            id: expect.any(String),
+            picture_id: expect.any(String),
+            geolocalisation: expect.objectContaining({
+              location: expect.objectContaining({
+                type: expect.stringContaining('Point'),
+                coordinates: expect.any(Array),
+              }),
+            }),
+          }),
+        ]),
+      }),
+    );
+  });
 
-//   defineTest(msg.SUCCESS_RESSOURCE_RETRIEVAL(R.MUSHROOMS), 'with pictures', async (messageWrapper) => {
-//     const res = await ApiTester.apiCall({
-//       method: 'get',
-//       path: 'species/?showPictures=true&pageSize=2',
-//       messageWrapper,
-//       token: tester.userToken,
-//     });
-//     expect(res.body).toEqual(
-//       expect.objectContaining({
-//         message: expect.stringContaining(messageWrapper.msg),
-//         currentPage: expect.any(Number),
-//         lastPage: expect.any(Number),
-//         pageSize: expect.any(Number),
-//         mushrooms: expect.arrayContaining([
-//           expect.objectContaining({
-//             id: expect.any(String),
-//             description: expect.any(String),
-//             picture_id: expect.any(String),
-//             user_id: expect.any(String),
-//             date: expect.any(String),
-//             species_id: expect.any(String),
-//             picture: expect.objectContaining({
-//               value: expect.any(String),
-//               specy_id: expect.any(String),
-//               collectionName: expect.any(String),
-//               date: expect.any(String),
-//               id: expect.any(String),
-//             }),
-//             geolocalisation: expect.objectContaining({
-//               location: expect.objectContaining({
-//                 type: expect.stringContaining('Point'),
-//               }),
-//               coordinates: expect.number(Array),
-//             }),
-//           }),
-//         ]),
-//       }),
-//     );
-//   });
+  defineTest(msg.SUCCESS_RESSOURCE_RETRIEVAL(R.MUSHROOMS), 'with pictures', async (messageWrapper) => {
+    const res = await ApiTester.apiCall({
+      method: 'get',
+      path: 'mushrooms/?showPictures=true&pageSize=2',
+      messageWrapper,
+      token: tester.userToken,
+    });
+    let i = 0;
+    res.body.mushrooms.forEach((mushroom) => {
+      expect(typeof mushroom.picture.value).toBe('string');
+      delete res.body.mushrooms[i].picture.value;
+      i++;
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(messageWrapper.msg),
+        currentPage: expect.any(Number),
+        lastPage: expect.any(Number),
+        pageSize: expect.any(Number),
+        mushrooms: expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(String),
+            description: expect.any(String),
+            picture_id: expect.any(String),
+            user_id: expect.any(String),
+            date: expect.any(String),
+            specy_id: expect.any(String),
+            picture: expect.objectContaining({
+              collectionName: expect.any(String),
+              date: expect.any(String),
+              specy_id: expect.any(String),
+              mushroom_id: expect.any(String),
+              user_id: expect.any(String),
+              id: expect.any(String),
+            }),
+            geolocalisation: expect.objectContaining({
+              location: expect.objectContaining({
+                type: expect.stringContaining('Point'),
+                coordinates: expect.any(Array),
+              }),
+            }),
+          }),
+        ]),
+      }),
+    );
+  });
 
-//   defineTest(msg.SUCCESS_RESSOURCE_RETRIEVAL(R.MUSHROOMS), 'retrieve specific species id ', async (messageWrapper) => {
-//     const validSpecyId = ApiTester.getValidSpecyId();
-//     const res = await ApiTester.apiCall({
-//       method: 'get',
-//       path: `species/pageSize=2&speciesId=${validSpecyId}`,
-//       messageWrapper,
-//       token: tester.userToken,
-//     });
-//     expect(res.body).toEqual(
-//       expect.objectContaining({
-//         message: expect.stringContaining(messageWrapper.msg),
-//         currentPage: expect.any(Number),
-//         lastPage: expect.any(Number),
-//         pageSize: expect.any(Number),
-//         mushrooms: expect.arrayContaining([
-//           expect.objectContaining({
-//             id: expect.any(String),
-//             description: expect.any(String),
-//             picture_id: expect.any(String),
-//             user_id: expect.any(String),
-//             date: expect.any(String),
-//             species_id: expect.stringContaining(validSpecyId),
-//             geolocalisation: expect.objectContaining({
-//               location: expect.objectContaining({
-//                 type: expect.stringContaining('Point'),
-//               }),
-//               coordinates: expect.number(Array),
-//             }),
-//           }),
-//         ]),
-//       }),
-//     );
-//   });
+  defineTest(msg.SUCCESS_RESSOURCE_RETRIEVAL(R.MUSHROOMS), 'retrieve specific specy id ', async (messageWrapper) => {
+    const validSpecyId = await ApiTester.getValidSpecyId(tester.userToken);
+    const res = await ApiTester.apiCall({
+      method: 'get',
+      path: `mushrooms/?pageSize=2&specyId=${validSpecyId}`,
+      messageWrapper,
+      token: tester.userToken,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(messageWrapper.msg),
+        currentPage: expect.any(Number),
+        lastPage: expect.any(Number),
+        pageSize: expect.any(Number),
+        mushrooms: expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(String),
+            description: expect.any(String),
+            picture_id: expect.any(String),
+            user_id: expect.any(String),
+            date: expect.any(String),
+            specy_id: expect.stringContaining(validSpecyId),
+            geolocalisation: expect.objectContaining({
+              location: expect.objectContaining({
+                type: expect.stringContaining('Point'),
+                coordinates: expect.any(Array),
+              }),
+            }),
+          }),
+        ]),
+      }),
+    );
+  });
 
-//   defineTest(msg.SUCCESS_RESSOURCE_RETRIEVAL(R.MUSHROOMS), 'retrieve specific user\'s mushrooms', async (messageWrapper) => {
-//     const validUserId = ApiTester.getValidUserId();
-//     const res = await ApiTester.apiCall({
-//       method: 'get',
-//       path: `species/pageSize=2&userId=${validUserId}`,
-//       messageWrapper,
-//       token: tester.userToken,
-//     });
-//     expect(res.body).toEqual(
-//       expect.objectContaining({
-//         message: expect.stringContaining(messageWrapper.msg),
-//         currentPage: expect.any(Number),
-//         lastPage: expect.any(Number),
-//         pageSize: expect.any(Number),
-//         mushrooms: expect.arrayContaining([
-//           expect.objectContaining({
-//             id: expect.any(String),
-//             description: expect.any(String),
-//             picture_id: expect.any(String),
-//             user_id: expect.stringContaining(validUserId),
-//             date: expect.any(String),
-//             species_id: expect.any(String),
-//             geolocalisation: expect.objectContaining({
-//               location: expect.objectContaining({
-//                 type: expect.stringContaining('Point'),
-//               }),
-//               coordinates: expect.number(Array),
-//             }),
-//           }),
-//         ]),
-//       }),
-//     );
-//   });
-
-//   defineTest(msg.SUCCESS_RESSOURCE_RETRIEVAL(R.MUSHROOMS), 'retrieve a specific usage', async (messageWrapper) => {
-//     const res = await ApiTester.apiCall({
-//       method: 'get',
-//       path: 'species/pageSize=2&usage=commestible',
-//       messageWrapper,
-//       token: tester.userToken,
-//     });
-//     expect(res.body).toEqual(
-//       expect.objectContaining({
-//         message: expect.stringContaining(messageWrapper.msg),
-//         currentPage: expect.any(Number),
-//         lastPage: expect.any(Number),
-//         pageSize: expect.any(Number),
-//         mushrooms: expect.arrayContaining([
-//           expect.objectContaining({
-//             id: expect.any(String),
-//             description: expect.any(String),
-//             picture_id: expect.any(String),
-//             user_id: expect.stringContaining(validUserId),
-//             date: expect.any(String),
-//             species_id: expect.any(String),
-//             geolocalisation: expect.objectContaining({
-//               location: expect.objectContaining({
-//                 type: expect.stringContaining('Point'),
-//               }),
-//               coordinates: expect.number(Array),
-//             }),
-//           }),
-//         ]),
-//       }),
-//     );
-//   });
-// });
+  defineTest(msg.SUCCESS_RESSOURCE_RETRIEVAL(R.MUSHROOMS), 'retrieve specific user\'s mushrooms', async (messageWrapper) => {
+    const validUserId = await ApiTester.getValidUserId(tester.userToken);
+    const res = await ApiTester.apiCall({
+      method: 'get',
+      path: `mushrooms/?pageSize=2&userId=${validUserId}`,
+      messageWrapper,
+      token: tester.userToken,
+    });
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message: expect.stringContaining(messageWrapper.msg),
+        currentPage: expect.any(Number),
+        lastPage: expect.any(Number),
+        pageSize: expect.any(Number),
+        mushrooms: expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(String),
+            description: expect.any(String),
+            picture_id: expect.any(String),
+            user_id: expect.stringContaining(validUserId),
+            date: expect.any(String),
+            specy_id: expect.any(String),
+            geolocalisation: expect.objectContaining({
+              location: expect.objectContaining({
+                type: expect.stringContaining('Point'),
+                coordinates: expect.any(Array),
+              }),
+            }),
+          }),
+        ]),
+      }),
+    );
+  });
+});
 
 // ==========================================================================
 //  POST /mushrooms

@@ -38,6 +38,7 @@ const mushroomSchema = new Schema({
       coordinates: {
         type: [Number],
         required: true,
+        index: '2dsphere',
         validate: {
           validator: validateGeoJsonCoordinates,
           message: '{VALUE} is not a valid longitude/latitude(/altitude) coordinates array',
