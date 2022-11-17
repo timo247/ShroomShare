@@ -23,7 +23,7 @@ async function seeder() {
     const mushroomId = new Mongoose.Types.ObjectId();
     const y = randomInt(1, 6);
     const userId = (await getUser(`user0${i}`)).id;
-    const species = (await getSpecies(speciesList[i + y].name));
+    const species = await getSpecies(speciesList[i + y].name);
     const coordinates = location[i - 1].split(',');
     const imagePath = `./src/data/images/mushroomSeederImg/${y}.jpg`;
     await createMushroom(species, coordinates, pictureId, mushroomId, userId);
@@ -62,14 +62,14 @@ async function getSpecies(speciesName) {
   return species;
 }
 
-async function createImg(imgPath, specyId, pictureId, userId, mushroomId) {
+async function createImg(imgPath, speciesId, pictureId, userId, mushroomId) {
   const extension = imgPath.split('.')[1];
   const imgBase64 = tobase64(imgPath, extension);
   if (!isBase64(imgBase64)) throw new Error('picture is not base64');
   const image = new Image({
     _id: pictureId,
     value: imgBase64,
-    specy_id: specyId,
+    species_id: speciesId,
     mushroom_id: mushroomId,
     collectionName: 'mushrooms',
     user_id: userId,
@@ -82,10 +82,11 @@ async function createImg(imgPath, specyId, pictureId, userId, mushroomId) {
 }
 
 async function createMushroom(species, coordinates, pictureId, mushroomId, userId) {
+  console.log(species.id, coordinates, pictureId, mushroomId, userId);
   const mushroom = new Mushroom({
     _id: mushroomId,
     user_id: userId,
-    specy_id: species.id,
+    species_id: species.id,
     picture_id: pictureId,
     description: `J'ai trouvé ce magnifique spécimen ${species.name} en bordure de forêt`,
     date: new Date(),
