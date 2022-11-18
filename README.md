@@ -8,6 +8,7 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
 
 - [ShroomShare](#shroomshare)
 - [Table of Contents](#table-of-contents)
+- [Chat](#chat)
 - [Routes](#routes)
   - [Authentification](#authentification)
     - [Récupérer un token](#récupérer-un-token)
@@ -30,8 +31,62 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
     - [Supprimer un utilisateur](#supprimer-un-utilisateur)
   - [Images](#images)
     - [Retrouver des images](#retrouver-des-images)
-  - [Chat](#chat)
 
+# Chat
+
+ShroomShare dispose d'un chat avec différents channels chacun associé à une langue différente. Lors de la première connexion au chat, il est possible de préciser le channel auxquel on souhaite se connecter au moyen du query parameter appelé `language`. Si aucuns query parameter n'est préciser alors l'utilisateur est par défault connecté au channel anglais. A préciser que le chat est réservé aux utilisateurs authentifié.
+
+Les messages n'ont pas besoin de respecter un format particulier, il peuvent être directement saisis tels quels, null besoin de recourir au JSON ou un autre format relativement élaboré.
+
+__Accéder au chat__
+
+```
+ ws://127.0.0.1:3000/ 
+```
+__Query parameter__
+
+- `language`: `enum ['fr'|'en'|'it'|'de']`
+
+__Réponses: message envoyé__
+
+```json
+{
+    "status": "Message received.",
+    "message": "hello",
+    "timestamp": 1668253852370,
+    "user": {
+        "username": "user01",
+        "admin": false,
+        "id": "636b979f8f7ef3fb6243e8f3"
+    }
+}
+```
+__Réponses: utilisateur connecté__
+
+```json
+{
+    "status": "User connected.",
+    "timestamp": 1668253811261,
+    "user": {
+        "username": "user01",
+        "admin": false,
+        "id": "636b979f8f7ef3fb6243e8f3"
+    }
+}
+```
+__Réponses: utilisateur déconnecté__
+
+```json
+{
+    "status": "User disconnected.",
+    "timestamp": 1668253852370,
+    "user": {
+        "username": "user01",
+        "admin": false,
+        "id": "636b979f8f7ef3fb6243e8f3"
+    }
+}
+```
 # Routes
 
 **Legendes**
@@ -522,61 +577,5 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
         "id": "636cca7ec8fff49b7d347e5c"
      }
   ]
-}
-```
-
-## Chat
-
-ShroomShare dispose d'un chat avec différents channels chacun associé à une langue différente. Lors de la première connexion au chat, il est possible de préciser le channel auxquel on souhaite se connecter au moyen du query parameter appelé `language`. Si aucuns query parameter n'est préciser alors l'utilisateur est par défault connecté au channel anglais. A préciser que le chat est réservé aux utilisateurs authentifié.
-
-Les messages n'ont pas besoin de respecter un format particulier, il peuvent être directement saisis tels quels, null besoin de recourir au JSON ou un autre format relativement élaboré.
-
-__Accéder au chat__
-
-```
- ws://127.0.0.1:3000/ 
-```
-__Query parameter__
-
-- `language`: `enum ['fr'|'en'|'it'|'de']`
-
-__Réponses: message envoyé__
-
-```json
-{
-    "status": "Message received.",
-    "message": "hello",
-    "timestamp": 1668253852370,
-    "user": {
-        "username": "user01",
-        "admin": false,
-        "id": "636b979f8f7ef3fb6243e8f3"
-    }
-}
-```
-__Réponses: utilisateur connecté__
-
-```json
-{
-    "status": "User connected.",
-    "timestamp": 1668253811261,
-    "user": {
-        "username": "user01",
-        "admin": false,
-        "id": "636b979f8f7ef3fb6243e8f3"
-    }
-}
-```
-__Réponses: utilisateur déconnecté__
-
-```json
-{
-    "status": "User disconnected.",
-    "timestamp": 1668253852370,
-    "user": {
-        "username": "user01",
-        "admin": false,
-        "id": "636b979f8f7ef3fb6243e8f3"
-    }
 }
 ```
