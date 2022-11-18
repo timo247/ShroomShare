@@ -45,11 +45,9 @@ describe('GET /mushrooms', () => {
             date: expect.any(String),
             id: expect.any(String),
             picture_id: expect.any(String),
-            geolocalisation: expect.objectContaining({
-              location: expect.objectContaining({
-                type: expect.stringContaining('Point'),
-                coordinates: expect.any(Array),
-              }),
+            location: expect.objectContaining({
+              type: expect.stringContaining('Point'),
+              coordinates: expect.any(Array),
             }),
           }),
         ]),
@@ -92,11 +90,9 @@ describe('GET /mushrooms', () => {
               user_id: expect.any(String),
               id: expect.any(String),
             }),
-            geolocalisation: expect.objectContaining({
-              location: expect.objectContaining({
-                type: expect.stringContaining('Point'),
-                coordinates: expect.any(Array),
-              }),
+            location: expect.objectContaining({
+              type: expect.stringContaining('Point'),
+              coordinates: expect.any(Array),
             }),
           }),
         ]),
@@ -126,11 +122,9 @@ describe('GET /mushrooms', () => {
             user_id: expect.any(String),
             date: expect.any(String),
             specy_id: expect.stringContaining(validSpecyId),
-            geolocalisation: expect.objectContaining({
-              location: expect.objectContaining({
-                type: expect.stringContaining('Point'),
-                coordinates: expect.any(Array),
-              }),
+            location: expect.objectContaining({
+              type: expect.stringContaining('Point'),
+              coordinates: expect.any(Array),
             }),
           }),
         ]),
@@ -160,11 +154,9 @@ describe('GET /mushrooms', () => {
             user_id: expect.stringContaining(validUserId),
             date: expect.any(String),
             specy_id: expect.any(String),
-            geolocalisation: expect.objectContaining({
-              location: expect.objectContaining({
-                type: expect.stringContaining('Point'),
-                coordinates: expect.any(Array),
-              }),
+            location: expect.objectContaining({
+              type: expect.stringContaining('Point'),
+              coordinates: expect.any(Array),
             }),
           }),
         ]),
@@ -194,11 +186,9 @@ describe('POST /mushrooms', () => {
         specy_id: specyId,
         picture,
         date: newDate,
-        geolocalisation: {
-          location: {
-            type: 'Point',
-            coordinates: [latitude, longitude],
-          },
+        location: {
+          type: 'Point',
+          coordinates: [latitude, longitude],
         },
       },
       messageWrapper,
@@ -221,13 +211,11 @@ describe('POST /mushrooms', () => {
             id: expect.any(String),
             collectionName: expect.any(String),
           }),
-          geolocalisation: expect.objectContaining({
-            location: expect.objectContaining({
-              type: expect.stringContaining('Point'),
-              coordinates: expect.arrayContaining([
-                latitude, longitude,
-              ]),
-            }),
+          location: expect.objectContaining({
+            type: expect.stringContaining('Point'),
+            coordinates: expect.arrayContaining([
+              latitude, longitude,
+            ]),
           }),
         }),
       }),
@@ -250,7 +238,7 @@ describe('POST /mushrooms', () => {
       expect.objectContaining({
         messages: expect.arrayContaining([
           msg.ERROR_FIELD_REQUIRED('picture').msg,
-          msg.ERROR_FIELD_REQUIRED('geolocalisation').msg,
+          msg.ERROR_FIELD_REQUIRED('location').msg,
           msg.ERROR_FIELD_REQUIRED('specy_id').msg,
         ]),
       }),
@@ -268,11 +256,9 @@ describe('POST /mushrooms', () => {
         specy_id: specyId,
         picture: 'adfakfj',
         date: newDate,
-        geolocalisation: {
-          location: {
-            type: 'Point',
-            coordinates: [46.616517, 6.234434],
-          },
+        location: {
+          type: 'Point',
+          coordinates: [46.616517, 6.234434],
         },
       },
       messageWrapper,
@@ -296,11 +282,9 @@ describe('POST /mushrooms', () => {
         specy_id: specyId,
         picture,
         date: 'gg',
-        geolocalisation: {
-          location: {
-            type: 'Point',
-            coordinates: [46.616517, 6.234434],
-          },
+        location: {
+          type: 'Point',
+          coordinates: [46.616517, 6.234434],
         },
       },
       messageWrapper,
@@ -325,11 +309,9 @@ describe('POST /mushrooms', () => {
         specy_id: specyId,
         picture,
         date: newDate,
-        geolocalisation: {
-          location: {
-            type: 'Point',
-            coordinates: [100, 200],
-          },
+        location: {
+          type: 'Point',
+          coordinates: [100, 200],
         },
       },
       messageWrapper,
@@ -362,14 +344,12 @@ describe('PATCH /mushrooms/:id', () => {
       body: {
         description: newDescription,
         picture: newPicture,
-        geolocalisation: {
-          location: {
-            type: 'Point',
-            coordinates: [
-              longitude,
-              latitude,
-            ],
-          },
+        location: {
+          type: 'Point',
+          coordinates: [
+            longitude,
+            latitude,
+          ],
         },
       },
       token: tester.adminToken,
@@ -395,13 +375,11 @@ describe('PATCH /mushrooms/:id', () => {
             user_id: expect.any(String),
             mushroom_id: expect.any(String),
           }),
-          geolocalisation: expect.objectContaining({
-            location: expect.objectContaining({
-              type: expect.stringContaining('Point'),
-              coordinates: expect.arrayContaining([
-                latitude, longitude,
-              ]),
-            }),
+          location: expect.objectContaining({
+            type: expect.stringContaining('Point'),
+            coordinates: expect.arrayContaining([
+              latitude, longitude,
+            ]),
           }),
         }),
       }),
@@ -434,14 +412,12 @@ describe('PATCH /mushrooms/:id', () => {
       messageWrapper,
       token: tester.userToken,
       body: {
-        geolocalisation: {
-          location: {
-            type: 'Point',
-            coordinates: [
-              100,
-              200,
-            ],
-          },
+        location: {
+          type: 'Point',
+          coordinates: [
+            100,
+            200,
+          ],
         },
       },
     });

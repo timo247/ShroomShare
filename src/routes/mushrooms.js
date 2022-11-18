@@ -97,13 +97,8 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
       if (lat < -90 || lat > 90) return useAuth.send(res, msg.ERROR_LATITUDE_VALIDATION);
       if (!radius) radius = 1000;
       if (isNaN(radius)) return useAuth.send(res, msg.ERROR_RADIUS_NAN);//eslint-disable-line
-      // const query = await Mushroom.find().where('geolocalisation.location.coordinates').near({
-      //   center: [parseFloat(long), parseFloat(lat)],
-      //   spherical: true,
-      //   maxDistance: 5,
-      // });
       dynamicQuery = Mushroom.find({
-        'geolocalisation.location.coordinates': {
+        location: {
           $near: {
             $geometry: {
               type: 'Point',
@@ -114,8 +109,6 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
           },
         },
       });
-      const query = await dynamicQuery;
-      console.log(query.length);
     }
 
     if (queryTo) {
@@ -125,17 +118,17 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
     }
     if (queryFrom) {
       if (!validateDate(queryFrom)) return useAuth.send(res, msg.ERROR_DATE_FORMAT);
-      dateMin = dateMax - queryFrom;
+      dateMin = queryFrom;
       dynamicQuery = dynamicQuery.where('date').gt(dateMin).sort('date');
     }
     if (queryUserId) {
-      const existingUserId = await User.findOne({ _id: queryUserId });
-      if (!existingUserId) return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
+      const existingUser = await User.findOne({ _id: queryUserId });
+      if (!existingUser) return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
       dynamicQuery = dynamicQuery.where('user_id').equals(queryUserId);
     }
     if (querySpecyId) {
-      const existingUserId = await Specy.findOne({ _id: querySpecyId });
-      if (!existingUserId) return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.SPECY));
+      const existingSpecy = await Specy.findOne({ _id: querySpecyId });
+      if (!existingSpecy) return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.SPECY));
       dynamicQuery = dynamicQuery.where('specy_id').equals(querySpecyId);
     }
     let data = await dynamicQuery;
@@ -205,13 +198,13 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
 // Add new mushroom
 router.post('/', auth.authenticateUser, async (req, res, next) => {
   try {
-    const errorMessages = useRouter.checkForRequiredParams(req, res, ['date', 'description', 'specy_id', 'picture', 'geolocalisation']);
+    const errorMessages = useRouter.checkForRequiredParams(req, res, ['date', 'description', 'specy_id', 'picture', 'location']);
     if (errorMessages) return useAuth.send(res, errorMessages);
     const currentSpecy = await Specy.findOne({ id: req.body.specy_id });
     if (!currentSpecy) return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.SPECY));
     if (!isBase64(req.body.picture)) return useAuth.send(res, msg.ERROR_IMG_BASE64);
     if (!validateDate(req.body.date)) return useAuth.send(res, msg.ERROR_DATE_FORMAT);
-    if (!validateGeoJsonCoordinates(req.body.geolocalisation.location.coordinates)) {
+    if (!validateGeoJsonCoordinates(req.body.location.coordinates)) {
       return useAuth.send(res, msg.ERROR_GEOJSON_FORMAT);
     }
 
@@ -233,11 +226,9 @@ router.post('/', auth.authenticateUser, async (req, res, next) => {
       picture_id: pictureId,
       description: req.body.description,
       date: req.body.date,
-      geolocalisation: {
-        location: {
-          type: req.body.geolocalisation.location.type,
-          coordinates: req.body.geolocalisation.location.coordinates,
-        },
+      location: {
+        type: req.body.location.type,
+        coordinates: req.body.location.coordinates,
       },
     });
     let savedMushroom = await mushroom.save();
@@ -285,8 +276,8 @@ router.patch('/:id', auth.authenticateUser, async (req, res, next) => {
     if (req.body.date) {
       if (!validateDate(req.body.date)) return useAuth.send(res, msg.ERROR_DATE_FORMAT);
     }
-    if (req.body.geolocalisation.location.coordinates) {
-      if (!validateGeoJsonCoordinates(req.body.geolocalisation.location.coordinates)) {
+    if (req.body.location.coordinates) {
+      if (!validateGeoJsonCoordinates(req.body.location.coordinates)) {
         return useAuth.send(res, msg.ERROR_GEOJSON_FORMAT);
       }
     }

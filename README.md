@@ -279,11 +279,10 @@ __Réponses: utilisateur déconnecté__
     picture: base64String,
     description?: String,
     date: Date,
-    geolocalisation: {
       location: {
-       type: enum [Point], 
+        type: enum [Point], 
+        coordinates: number[]
       },
-      coordinates: number[]
     }
 }
 ```
@@ -309,14 +308,10 @@ __Réponses: utilisateur déconnecté__
       "date": "2022-11-09T12:05:51.097Z",
       "id": "636b97a08f7ef3fb6243e92e"
     },
-    "geolocalisation": {
-      "location": {
-       "type": "Point", 
-      },
-      "coordinates": [
-        "46.616517,6.234434,..."
-      ]
-    }
+    "location": {
+      "type": "Point", 
+      "coordinates": [ 46.616517,6.234434 ]
+    },
   }
 }
 ```
@@ -345,12 +340,10 @@ __Réponses: utilisateur déconnecté__
     picture?: base64String
     description?: String,
     date?: Date,
-    geolocalisation?: {
       location: {
-       type: enum [Point], 
+        type: enum [Point], 
+        coordinates: number[]
       },
-      coordinates: number[]
-    }
 }
 ```
 
@@ -375,14 +368,10 @@ __Réponses: utilisateur déconnecté__
       "date": "2022-11-09T12:05:51.097Z",
       "id": "636b97a08f7ef3fb6243e92e"
     },
-    "geolocalisation": {
-      "location": {
-       "type": "Point", 
-      },
-      "coordinates": [
-        "46.616517,6.234434,..."
-      ]
-    }
+    "location": {
+      "type": "Point", 
+      "coordinates": [ 46.616517,6.234434 ]
+    },
   }
 }
 ```
@@ -425,14 +414,10 @@ __Réponses: utilisateur déconnecté__
         "date": "2022-11-09T12:05:51.097Z",
         "id": "636b97a08f7ef3fb6243e92e"
       },
-      "geolocalisation": {
-        "location": {
+      "location": {
         "type": "Point", 
-        },
-        "coordinates": [
-          "46.616517,6.234434,..."
-        ]
-      }
+        "coordinates": [ 46.616517,6.234434 ]
+      },
     }
   ]
 }

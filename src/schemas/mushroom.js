@@ -27,22 +27,18 @@ const mushroomSchema = new Schema({
     type: Date,
     default: Date.now,
   },
-  geolocalisation: {
-    // store geospatial information as GeoJSON object
-    location: {
-      type: {
-        type: String,
-        required: true,
-        enum: ['Point'],
-      },
-      coordinates: {
-        type: [Number],
-        required: true,
-        index: '2dsphere',
-        validate: {
-          validator: validateGeoJsonCoordinates,
-          message: '{VALUE} is not a valid longitude/latitude(/altitude) coordinates array',
-        },
+  location: {
+    type: {
+      type: String,
+      default: 'Point',
+      enum: ['Point'],
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+      validate: {
+        validator: validateGeoJsonCoordinates,
+        message: '{VALUE} is not a valid longitude/latitude(/altitude) coordinates array',
       },
     },
   },

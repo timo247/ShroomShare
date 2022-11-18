@@ -23,7 +23,7 @@ async function seeder() {
     const mushroomId = new Mongoose.Types.ObjectId();
     const y = randomInt(1, 6);
     const userId = (await getUser(`user0${i}`)).id;
-    const species = (await getSpecies(speciesList[i + y].name));
+    const species = (await getSpecies(speciesList[i].name));
     const coordinates = location[i - 1].split(',');
     const imagePath = `./src/data/images/mushroomSeederImg/${y}.jpg`;
     await createMushroom(species, coordinates, pictureId, mushroomId, userId);
@@ -89,11 +89,9 @@ async function createMushroom(species, coordinates, pictureId, mushroomId, userI
     picture_id: pictureId,
     description: `J'ai trouvé ce magnifique spécimen ${species.name} en bordure de forêt`,
     date: new Date(),
-    geolocalisation: {
-      location: {
-        type: 'Point',
-        coordinates: [coordinates[0], coordinates[1]],
-      },
+    location: {
+      type: 'Point',
+      coordinates: [coordinates[1], coordinates[0]],
     },
   });
   try {
