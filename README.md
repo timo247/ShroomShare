@@ -130,7 +130,7 @@ __Réponses: utilisateur déconnecté__
     name: String, 
     description: String, 
     usage: String, 
-    picture: File<JPG|PNG>, 
+    picture: base64String, 
 } 
 ```
 
@@ -167,7 +167,7 @@ __Réponses: utilisateur déconnecté__
     name?: String,
     description?: String,
     usage?: String,
-    picture?: File<JPG|PNG>,
+    picture?: base64String,
 }
 ```
 

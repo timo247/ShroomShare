@@ -6,7 +6,6 @@ import mushroomsSeeder from '../../seeders/mushroomSeeder.js';
 import msg, { RESSOURCES as R } from '../../data/messages.js';
 import ApiTester from '../../helpers/ApiTester.js';
 import defineTest from '../../helpers/useDefineTest.js';
-import Mushroom from '../../schemas/mushroom.js';
 
 let tester;
 const prepare = async () => {
