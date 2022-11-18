@@ -31,8 +31,6 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
   - [Images](#images)
     - [Retrouver des images](#retrouver-des-images)
   - [Chat](#chat)
-  - [Schémas](#schémas)
-- [Mongosh](#mongosh)
 
 # Routes
 
@@ -60,7 +58,7 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
 
 ```json
 {
-  "message": "User connected.",
+  "message": "Token succesfully created.",
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkphbmUgRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.cMErWtEf7DxCXJl8C9q0L7ttkm-Ex54UWHsOCMGbtUc"
 }
 ```
@@ -85,7 +83,7 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
 
 ```json
 {
-  "message": "Specy succefully created.",
+  "message": "Specy successfully created.",
   "specy": {
     "name": "Amanite phalloides",
     "description": "The Amanita phalloides is a ...",
@@ -113,7 +111,6 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
 {
     name?: String,
     description?: String,
-    weight?: Number,
     usage?: String,
     picture?: File<JPG|PNG>,
 }
@@ -123,7 +120,7 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
 
 ```json
 {
-  "message": "Specy succefully modified.",
+  "message": "Specy successfully modified.",
   "specy": {
     "name": "Amanite phalloides",
     "description": "The Amanita phalloides is a ...",
@@ -149,7 +146,7 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
 
 ```json
 {
-  "message": "Specy succefully deleted."
+  "message": "Specy successfully deleted."
 }
 ```
 
@@ -167,7 +164,7 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
 
 ```json
 {
-  "message": "Species succefully retrieved.",
+  "message": "Species successfully retrieved.",
   "species": [
     {
       "name": "Amanite phalloides",
@@ -195,7 +192,7 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
 
 ```json
 {
-  "message": "Specy succefully retrieved.",
+  "message": "Specy successfully retrieved.",
   "specy": {
     "name": "Amanite phalloides",
     "description": "The Amanita phalloides is a ...",
@@ -223,8 +220,8 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
 
 ```
 {
-    species_id: Number,
-    picture: File<JPG|PNG>,
+    specy_id: Number,
+    picture: base64String,
     description?: String,
     date: Date,
     geolocalisation: {
@@ -240,16 +237,19 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
 
 ```json
 {
-  "message": "Mushroom added",
+  "message": "Mushroom successfully added.",
   "mushroom": {
-    "species_id": "1",
+    "specy_id": "636b97a08f7ef3fb6243e92f",
     "user_id": "636b97a08f7ef3fb6243e92f",
-    "picture": "https://...",
+    "picture_id": "636b97a08f7ef3fb6243e92e",
     "description": "This is a Amanita phalloides...",
     "date": "2022.01.01",
+    "id": "636b97a08f7ef3fb6243e92f",
     "picture": {
       "value": "data:image/undefinedbase64, ... ",
       "specy_id": "636b97a08f7ef3fb6243e92f",
+      "mushroom_id": "636b97a08f7ef3fb6243e92f",
+      "user_id": "636b97a08f7ef3fb6243e92f",
       "collectionName": "species",
       "date": "2022-11-09T12:05:51.097Z",
       "id": "636b97a08f7ef3fb6243e92e"
@@ -274,7 +274,7 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
 
 ```json
 {
-  "message": "Mushroom deleted"
+  "message": "Mushroom successfully deleted."
 }
 ```
 
@@ -286,8 +286,8 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
 
 ```
 {
-    species_id?: Number,
-    picture?: File<JPG|PNG>,
+    specy_id?: Number,
+    picture?: base64String
     description?: String,
     date?: Date,
     geolocalisation?: {
@@ -303,15 +303,18 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
 
 ```json
 {
-  "message": "Mushroom updated",
+  "message": "Mushroom successfully updated.",
   "mushroom": {
-    "species_id": "1",
+    "specy_id": "636b97a08f7ef3fb6243e92f",
     "user_id": "636b97a08f7ef3fb6243e92f",
-    "picture": "https://...",
+    "picture_id": "636b97a08f7ef3fb6243e92e",
     "description": "This is a Amanita phalloides...",
     "date": "2022.01.01",
+    "id": "636b97a08f7ef3fb6243e92f",
     "picture": {
       "value": "data:image/undefinedbase64, ... ",
+      "mushroom_id": "636b97a08f7ef3fb6243e92f",
+      "user_id": "636b97a08f7ef3fb6243e92f",
       "specy_id": "636b97a08f7ef3fb6243e92f",
       "collectionName": "species",
       "date": "2022-11-09T12:05:51.097Z",
@@ -335,12 +338,11 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
 
 **Filtres disponibles**
 
-- `?location={ lat:Float, long:Float }`: Coordonnées GPS
-- `?species=String`: Espèce(s)
-- `?user=Integer`: ID Utilisateur
+- `?latitude=Number`: Coordonnée GPS
+- `?longitude=Number`: Coordonnée GPS
+- `?specyId=String`: Id de l'espèce
+- `?userId=Integer`: Id de l'utilisateur
 - `?showPictures=Boolean`: affiche ou non les images
-- `&total=Boolean`: Somme des champignons par utilisateur (Si TRUE)
-- `?usage=String`: Usage
 - `?from=Date`: Date de début
 - `?to=Date`: Date de Fin
 - `?page=value`: Numéro de la page
@@ -350,17 +352,20 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
 
 ```json
 {
-  "message": "Mushrooms retrieved",
+  "message": "Mushrooms successfully retrieved.",
   "mushroom": [
     {
-      "sepcy_id": "1",
+      "specy_id": "636b97a08f7ef3fb6243e92f",
       "user_id": "636b97a08f7ef3fb6243e92f",
-      "picture": "https://...",
+      "picture_id": "636b97a08f7ef3fb6243e92e",
       "description": "This is a Amanita phalloides...",
       "date": "2022.01.01",
+      "id": "636b97a08f7ef3fb6243e92f",
       "picture": {
         "value": "data:image/undefinedbase64, ... ",
         "specy_id": "636b97a08f7ef3fb6243e92f",
+        "mushroom_id": "636b97a08f7ef3fb6243e92f",
+        "user_id": "636b97a08f7ef3fb6243e92f",
         "collectionName": "species",
         "date": "2022-11-09T12:05:51.097Z",
         "id": "636b97a08f7ef3fb6243e92e"
@@ -393,7 +398,7 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
 
 ```json
 {
-  "message": "Users succefully retrieved.",
+  "message": "Users successfully retrieved.",
   "users": [
     {
       "username": "John2022",
@@ -411,7 +416,7 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
 
 ```json
 {
-  "message": "User succefully retrieved.",
+  "message": "User successfully retrieved.",
   "user": {
     "username": "John2023",
     "admin": "false"
@@ -436,7 +441,7 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
 
 ```json
 {
-  "message": "User succefully created.",
+  "message": "User successfully created.",
   "user": {
     "username": "John2023",
     "password": "mySecretPassword",
@@ -466,7 +471,7 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
 
 ```json
 {
-  "message": "User succefully modified.",
+  "message": "User successfully modified.",
   "user": {
     "username": "John2023",
     "password": "mySecretPassword",
@@ -484,7 +489,7 @@ Then, the app users may find mushrooms into the wild corresponding to the availa
 
 ```json
 {
-  "message": "User succefully deleted."
+  "message": "User successfully deleted."
 }
 ```
 
@@ -574,101 +579,4 @@ __Réponses: utilisateur déconnecté__
         "id": "636b979f8f7ef3fb6243e8f3"
     }
 }
-```
-
-## Schémas
-
-```
-Species: {
-	name: String,
-	description: String,
-	weight: Number,
-	usage: String,
-	picture: String,
-}
-```
-
-```
-Mushroom: {
-	specy_id: Number,
-	user_id: Number,
-	picture: String,
-	description?: String,
-	date: Date,
-	location: {
-		lat: String,
-		long: String,
-    }
-}
-```
-
-```
-User: {
-	username: String,
-	password: String,
-	email: String,
-	admin: Boolean,
-}
-```
-
-# Mongosh
-
-**Démarer mongodb (MacOS)**
-
-```bash
-brew services start mongodb-community@6.0
-```
-
-**Arrêter mongodb (MacOS)**
-
-```bash
-brew services stop mongodb-community@6.0
-```
-
-**Entrer dans mongosh**
-
-Les commandes suivantes sont à éxécuter dans `mongosh`, pour que `mongosh` soit accesible il faut que la base de données soit au préalable démarée.
-
-```bash
-mongosh
-```
-
-**Lister les db existantes**
-
-```bash
-show dbs
-```
-
-**Lister les collections existantes**
-
-```bash
-show collections
-```
-
-**Afficher le nom de la db courante**
-
-```bash
-db
-```
-
-**AFficher les index d'un schémas**
-
-```bash
-db.<schema>.getIndexes()
-# exemple
-db.users.getIndexes()
-```
-
-**Supprimer un index sur un schéma**
-
-```bash
-db.<schema>.dropIndex(<indexName>)
-# exemple
-db.users.dropIndex('username')
-```
-
-**Changer de db**
-
-```bash
-use <dbName>
 ```

@@ -97,12 +97,25 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
       if (lat < -90 || lat > 90) return useAuth.send(res, msg.ERROR_LATITUDE_VALIDATION);
       if (!radius) radius = 1000;
       if (isNaN(radius)) return useAuth.send(res, msg.ERROR_RADIUS_NAN);//eslint-disable-line
-      const query = await Mushroom.find().where('geolocalisation.location.coordinates').near({
-        center: [parseFloat(long), parseFloat(lat)],
-        spherical: true,
-        maxDistance: 5,
+      // const query = await Mushroom.find().where('geolocalisation.location.coordinates').near({
+      //   center: [parseFloat(long), parseFloat(lat)],
+      //   spherical: true,
+      //   maxDistance: 5,
+      // });
+      dynamicQuery = Mushroom.find({
+        'geolocalisation.location.coordinates': {
+          $near: {
+            $geometry: {
+              type: 'Point',
+              coordinates: [long, lat],
+            },
+            $minDistance: 0,
+            $maxDistance: radius,
+          },
+        },
       });
-      // console.log({ query, radius });
+      const query = await dynamicQuery;
+      console.log(query.length);
     }
 
     if (queryTo) {
