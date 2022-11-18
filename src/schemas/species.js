@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 
 const usages = ['commestible', 'non-commestible'];
 
-const speciesSchema = new Schema({
+const specySchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -27,7 +27,7 @@ const speciesSchema = new Schema({
   },
 });
 
-speciesSchema.set('toJSON', {
+specySchema.set('toJSON', {
   transform: transformJsonUser,
 });
 
@@ -38,7 +38,7 @@ function transformJsonUser(doc, json, options) {
   return json;
 }
 
-mongoose.model('Species', speciesSchema, 'species');
-const Species = mongoose.model('Species');
+mongoose.model('Specy', specySchema, 'species');
+const Specy = mongoose.model('Specy');
 
-export default Species;
+export default Specy;

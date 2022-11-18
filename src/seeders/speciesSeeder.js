@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import mongoose from 'mongoose';
 import path from 'path';
-import Species from '../schemas/species.js';
+import Specy from '../schemas/species.js';
 import Image from '../schemas/images.js';
 import tobase64 from '../helpers/useToBase64.js';
 import isBase64 from '../helpers/useValidateBase64.js';
@@ -20,38 +20,38 @@ async function seeder() {
   const imgs = fs.readdirSync(imgsPath);
   let i = 0;
   const speciesArray = await getCsvData();
-  for (const species of speciesArray) {
+  for (const specy of speciesArray) {
     const pictureId = new mongoose.Types.ObjectId();
-    const speciesId = new mongoose.Types.ObjectId();
-    await createSpecies(species, speciesId, pictureId);
-    await createImg(`src/data/images/${imgs[i]}`, speciesId, pictureId);
+    const specyId = new mongoose.Types.ObjectId();
+    await createSpecy(specy, specyId, pictureId);
+    await createImg(`src/data/images/${imgs[i]}`, specyId, pictureId);
     i++;
   }
 }
 
-async function createSpecies(speciesFromFile, speciesId, pictureId) {
-  const species = new Species({
-    _id: speciesId,
-    name: speciesFromFile.name,
-    description: speciesFromFile.description,
-    usage: speciesFromFile.usage,
+async function createSpecy(specyFromFile, specyId, pictureId) {
+  const specy = new Specy({
+    _id: specyId,
+    name: specyFromFile.name,
+    description: specyFromFile.description,
+    usage: specyFromFile.usage,
     picture_id: pictureId,
   });
   try {
-    await species.save();
+    await specy.save();
   } catch (err) {
-    console.warn('species could not be saved', err);
+    console.warn('specy could not be saved', err);
   }
 }
 
-async function createImg(imgPath, speciesId, pictureId) {
+async function createImg(imgPath, specyId, pictureId) {
   const extension = imgPath.split('.')[1];
   const imgBase64 = tobase64(imgPath, extension);
   if (!isBase64(imgBase64)) throw new Error('picture is not base64');
   const image = new Image({
     _id: pictureId,
     value: imgBase64,
-    species_id: speciesId,
+    specy_id: specyId,
     collectionName: 'species',
   });
   try {
