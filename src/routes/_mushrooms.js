@@ -13,18 +13,18 @@
  *          CreateMushroomSchema:
  *           type: object
  *           properties:
- *              species_id:
+ *              specy_id:
  *                  type: number
  *              picture:
- *                  type: string
+ *                  type: base6aString
  *              description:
  *                  type: string
  *              date:
  *                  type: string
- *              geolocalisation:
+ *              location:
  *                  type: object
  *                  properties:
- *                     location:
+ *                     type:
  *                        type: string
  *                        enum: [Point]
  *                     coordinates:
@@ -32,7 +32,7 @@
  *                        minItems: 2
  *                        maxItems: 2
  *                        items:
- *                           type: number 
+ *                          type: number 
  * 
  */
 
@@ -52,9 +52,7 @@
  *                 mushroom:
  *                  type: object
  *                  properties:
- *                     id:
- *                       type: string
- *                     species_id:
+ *                     specy_id:
  *                      type: number
  *                     user_id:
  *                      type: number
@@ -62,12 +60,14 @@
  *                      type: string
  *                     date:
  *                      type: string
+ *                     id:
+ *                      type: string
  *                     picture:
  *                      type: object
  *                      properties:
  *                        value:
  *                         type: string
- *                        resource_id:
+ *                        specy_id:
  *                         type: string
  *                        collectionName:
  *                         type: string
@@ -76,18 +76,18 @@
  *                         format: date-time
  *                        id:
  *                         type: string
- *                     geolocalisation:
- *                      type: object
- *                      properties:
- *                        location:
+ *                     location:
+ *                        type: object
+ *                        properties:
+ *                          type:
  *                            type: string
  *                            enum: [Point]
- *                        coordinates:
+ *                          coordinates:
  *                            type: array
  *                            minItems: 2
  *                            maxItems: 2
  *                            items:
- *                               type: number
+ *                              type: number 
  *                       
  */
 
@@ -104,19 +104,19 @@
  *       value:
  *          message: "Mushroom successfully created"
  *          mushroom:
- *             id: "5f9f9f9f9f9f9f9f9f9f9f9f"
- *             species_id: 1
+ *             specy_id: 1
  *             user_id: 1
  *             description: "This is a mushroom"
  *             date: "2020-01-01"
+ *             id: "5f9f9f9f9f9f9f9f9f9f9f9f"
  *             picture:
  *              value: "data:image/undefinedbase64,..."
- *              resource_id: "5e1f9b9b9b9b9b9b9b9b9b9b"
+ *              specy_id: "5e1f9b9b9b9b9b9b9b9b9b9b"
  *              collectionName: "mushrooms"
  *              date: "2020-01-01T00:00:00.000Z"
  *              id: "5e1f9b9b9b9b9b9b9b9b9b9b"
- *             geolocalisation:
- *              location: Point
+ *             location: 
+ *              type: Point
  *              coordinates: [1, 1]
  */
  
@@ -133,8 +133,8 @@
  *                 picture: bcqipséncbqwvvbqwbljhfqii238rufz8uq3b4
  *                 description: This is a description
  *                 date: 2020-10-27T15:00:00.000Z
- *                 geolocalisation:
- *                    location: Point
+ *                 location: 
+ *                    type : Point
  *                    coordinates:
  *                     - 2.345
  *                     - 48.8566
@@ -195,7 +195,7 @@
  *      examples:
  *          DeletedMushroomExample:
  *              value:
- *                 message: "Mushroom successfully deleted"
+ *                 message: "Mushroom successfully deleted."
  */
 
 // ===============================================================
@@ -217,7 +217,7 @@
  *          UpdateMushroomSchema:
  *           type: object
  *           properties:
- *              species_id:
+ *              specy_id:
  *                  type: number
  *              picture:
  *                  type: string
@@ -225,18 +225,18 @@
  *                  type: string
  *              date:
  *                  type: string
- *              geolocalisation:
+ *              location:
  *                  type: object
  *                  properties:
- *                     location:
- *                            type: string
- *                            enum: [Point]
+ *                     type:
+ *                        type: string
+ *                        enum: [Point]
  *                     coordinates:
- *                            type: array
- *                            minItems: 2
- *                            maxItems: 2
- *                            items:
- *                               type: number 
+ *                        type: array
+ *                        minItems: 2
+ *                        maxItems: 2
+ *                        items:
+ *                          type: number 
  * 
  */
 
@@ -256,9 +256,7 @@
  *                 mushroom:
  *                  type: object
  *                  properties:
- *                     id:
- *                      type: string
- *                     species_id:
+ *                     specy_id:
  *                      type: number
  *                     user_id:
  *                      type: number
@@ -266,12 +264,14 @@
  *                      type: string
  *                     date:
  *                      type: string
+ *                     id:
+ *                      type: string
  *                     picture:
  *                      type: object
  *                      properties:
  *                        value:
  *                         type: string
- *                        resource_id:
+ *                        specy_id:
  *                         type: string
  *                        collectionName:
  *                         type: string
@@ -280,18 +280,18 @@
  *                         format: date-time
  *                        id:
  *                         type: string
- *                     geolocalisation:
- *                      type: object
- *                      properties:
- *                        location:
+ *                     location:
+ *                        type: object
+ *                        properties:
+ *                          type:
  *                            type: string
  *                            enum: [Point]
- *                        coordinates:
+ *                          coordinates:
  *                            type: array
  *                            minItems: 2
  *                            maxItems: 2
  *                            items:
- *                               type: number 
+ *                              type: number 
  *                       
  */
 // ===============================================================
@@ -306,12 +306,12 @@
  *      examples:
  *          UpdateMushroomExample:
  *             value:
- *                 species_id: 1
+ *                 specy_id: 1
  *                 picture: bcqipséncbqwvvbqwbljhfqii238rufz8uq3b4
  *                 description: This is a description
  *                 date: 2020-10-27T15:00:00.000Z
- *                 geolocalisation:
- *                    location: Point
+ *                 location: 
+ *                    type : Point
  *                    coordinates:
  *                     - 2.345
  *                     - 48.8566
@@ -329,19 +329,19 @@
  *       value:
  *          message: "Mushroom successfully updated"
  *          mushroom:
- *             id: "5f9f9f9f9f9f9f9f9f9f9f9f"
- *             species_id: 1
+ *             specy_id: 1
  *             user_id: 1
  *             description: "This is a mushroom"
  *             date: "2020-01-01"
+ *             id: "5f9f9f9f9f9f9f9f9f9f9f9f"
  *             picture:
  *              value: "data:image/undefinedbase64,..."
- *              resource_id: "5e1f9b9b9b9b9b9b9b9b9b9b"
+ *              specy_id: "5e1f9b9b9b9b9b9b9b9b9b9b"
  *              collectionName: "mushrooms"
  *              date: "2020-01-01T00:00:00.000Z"
  *              id: "5e1f9b9b9b9b9b9b9b9b9b9b"
- *             geolocalisation:
- *              location: Point
+ *             location: 
+ *              type: Point
  *              coordinates: [1, 1]
  */
 
@@ -392,9 +392,7 @@
  *                 mushroom:
  *                  type: object
  *                  properties:
- *                     id:
- *                      type: string
- *                     species_id:
+ *                     specy_id:
  *                      type: number
  *                     user_id:
  *                      type: number
@@ -402,12 +400,14 @@
  *                      type: string
  *                     date:
  *                      type: string
+ *                     id:
+ *                      type: string
  *                     picture:
  *                      type: object
  *                      properties:
  *                        value:
  *                         type: string
- *                        resource_id:
+ *                        specy_id:
  *                         type: string
  *                        collectionName:
  *                         type: string
@@ -416,19 +416,18 @@
  *                         format: date-time
  *                        id:
  *                         type: string
- *                     geolocalisation:
- *                      type: object
- *                      properties:
- *                        location:
+ *                     location:
+ *                        type: object
+ *                        properties:
+ *                          type:
  *                            type: string
  *                            enum: [Point]
- *                        coordinates:
+ *                          coordinates:
  *                            type: array
  *                            minItems: 2
  *                            maxItems: 2
  *                            items:
- *                               type: number
- *                       
+ *                              type: number 
  */
 
 // ===============================================================
@@ -445,18 +444,18 @@
  *       value:
  *          message: "Mushroom successfully updated"
  *          mushroom:
- *             id: "5f9f9f9f9f9f9f9f9f9f9f9f"
- *             species_id: 1
+ *             specy_id: 1
  *             user_id: 1
  *             description: "This is a mushroom"
  *             date: "2020-01-01"
+ *             id: "5f9f9f9f9f9f9f9f9f9f9f9f"
  *             picture:
  *              value: "data:image/undefinedbase64,..."
- *              resource_id: "5e1f9b9b9b9b9b9b9b9b9b9b"
+ *              specy_id: "5e1f9b9b9b9b9b9b9b9b9b9b"
  *              collectionName: "mushrooms"
  *              date: "2020-01-01T00:00:00.000Z"
  *              id: "5e1f9b9b9b9b9b9b9b9b9b9b"
- *             geolocalisation:
- *              location: Point
+ *             location: 
+ *              type: Point
  *              coordinates: [1, 1]
  */

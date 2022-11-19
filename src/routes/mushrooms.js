@@ -26,11 +26,15 @@ const errorLogger = config.debug.apiErrors;
  *      summary: Retrieved all mushrooms
  *      parameters:
  *        - in: query
- *          name: location
+ *          name: latitude
  *          type: integer
  *          description: Coordonnées GPS (nombres)
  *        - in: query
- *          name: speciesId
+ *          name: longitude
+ *          type: integer
+ *          description: Coordonnées GPS (nombres)
+ *        - in: query
+ *          name: specyId
  *          type: String
  *          description: Choississez l'espèce de champignon
  *        - in: query
@@ -41,14 +45,6 @@ const errorLogger = config.debug.apiErrors;
  *          name: showPictures
  *          type: boolean
  *          description: Affichez les images ou non
- *        - in: query
- *          name: total
- *          type: boolean
- *          description: Sommez des champignons par utilisateur
- *        - in: query
- *          name: usage
- *          type: String
- *          description: Comestible ou non-comestible
  *        - in: query
  *          name: from
  *          type: date

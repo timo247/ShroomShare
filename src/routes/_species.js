@@ -23,7 +23,7 @@
  *                    - commestible
  *                    - non-commestible
  *              picture:
- *               type: string
+ *               type: base64String
  */
 
 // =================================================
@@ -95,7 +95,7 @@
  *     examples:
  *        CreatedSpecieExample:
  *          value:
- *           message: Specie created
+ *           message: Specie successfully created.
  *           specy:
  *              name: Bolet
  *              description: Bolet qui apparaît dans la foret
@@ -192,7 +192,7 @@
  *      examples:
  *          RetrievedSpecieExample:
  *           value:
- *              message: Specie retrieved
+ *              message: Specy successfully retrieved.
  *              specy:
  *                  name: Bolet
  *                  description: Bolet qui apparaît dans la foret
@@ -235,7 +235,7 @@
  *                    - commestible
  *                    - non-commestible
  *              picture:
- *               type: string
+ *               type: base64String
  */
 
 // =================================================
@@ -307,7 +307,7 @@
  *      examples:
  *          UpdatedSpecieExample:
  *           value:
- *              message: Specie updated
+ *              message: Specie successfully updated.
  *              specy:
  *                  name: Bolet
  *                  description: Bolet qui apparaît dans la foret
@@ -377,7 +377,7 @@
  *      examples:
  *          DeletedSpecieExample:
  *              value:
- *                  message: Specie deleted
+ *                  message: Specy successfully deleted.
  */
 // =================================================
 // =================================================
@@ -442,7 +442,7 @@
  *      examples:
  *          RetrievedAllSpecieExample:
  *           value:
- *              message: Specie retrieved
+ *              message: Species successfully retrieved.
  *              species:
  *                - name: Bolet
  *                  description: Bolet qui apparaît dans la foret

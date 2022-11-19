@@ -42,7 +42,7 @@
  *      examples:
  *          AllUserExample:
  *              value:
- *                  message: "Success: All users retrieved"
+ *                  message: "Users successfully retrieved"
  *                  user:
  *                        - username: John2022
  *                          admin: false
@@ -89,7 +89,7 @@
  *         examples:
  *            SpecifUserExample:
  *               value:
- *                 message: "Success: Specif user retrieved"
+ *                 message: "User successfully retrieved"
  *                 user:
  *                  username: John2022
  *                  admin: false
@@ -187,7 +187,7 @@
  *     examples:
  *          CreatedUserExample:
  *             value:
- *              message: "Success: User created"
+ *              message: "User successfully created"
  *              user:
  *                username: John2022
  *                password: 12345678
@@ -307,7 +307,7 @@
  *    examples:
  *     UpdatedUserExample:  
  *      value:
- *          message: "Success: User updated"
+ *          message: "User successfully modiefied"
  *          user:
  *             username: John2022
  *             password: 12345678
@@ -371,5 +371,5 @@
  *      examples:
  *        DeletedUserExample:
  *         value:
- *              message: "Success: User deleted"
+ *              message: "user successfully deleted"
  */

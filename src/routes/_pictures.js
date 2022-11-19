@@ -14,7 +14,7 @@
  *    RetrievePictureSchema:
  *      type: object
  *      properties:
- *       id:
+ *       ids:
  *          type: array
  *          items:
  *           type: string
@@ -32,7 +32,7 @@
  *          properties:
  *              message:
  *                  type: string
- *              picture:
+ *              pictures:
  *                  type: array
  *                  items:
  *                      type: object
@@ -59,7 +59,7 @@
  *      examples:
  *          RetrievePictureExample:
  *              value:
- *                  id: 
+ *                  ids: 
  *                     - 5f1f9b9b9b9b9b9b9b9b9b9b
  */
 
@@ -72,8 +72,8 @@
  *      examples:
  *          RetrievedPictureExample:
  *              value:
- *                  message: Picture retrieved   
- *                  picture:
+ *                  message: Pictures successfully retrieved   
+ *                  pictures:
  *                    - value: cnwqigciccqi
  *                      ressources_id: 5f1f9b9b9b9b9b9b9b9b9b9b
  *                      collectionName: species
