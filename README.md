@@ -41,7 +41,7 @@ Les messages n'ont pas besoin de respecter un format particulier, il peuvent êt
 __Accéder au chat__
 
 ```
- ws://127.0.0.1:3000/ 
+ ws://shroom-share.onrender.com 
 ```
 __Query parameter__
 
