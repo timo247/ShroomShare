@@ -22,7 +22,7 @@ const options = {
     info: {
       title: 'ShroomShare',
       version: '1.0.0',
-      description: '',
+      description: 'To access the chat documentation visit the developer Website',
     },
     servers: [
       {
