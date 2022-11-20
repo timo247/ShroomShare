@@ -99,7 +99,7 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
  *    get:
  *      tags:
  *        - Species
- *      summary: Retrieve specie
+ *      summary: Retrieve a specy
  *      responses:
  *       200:
  *        content:
@@ -143,7 +143,7 @@ router.get('/:id', auth.authenticateUser, async (req, res, next) => {
  *    post:
  *      tags:
  *        - Species
- *      summary: Create a new specie
+ *      summary: Create a new specy
  *      requestBody:
  *       $ref: '#/components/requestBodies/SpecieBody'
  *      responses:
@@ -194,7 +194,7 @@ router.post('/', auth.authenticateAdmin, async (req, res, next) => {
  *    patch:
  *      tags:
  *        - Species
- *      summary: Update a specie
+ *      summary: Update a specy
  *      requestBody:
  *       $ref: '#/components/requestBodies/UpdateSpecieBody'
  *      responses:
@@ -246,7 +246,7 @@ router.patch('/:id', auth.authenticateAdmin, async (req, res, next) => {
  *    delete:
  *      tags:
  *        - Species
- *      summary: Delete a specie
+ *      summary: Delete a specy
  *      responses:
  *       200:
  *        content:

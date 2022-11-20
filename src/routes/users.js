@@ -17,7 +17,7 @@ const router = express.Router();
  *    get:
  *      tags:
  *        - Users
- *      summary: Get all users
+ *      summary: Retrieve all users
  *      parameters:
  *        - in: query
  *          name: page
@@ -39,7 +39,7 @@ const router = express.Router();
  *                   $ref: '#/components/examples/AllUserExample'
  */
 
-// Retrieves all users
+// Retrieve all users
 router.get('/', auth.authenticateUser, async (req, res, next) => {
   try {
     let users = await User.find().sort('username');
@@ -64,7 +64,7 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
  *    get:
  *      tags:
  *        - Users
- *      summary: Get a specif user
+ *      summary: Retrieve a user
  *      responses:
  *        200:
  *           content:
@@ -77,7 +77,7 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
  *                   $ref: '#/components/examples/SpecifUserExample'
  */
 
-// Retrieves a specif user
+// Retrieves an user
 router.get('/:id', auth.authenticateUser, async (req, res, next) => {
   try {
     const id = req.params.id;

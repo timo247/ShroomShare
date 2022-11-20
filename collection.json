@@ -3,46 +3,562 @@
   "info": {
     "title": "ShroomShare",
     "version": "1.0.0",
-    "description": ""
+    "description": "To access the chat documentation visit the Github repository of the project.",
+    "contact": {
+      "name": "Github repository",
+      "url": "https://github.com/timo247/ShroomShare"
+    }
   },
   "server": [
     {
-      "url": "http: //localhost:3000/api/"
+      "url": "https://shroom-share.onrender.com/api/"
     }
   ],
   "swagger": "2.0",
   "paths": {
-    "/auth": {
-      "post": {
-        "summary": "Create a jWT token.",
-        "requestBody": {
-          "required": true,
+    "components": {
+      "schema": {
+        "DeletedUserSchema": {
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "requestBodies": {
+        "UpdateUserBody": {
+          "description": "User object",
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "properties": {
-                  "username": {
-                    "type": "string"
-                  },
-                  "password": {
-                    "type": "string"
-                  }
-                }
+                "$ref": "#/components/schema/UpdateUserSchema"
               },
-              "example": {
-                "username": "user01",
-                "password": "password01"
+              "examples": {
+                "UpdateUserExample": {
+                  "$ref": "#/components/examples/UpdateUserExample"
+                }
               }
             }
           }
+        }
+      },
+      "examples": {
+        "DeletedUserExample": {
+          "value": {
+            "message": "user successfully deleted"
+          }
+        }
+      },
+      "responses": {
+        "ResponseOk": {
+          "description": "todo",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CredentialOkSchema"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth": {
+      "post": {
+        "tags": [
+          "Authentification"
+        ],
+        "summary": "Create a JWT token.",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/CredentialBody"
         },
         "responses": {
           "200": {
-            "description": "Returns a mysterious string.",
-            "content": null,
-            "application/json": null,
-            "schema": null
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#components/schema/CredentialOkSchema"
+                },
+                "examples": {
+                  "CredentialResponseExemple": {
+                    "$ref": "#components/examples/CredentialOkExample"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mushrooms": {
+      "get": {
+        "tags": [
+          "Mushrooms"
+        ],
+        "summary": "Retrieve all mushrooms",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "latitude",
+            "type": "integer",
+            "description": "Coordonnées GPS (nombres)"
+          },
+          {
+            "in": "query",
+            "name": "longitude",
+            "type": "integer",
+            "description": "Coordonnées GPS (nombres)"
+          },
+          {
+            "in": "query",
+            "name": "specyId",
+            "type": "String",
+            "description": "Choississez l'espèce de champignon"
+          },
+          {
+            "in": "query",
+            "name": "userId",
+            "type": "integer",
+            "description": "Choississez l'ID de l'utilisateur"
+          },
+          {
+            "in": "query",
+            "name": "showPictures",
+            "type": "boolean",
+            "description": "Affichez les images ou non"
+          },
+          {
+            "in": "query",
+            "name": "from",
+            "type": "date",
+            "description": "Choississez la date de début"
+          },
+          {
+            "in": "query",
+            "name": "to",
+            "type": "date",
+            "description": "Choississez la date de fin"
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "type": "integer",
+            "description": "Choississez le numéro de la page à afficher.(pas de page zéro et négative)"
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "type": "integer",
+            "description": "Nombre déléments que vous voulez sur la page."
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#components/schema/RetrievedMushroomSchema"
+                },
+                "examples": {
+                  "AllUserExample": {
+                    "$ref": "#/components/examples/RetrievedMushroomExample"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Mushrooms"
+        ],
+        "summary": "Create a new mushroom",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/CreateMushroomBody"
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schema/CreatedMushroomSchema"
+                },
+                "examples": {
+                  "CreatedMushroomExample": {
+                    "$ref": "#/components/examples/CreatedMushroomExample"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mushrooms/:id": {
+      "patch": {
+        "tags": [
+          "Mushrooms"
+        ],
+        "summary": "Update a mushroom",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/UpdateMushroomBody"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schema/UpdatedMushroomSchema"
+                },
+                "examples": {
+                  "CreatedMushroomExample": {
+                    "$ref": "#/components/examples/UpdatedMushroomExample"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Mushrooms"
+        ],
+        "summary": "Delete a mushroom",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schema/DeletedMushroomSchema"
+                },
+                "examples": {
+                  "CreatedMushroomExample": {
+                    "$ref": "#/components/examples/DeletedMushroomExample"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pictures": {
+      "post": {
+        "tags": [
+          "Pictures"
+        ],
+        "summary": "Retrieve all pictures",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/RetrievePicturesBody"
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schema/RetrievedPictureSchema"
+                },
+                "examples": {
+                  "CreatedMushroomExample": {
+                    "$ref": "#/components/examples/RetrievedPictureExample"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/species": {
+      "get": {
+        "tags": [
+          "Species"
+        ],
+        "summary": "Retrieve all species",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "type": "integer",
+            "description": "Numéro de la page à afficher.(pas de page zéro et négative)"
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "type": "integer",
+            "description": "Nombre d'éléments que vous voulez sur la page."
+          },
+          {
+            "in": "query",
+            "name": "showPictures",
+            "type": "boolean",
+            "description": "Si vous voulez voir les images ou non."
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#components/schema/RetrievedAllSpecieSchema"
+                },
+                "examples": {
+                  "CreatedSpecieExample": {
+                    "$ref": "#/components/examples/RetrievedAllSpecieExample"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Species"
+        ],
+        "summary": "Create a new specy",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SpecieBody"
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#components/schema/CreatedSpecieSchema"
+                },
+                "examples": {
+                  "CreatedSpecieExample": {
+                    "$ref": "#/components/examples/CreatedSpecieExample"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/species/:id": {
+      "get": {
+        "tags": [
+          "Species"
+        ],
+        "summary": "Retrieve a specy",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#components/schema/RetrievedSpecieSchema"
+                },
+                "examples": {
+                  "CreatedSpecieExample": {
+                    "$ref": "#/components/examples/RetrievedSpecieExample"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Species"
+        ],
+        "summary": "Update a specy",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/UpdateSpecieBody"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#components/schema/UpdatedSpecieSchema"
+                },
+                "examples": {
+                  "CreatedSpecieExample": {
+                    "$ref": "#/components/examples/UpdatedSpecieExample"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Species"
+        ],
+        "summary": "Delete a specy",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#components/schema/DeletedSpecieSchema"
+                },
+                "examples": {
+                  "CreatedSpecieExample": {
+                    "$ref": "#/components/examples/DeletedSpecieExample"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Retrieve all users",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "type": "integer",
+            "description": "Choississez le numéro de la page à afficher.(pas de page zéro et négative)"
+          },
+          {
+            "in": "query",
+            "name": "PageSize",
+            "type": "integer",
+            "description": "Nombre déléments que vous voulez sur la page."
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#components/schema/UserSchema"
+                },
+                "examples": {
+                  "AllUserExample": {
+                    "$ref": "#/components/examples/AllUserExample"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Create a new user",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/UserBody"
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schema/CreatedUserSchema"
+                },
+                "examples": {
+                  "CreatedUserExample": {
+                    "$ref": "#/components/examples/CreatedUserExample"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/:id": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Retrieve a user",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schema/SpecifUserSchema"
+                },
+                "examples": {
+                  "AllUserExample": {
+                    "$ref": "#/components/examples/SpecifUserExample"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Update a user",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/UpdateUserBody"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schema/UpdatedUserSchema"
+                },
+                "examples": {
+                  "UpdatedUserExample": {
+                    "$ref": "#/components/examples/UpdatedUserExample"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Delete a user",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schema/DeletedUserSchema"
+                },
+                "examples": {
+                  "DeletedUserExample": {
+                    "$ref": "#/components/examples/DeletedUserExample"
+                  }
+                }
+              }
+            }
           }
         }
       }

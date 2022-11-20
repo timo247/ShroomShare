@@ -23,7 +23,7 @@ const errorLogger = config.debug.apiErrors;
  *    get:
  *      tags:
  *        - Mushrooms
- *      summary: Retrieved all mushrooms
+ *      summary: Retrieve all mushrooms
  *      parameters:
  *        - in: query
  *          name: latitude
@@ -176,7 +176,7 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
  *    post:
  *      tags:
  *        - Mushrooms
- *      summary: Add a new mushroom
+ *      summary: Create a new mushroom
  *      requestBody:
  *       $ref: '#/components/requestBodies/CreateMushroomBody'
  *      responses:

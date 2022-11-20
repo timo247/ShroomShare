@@ -22,11 +22,15 @@ const options = {
     info: {
       title: 'ShroomShare',
       version: '1.0.0',
-      description: 'To access the chat documentation visit the developer Website',
+      description: 'To access the chat documentation visit the Github repository of the project.',
+      contact: {
+        name: 'Github repository',
+        url: 'https://github.com/timo247/ShroomShare',
+      },
     },
     servers: [
       {
-        url: `http://localhost:${config.port}/${config.apiName}`,
+        url: `https://shroom-share.onrender.com/${config.apiName}`,
       },
     ],
   },

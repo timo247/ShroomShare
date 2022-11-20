@@ -4,11 +4,15 @@
         "info": {
             "title": "ShroomShare",
             "version": "1.0.0",
-            "description": ""
+            "description": "To access the chat documentation visit the Github repository of the project.",
+            "contact": {
+                "name": "Github repository",
+                "url": "https://github.com/timo247/ShroomShare"
+            }
         },
         "server": [
             {
-                "url": "http: //localhost:3000/api/"
+                "url": "https://shroom-share.onrender.com/api/"
             }
         ]
     },
