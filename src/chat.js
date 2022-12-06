@@ -2,7 +2,7 @@ import { WebSocketServer } from 'ws';
 import jwt from 'jsonwebtoken';
 import config from '../config.js';
 import User from './schemas/user.js';
-import msg from './data/messages.js';
+import msg from "./data/messages.js";
 
 // When connecting to chat, the user has to choose a language channel.
 // Channel are selected by providing a query parameter named 'language'.

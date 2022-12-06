@@ -54,7 +54,7 @@ router.use((req, res, next) => {
   if (tokenWrapper?.error) useAuth.send(res, msg.INTERNALERROR_TOKEN_CREATION);
   const payloadWrapper = useAuth.verifyJwtToken(tokenWrapper.token);
   if (payloadWrapper?.error) useAuth.send(res, msg.INTERNALERROR_TOKEN_VALIDATION);
-  useAuth.send(res, msg.SUCCESS_TOKEN_CREATION, { token: tokenWrapper.token });
+  useAuth.send(res, msg.SUCCESS_TOKEN_CREATION, { user:req.body.user,token: tokenWrapper.token });
 });
 
 export default router;

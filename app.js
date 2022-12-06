@@ -13,6 +13,7 @@ import config from './config.js';
 import connect from './src/helpers/useDbConnector.js';
 import msg, { RESSOURCES as R } from './src/data/messages.js';
 import useAuth from './src/helpers/useAuth.js';
+import cors from 'cors';
 
 const apiErrorsLogger = config.debug.apiErrors;
 
@@ -42,9 +43,8 @@ const specs = swaggerJsodc(options);
 await connect();
 const app = express();
 
-if (process.env.NODE_ENV !== 'test') {
-  app.use(logger('dev'));
-}
+app.use(cors())
+if (process.env.NODE_ENV !== 'test') app.use(logger('dev'));
 app.use(express.json({ limit: '10MB' }));
 app.use(express.urlencoded({ extended: false }));
 

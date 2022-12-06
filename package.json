@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon",
-    "dev-mac": "cross-env DEBUG=api:errors,api:succes nodemon",
-    "start": "node ./src/bin/start",
+    "dev-mac": "cross-env DEBUG=api:errors,api:succes nodemon --inspect",
+    "start": "node --inspect ./src/bin/start",
     "seed": "node ./src/seeders/seeders.js",
     "seed-test": "cross-env DATABASE_URL=mongodb://127.0.0.1:27017/test node ./src/seeders/seeders.js",
     "test": "cross-env DATABASE_URL=mongodb://127.0.0.1:27017/test node --experimental-vm-modules node_modules/.bin/jest --coverage --runInBand",
@@ -15,11 +15,15 @@
     "test-species": "cross-env DATABASE_URL=mongodb://127.0.0.1:27017/test node --experimental-vm-modules node_modules/.bin/jest species.test.js",
     "test-mushrooms": "cross-env DATABASE_URL=mongodb://127.0.0.1:27017/test node --experimental-vm-modules node_modules/.bin/jest mushrooms.test.js",
     "test-pictures": "cross-env DATABASE_URL=mongodb://127.0.0.1:27017/test node --experimental-vm-modules node_modules/.bin/jest pictures.test.js",
-    "doc": "npx swagger-jsdoc-generator swagger.json > collection.json"
+    "doc": "npx swagger-jsdoc-generator swagger.json > collection.json",
+    "db-start": "brew services start mongodb-community@6.0",
+    "db-stop": "brew services stop mongodb-community@6.0",
+    "db-restart": "brew services restart mongodb-community@6.0"
   },
   "dependencies": {
     "@hexagon/base64": "^1.1.25",
     "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
     "debug": "^4.3.4",
     "express": "~4.18.1",
     "http-errors": "^2.0.0",
