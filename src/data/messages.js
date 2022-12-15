@@ -39,6 +39,7 @@ const messages = {
   SUCCESS_RESSOURCE_CREATION: (name) => new Message(name, 'successfully created.', 201).getMessageWrapper(),
   SUCCESS_RESSOURCE_MODIFICATION: (name) => new Message(name, 'successfully modified.', 200).getMessageWrapper(),
   SUCCESS_RESSOURCE_DELETION: (name) => new Message(name, 'successfully deleted.', 200).getMessageWrapper(),
+  SUCCESS_RESSOURCE_COUNTING: (name) => new Message(name, 'successfully counted.', 200).getMessageWrapper(),
   ERROR_RESSOURCE_EXISTANCE: (name) => new Message(name, 'not found.', 404).getMessageWrapper(),
   ERROR_RESSOURCE_UNICITY: (name) => new Message(name, 'is already taken', 401, false).getMessageWrapper(),
   ERROR_RESSOURCE_DUPLICATE: (name) => new Message(name, 'already exist', 409).getMessageWrapper(),

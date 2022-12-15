@@ -3,6 +3,7 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerJsodc from 'swagger-jsdoc';
 import mongoose from 'mongoose';
 import logger from 'morgan';
+import cors from 'cors';
 import indexRouter from './src/routes/index.js';
 import usersRouter from './src/routes/users.js';
 import authRouter from './src/routes/auth.js';
@@ -13,7 +14,6 @@ import config from './config.js';
 import connect from './src/helpers/useDbConnector.js';
 import msg, { RESSOURCES as R } from './src/data/messages.js';
 import useAuth from './src/helpers/useAuth.js';
-import cors from 'cors';
 
 const apiErrorsLogger = config.debug.apiErrors;
 
@@ -43,7 +43,7 @@ const specs = swaggerJsodc(options);
 await connect();
 const app = express();
 
-app.use(cors())
+app.use(cors());
 if (process.env.NODE_ENV !== 'test') app.use(logger('dev'));
 app.use(express.json({ limit: '10MB' }));
 app.use(express.urlencoded({ extended: false }));

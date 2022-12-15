@@ -42,7 +42,12 @@ const router = express.Router();
 // Retrieve all users
 router.get('/', auth.authenticateUser, async (req, res, next) => {
   try {
-    let users = await User.find().sort('username');
+    const searchQuery = req.query?.search;
+    const regexp = {
+      username: { "$regex": searchQuery, "$options": "i" }
+    }
+    const option = searchQuery? regexp: undefined;
+    let users = await User.find(option).sort('username');
     const pages = new Paginator({
       numberOfItems: users.length,
       pageSize: req.query?.pageSize,

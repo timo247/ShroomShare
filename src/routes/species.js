@@ -49,6 +49,12 @@ const errorLogger = config.debug.apiErrors;
 router.get('/', auth.authenticateUser, async (req, res, next) => {
   try {
     const showPictures = req.query?.showPictures;
+    const isCount = req.query?.count;
+    if (isCount === 'true') {
+      const count = await Specy.countDocuments();
+      req.body = useAuth.setBody({ count });
+      return useAuth.send(res, msg.SUCCESS_RESSOURCE_COUNTING(R.SPECIES), req.body);
+    }
     let species = await Specy.find().sort('name');
     const pages = new Paginator({
       numberOfItems: species.length,

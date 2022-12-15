@@ -78,11 +78,11 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
   try {
     const showPictures = req.query?.showPictures;
     const queryTo = req.query?.to;
-    const querySpecyId = req.query?.specyId;
+    const querySpecyId = req.query?.specyId?.split(',');
     const queryFrom = req.query?.from;
     const long = req.query?.longitude;
     const lat = req.query?.latitude;
-    const queryUserId = req.query?.userId;
+    const queryUserId = req.query?.userId?.split(',');
     let radius = req.query?.radius;
     let dateMin = 0;
     let dateMax = Date.now();
@@ -120,12 +120,12 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
     if (queryUserId) {
       const existingUser = await User.findOne({ _id: queryUserId });
       if (!existingUser) return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
-      dynamicQuery = dynamicQuery.where('user_id').equals(queryUserId);
+      dynamicQuery = dynamicQuery.where('user_id').in(queryUserId);
     }
     if (querySpecyId) {
       const existingSpecy = await Specy.findOne({ _id: querySpecyId });
       if (!existingSpecy) return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.SPECY));
-      dynamicQuery = dynamicQuery.where('specy_id').equals(querySpecyId);
+      dynamicQuery = dynamicQuery.where('specy_id').in(querySpecyId);
     }
     let data = await dynamicQuery;
     const pages = new Paginator({
