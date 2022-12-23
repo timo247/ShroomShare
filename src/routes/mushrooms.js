@@ -147,6 +147,7 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
         _id: { $in: ids },
       });
       pictures.forEach((picture) => {
+        // TODO: refactor the following line
         const mushWithPic = JSON.parse(JSON.stringify(mushroomsMap.get(picture.mushroom_id.toString()))); //eslint-disable-line
         mushWithPic.picture = picture;
         mushroomsMap.set(picture.mushroom_id.toString(), mushWithPic); //eslint-disable-line
@@ -175,6 +176,7 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
       const username = usersMap.get(String(mushroom.user_id));
       mushroom.author = username;
     });
+    errorLogger({ mushrooms });
 
     req.body = useAuth.setBody({
       currentPage: pages.currentPage,
