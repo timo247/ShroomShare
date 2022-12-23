@@ -44,9 +44,9 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
   try {
     const searchQuery = req.query?.search;
     const regexp = {
-      username: { "$regex": searchQuery, "$options": "i" }
-    }
-    const option = searchQuery? regexp: undefined;
+      username: { $regex: searchQuery, $options: 'i' },
+    };
+    const option = searchQuery ? regexp : undefined;
     let users = await User.find(option).sort('username');
     const pages = new Paginator({
       numberOfItems: users.length,
@@ -55,7 +55,10 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
     });
     users = users.slice(pages.firstIndex, pages.lastIndex);
     req.body = useAuth.setBody({
-      users, currentPage: pages.currentPage, pageSize: pages.pageSize, lastPage: pages.lastPage,
+      items: users,
+      currentPage: pages.currentPage,
+      pageSize: pages.pageSize,
+      lastPage: pages.lastPage,
     });
     useAuth.send(res, msg.SUCCESS_RESSOURCE_RETRIEVAL(R.USERS), req.body);
   } catch (error) {

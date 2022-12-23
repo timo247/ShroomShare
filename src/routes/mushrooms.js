@@ -78,11 +78,11 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
   try {
     const showPictures = req.query?.showPictures;
     const queryTo = req.query?.to;
-    const querySpecyId = req.query?.specyId?.split(',');
+    const querySpecyId = req.query?.specyIds?.split(',');
     const queryFrom = req.query?.from;
     const long = req.query?.longitude;
     const lat = req.query?.latitude;
-    const queryUserId = req.query?.userId?.split(',');
+    const queryUserId = req.query?.userIds?.split(',');
     let radius = req.query?.radius;
     let dateMin = 0;
     let dateMax = Date.now();
@@ -133,13 +133,16 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
       pageSize: req.query?.pageSize,
       currentPage: req.query?.currentPage,
     });
+
     data = data.slice(pages.firstIndex, pages.lastIndex);
+
+    const ids = data.map((mush) => mongoose.Types.ObjectId(mush.picture_id)); //eslint-disable-line
+    const mushroomsMap = new Map();
+    data.forEach((mush) => {
+      mushroomsMap.set(mush.id, mush);
+    });
+
     if (showPictures === 'true') {
-      const ids = data.map((mush) => mongoose.Types.ObjectId(mush.picture_id)); //eslint-disable-line
-      const mushroomsMap = new Map();
-      data.forEach((mush) => {
-        mushroomsMap.set(mush.id, mush);
-      });
       const pictures = await Image.find({
         _id: { $in: ids },
       });
@@ -148,21 +151,36 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
         mushWithPic.picture = picture;
         mushroomsMap.set(picture.mushroom_id.toString(), mushWithPic); //eslint-disable-line
       });
-      const mushrooms = Array.from(mushroomsMap.values());
-
-      req.body = useAuth.setBody({
-        currentPage: pages.currentPage,
-        pageSize: pages.pageSize,
-        lastPage: pages.lastPage,
-        mushrooms,
-      });
-      return useAuth.send(res, msg.SUCCESS_RESSOURCE_RETRIEVAL(R.MUSHROOMS), req.body);
     }
+
+    let mushrooms = [...mushroomsMap.values()];
+    // TODO: refactor the following line
+    mushrooms = JSON.parse(JSON.stringify(mushrooms));
+
+    const userIds = mushrooms.reduce((acc, mushroom) => {
+      acc.push(mushroom.user_id);
+      return acc;
+    }, []);
+
+    const users = await User.find({
+      _id: { $in: userIds },
+    });
+
+    const usersMap = new Map();
+    users.forEach((user) => {
+      usersMap.set(user.id, user.username);
+    });
+
+    mushrooms.forEach((mushroom) => {
+      const username = usersMap.get(String(mushroom.user_id));
+      mushroom.author = username;
+    });
+
     req.body = useAuth.setBody({
       currentPage: pages.currentPage,
       pageSize: pages.pageSize,
       lastPage: pages.lastPage,
-      mushrooms: data,
+      items: mushrooms,
     });
     useAuth.send(res, msg.SUCCESS_RESSOURCE_RETRIEVAL(R.MUSHROOMS), req.body);
   } catch (err) {

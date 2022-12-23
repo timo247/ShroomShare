@@ -88,7 +88,7 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
       species = Array.from(speciesMap.values());
     }
     req.body = useAuth.setBody({
-      species,
+      items: species,
       currentPage: pages.currentPage,
       pageSize: pages.pageSize,
       lastPage: pages.lastPage,
