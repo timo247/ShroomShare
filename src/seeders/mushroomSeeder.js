@@ -69,10 +69,10 @@ async function createImg(imgPath, specyId, pictureId, userId, mushroomId) {
   const image = new Image({
     _id: pictureId,
     value: imgBase64,
-    specy_id: specyId,
-    mushroom_id: mushroomId,
+    specy: specyId,
+    mushroom: mushroomId,
     collectionName: 'mushrooms',
-    user_id: userId,
+    user: userId,
   });
   try {
     await image.save();
@@ -84,9 +84,9 @@ async function createImg(imgPath, specyId, pictureId, userId, mushroomId) {
 async function createMushroom(species, coordinates, pictureId, mushroomId, userId) {
   const mushroom = new Mushroom({
     _id: mushroomId,
-    user_id: userId,
-    specy_id: species.id,
-    picture_id: pictureId,
+    user: userId,
+    specy: species.id,
+    picture: pictureId,
     description: `J'ai trouvé ce magnifique spécimen ${species.name} en bordure de forêt`,
     date: new Date(),
     location: {

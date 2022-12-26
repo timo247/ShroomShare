@@ -46,21 +46,39 @@ export default class ApiTester {
   static async getValidUserId(token) {
     const response = await supertest(app).get(`/${config.apiName}/users`)
       .set('Authorization', `Bearer ${token}`);
-    const id = response.body.users.find((el) => el.username === 'user01').id;
+    const id = response.body.items.find((el) => el.username === 'user01').id;
     return id;
+  }
+
+  static async getValidUserIds(token) {
+    const response = await supertest(app).get(`/${config.apiName}/users`)
+      .set('Authorization', `Bearer ${token}`);
+    const ids = response.body.items.map((user) => {
+      return user.id;
+    });
+    return ids.toString();
   }
 
   static async getValidSpecyId(token) {
     const response = await supertest(app).get(`/${config.apiName}/species`)
       .set('Authorization', `Bearer ${token}`);
-    return response.body.species[0].id;
+    return response.body.items[0].id;
+  }
+
+  static async getValidSpecyIds(token) {
+    const response = await supertest(app).get(`/${config.apiName}/species`)
+      .set('Authorization', `Bearer ${token}`);
+    const ids = response.body.items.map((specy) => {
+      return specy.id;
+    });
+    return ids.toString();
   }
 
   static async getValidMushroomId(token) {
     const userId = jwt.verify(token, config.secretKey).sub;
-    const response = await supertest(app).get(`/${config.apiName}/mushrooms/?userId=${userId}`)
+    const response = await supertest(app).get(`/${config.apiName}/mushrooms/?userIds=${userId}`)
       .set('Authorization', `Bearer ${token}`);
-    return response.body.mushrooms[0].id;
+    return response.body.items[0].id;
   }
 
   static shuffleString(string) {

@@ -55,38 +55,20 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
       req.body = useAuth.setBody({ count });
       return useAuth.send(res, msg.SUCCESS_RESSOURCE_COUNTING(R.SPECIES), req.body);
     }
-    let species = await Specy.find().sort('name');
+    const speciesQuery = Specy.find().sort('name');
+
+    if (showPictures === 'true') {
+      speciesQuery.populate('picture');
+    }
+    let species = await speciesQuery;
     const pages = new Paginator({
       numberOfItems: species.length,
       pageSize: req.query?.pageSize,
       currentPage: req.query?.currentPage,
     });
+
     species = species.slice(pages.firstIndex, pages.lastIndex);
-    if (showPictures === 'true') {
-      const ids = species.map((specy) => mongoose.Types.ObjectId(specy.picture_id)); //eslint-disable-line
-      const speciesMap = new Map();
-      species.forEach((specy) => {
-        speciesMap.set(specy['id'].toString(), specy); //eslint-disable-line
-      });
-      const pictures = await Image.find({
-        _id: { $in: ids },
-      });
-      if (!pictures) {
-        req.body = useAuth.setBody({
-          species,
-          currentPage: pages.currentPage,
-          pageSize: pages.pageSize,
-          lastPage: pages.lastPage,
-        });
-        return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.PICTURE), req.body);
-      }
-      pictures.forEach((picture) => {
-        const specyWithPicture = JSON.parse(JSON.stringify(speciesMap.get(picture.specy_id.toString()))); //eslint-disable-line
-        specyWithPicture.picture = picture;
-        speciesMap.set(picture.specy_id.toString(), specyWithPicture); //eslint-disable-line
-      });
-      species = Array.from(speciesMap.values());
-    }
+
     req.body = useAuth.setBody({
       items: species,
       currentPage: pages.currentPage,
@@ -125,18 +107,11 @@ router.get('/:id', auth.authenticateUser, async (req, res, next) => {
     if (!useRouter.isValidMongooseId(id)) {
       return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.SPECY));
     }
-    const specy = await Specy.findOne({ _id: id });
+    const specy = await Specy.findOne({ _id: id }).populate('picture');
     if (!specy) {
       return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.SPECY));
     }
-    const picture = await Image.findOne({ _id: specy.picture_id });
-    if (!picture) {
-      req.body = useAuth.setBody({ specy });
-      return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.PICTURE), req.body);
-    }
-    const modifiableSpecy = JSON.parse(JSON.stringify(specy));
-    modifiableSpecy.picture = picture;
-    req.body = useAuth.setBody({ specy: modifiableSpecy });
+    req.body = useAuth.setBody({ specy });
     useAuth.send(res, msg.SUCCESS_RESSOURCE_RETRIEVAL(R.SPECY), req.body);
   } catch (error) {
     return next(error);
@@ -178,11 +153,16 @@ router.post('/', auth.authenticateAdmin, async (req, res, next) => {
     req.body.picture_id = pictureId;
     const picture = req.body.picture;
     delete req.body.picture;
-    const specy = new Specy(req.body);
+    const specy = new Specy({
+      name: req.body.name,
+      description: req.body.description,
+      usage: req.body.usage,
+      picture: req.body.picture_id,
+    });
     const newPicture = new Image({
       _id: pictureId,
       value: picture,
-      specy_id: specyId,
+      specy: specyId,
     });
     const savedSpecy = await specy.save();
     const newSpecy = JSON.parse(JSON.stringify(savedSpecy));

@@ -4,19 +4,19 @@ import validateGeoJsonCoordinates from '../helpers/useValidateGeoJsonCoordinates
 const Schema = mongoose.Schema;
 
 const mushroomSchema = new Schema({
-  specy_id: {
+  specy: {
     type: Schema.Types.ObjectId,
-    ref: 'species',
+    ref: 'Specy',
     required: true,
   },
-  user_id: {
+  user: {
     type: Schema.Types.ObjectId,
-    ref: 'users',
+    ref: 'User',
     required: true,
   },
-  picture_id: {
+  picture: {
     type: Schema.Types.ObjectId,
-    ref: 'images',
+    ref: 'Image',
     required: true,
   },
   description: {

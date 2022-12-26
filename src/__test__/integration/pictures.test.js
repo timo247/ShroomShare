@@ -25,7 +25,7 @@ describe('POST /pictures', () => {
   defineTest(msg.SUCCESS_RESSOURCE_RETRIEVAL(R.PICTURES), '', async (messageWrapper) => {
     const response = await supertest(app).get(`/${config.apiName}/species`)
       .set('Authorization', `Bearer ${tester.userToken}`);
-    const pictureIds = response.body.species.map((specy) => specy.picture_id);
+    const pictureIds = response.body.items.map((specy) => specy.picture);
     const res = await ApiTester.apiCall({
       method: 'post',
       path: 'pictures',
@@ -39,7 +39,7 @@ describe('POST /pictures', () => {
         pictures: expect.arrayContaining([
           expect.objectContaining({
             value: expect.any(String),
-            specy_id: expect.any(String),
+            specy: expect.any(String),
             date: expect.any(String),
             id: expect.any(String),
             collectionName: expect.any(String),
@@ -83,7 +83,7 @@ describe('POST /pictures', () => {
   defineTest(msg.ERROR_RESSOURCE_EXISTANCE(R.PICTURES), '', async (messageWrapper) => {
     const response = await supertest(app).get(`/${config.apiName}/species`)
       .set('Authorization', `Bearer ${tester.userToken}`);
-    const pictureIds = response.body.species.map((specy) => specy.picture_id);
+    const pictureIds = response.body.items.map((specy) => specy.picture);
     const unvalidId = ApiTester.shuffleString(pictureIds[0]);
     const res = await ApiTester.apiCall({
       method: 'post',
@@ -102,7 +102,7 @@ describe('POST /pictures', () => {
   defineTest(msg.SUCCESS_RESSOURCE_RETRIEVAL(R.PICTURES), 'unvalidIds + unknownIds', async (messageWrapper) => {
     const response = await supertest(app).get(`/${config.apiName}/species`)
       .set('Authorization', `Bearer ${tester.userToken}`);
-    const pictureIds = response.body.species.map((specy) => specy.picture_id);
+    const pictureIds = response.body.items.map((specy) => specy.picture);
     pictureIds[0] = pictureIds[0].slice(0, -2);
     pictureIds[1] = ApiTester.shuffleString(pictureIds[1]);
 
@@ -123,7 +123,7 @@ describe('POST /pictures', () => {
         pictures: expect.arrayContaining([
           expect.objectContaining({
             value: expect.any(String),
-            specy_id: expect.any(String),
+            specy: expect.any(String),
             date: expect.any(String),
             id: expect.any(String),
             collectionName: expect.any(String),

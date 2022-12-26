@@ -33,7 +33,7 @@ describe('GET /users', () => {
         currentPage: expect.any(Number),
         lastPage: expect.any(Number),
         pageSize: expect.any(Number),
-        users: expect.arrayContaining([
+        items: expect.arrayContaining([
           expect.objectContaining({
             id: expect.any(String),
             username: expect.any(String),

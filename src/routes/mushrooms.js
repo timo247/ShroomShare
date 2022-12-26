@@ -80,6 +80,7 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
     const queryTo = req.query?.to;
     const querySpecyId = req.query?.specyIds?.split(',');
     const queryFrom = req.query?.from;
+    const usageQuery = req.query?.usage;
     const long = req.query?.longitude;
     const lat = req.query?.latitude;
     const queryUserId = req.query?.userIds?.split(',');
@@ -118,16 +119,35 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
       dynamicQuery = dynamicQuery.where('date').gt(dateMin).sort('date');
     }
     if (queryUserId) {
-      const existingUser = await User.findOne({ _id: queryUserId });
-      if (!existingUser) return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
-      dynamicQuery = dynamicQuery.where('user_id').in(queryUserId);
+      dynamicQuery = dynamicQuery.where('user').in(queryUserId);
     }
     if (querySpecyId) {
-      const existingSpecy = await Specy.findOne({ _id: querySpecyId });
-      if (!existingSpecy) return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.SPECY));
-      dynamicQuery = dynamicQuery.where('specy_id').in(querySpecyId);
+      dynamicQuery = dynamicQuery.where('specy').in(querySpecyId);
     }
-    let data = await dynamicQuery;
+    if (usageQuery) {
+      const usagesEn = ['edible', 'inedible'];
+      const usagesFR = ['commestible', 'non-commestible'];
+      const index = usagesEn.indexOf(usageQuery);
+      if (index === -1) return useAuth.send(res, msg.ERROR_USAGE_FORMAT);
+      dynamicQuery = dynamicQuery.populate({
+        path: 'specy_id',
+        match: { usage: { $eq: usagesFR[index] } },
+      });
+    } else {
+      dynamicQuery = dynamicQuery.populate('specy');
+    }
+    if (showPictures === 'true') {
+      dynamicQuery = dynamicQuery.populate('picture');
+    }
+    let data = await dynamicQuery.populate('user');
+
+    data = data.filter((item) => {
+      if (item.user_id === null) return;
+      if (item.specy_id === null) return;
+      if (item.picture_id === null) return;
+      return item;
+    });
+
     const pages = new Paginator({
       numberOfItems: data.length,
       pageSize: req.query?.pageSize,
@@ -136,53 +156,11 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
 
     data = data.slice(pages.firstIndex, pages.lastIndex);
 
-    const ids = data.map((mush) => mongoose.Types.ObjectId(mush.picture_id)); //eslint-disable-line
-    const mushroomsMap = new Map();
-    data.forEach((mush) => {
-      mushroomsMap.set(mush.id, mush);
-    });
-
-    if (showPictures === 'true') {
-      const pictures = await Image.find({
-        _id: { $in: ids },
-      });
-      pictures.forEach((picture) => {
-        // TODO: refactor the following line
-        const mushWithPic = JSON.parse(JSON.stringify(mushroomsMap.get(picture.mushroom_id.toString()))); //eslint-disable-line
-        mushWithPic.picture = picture;
-        mushroomsMap.set(picture.mushroom_id.toString(), mushWithPic); //eslint-disable-line
-      });
-    }
-
-    let mushrooms = [...mushroomsMap.values()];
-    // TODO: refactor the following line
-    mushrooms = JSON.parse(JSON.stringify(mushrooms));
-
-    const userIds = mushrooms.reduce((acc, mushroom) => {
-      acc.push(mushroom.user_id);
-      return acc;
-    }, []);
-
-    const users = await User.find({
-      _id: { $in: userIds },
-    });
-
-    const usersMap = new Map();
-    users.forEach((user) => {
-      usersMap.set(user.id, user.username);
-    });
-
-    mushrooms.forEach((mushroom) => {
-      const username = usersMap.get(String(mushroom.user_id));
-      mushroom.author = username;
-    });
-    errorLogger({ mushrooms });
-
     req.body = useAuth.setBody({
       currentPage: pages.currentPage,
       pageSize: pages.pageSize,
       lastPage: pages.lastPage,
-      items: mushrooms,
+      items: data,
     });
     useAuth.send(res, msg.SUCCESS_RESSOURCE_RETRIEVAL(R.MUSHROOMS), req.body);
   } catch (err) {
@@ -230,16 +208,16 @@ router.post('/', auth.authenticateUser, async (req, res, next) => {
     const picture = new Image({
       _id: pictureId,
       value: req.body.picture,
-      specy_id: req.body.specy_id,
+      specy: req.body.specy_id,
       collectionName: 'mushrooms',
-      user_id: req.currentUserId,
-      mushroom_id: mushroomId,
+      user: req.currentUserId,
+      mushroom: mushroomId,
     });
     const mushroom = new Mushroom({
       _id: mushroomId,
-      user_id: req.currentUserId,
-      specy_id: req.body.specy_id,
-      picture_id: pictureId,
+      user: req.currentUserId,
+      specy: req.body.specy_id,
+      picture: pictureId,
       description: req.body.description,
       date: req.body.date,
       location: {
@@ -304,14 +282,14 @@ router.patch('/:id', auth.authenticateUser, async (req, res, next) => {
         value: req.params.picture,
       };
       delete params.picture;
-      await Image.findOneAndUpdate({ mushroom_id: id }, picture);
+      await Image.findOneAndUpdate({ mushroom: id }, picture);
     }
     await Mushroom.findByIdAndUpdate(id, params);
-    const modifiedMushroom = await Mushroom.findOne({ _id: id });
-    const modifiedPicture = await Image.findOne({ mushroom_id: id });
-    const newMushroom = JSON.parse(JSON.stringify(modifiedMushroom));
-    newMushroom.picture = modifiedPicture;
-    req.body = useAuth.setBody({ mushroom: newMushroom });
+    const mushroom = await Mushroom.findById(id)
+      .populate('picture')
+      .populate('specy')
+      .populate('user');
+    req.body = useAuth.setBody({ mushroom });
     useAuth.send(res, msg.SUCCESS_RESSOURCE_MODIFICATION(R.MUSHROOM), req.body);
   } catch (error) {
     return next(error);
@@ -344,12 +322,12 @@ router.delete('/:id', auth.authenticateUser, async (req, res, next) => {
     if (!useRouter.isValidMongooseId(id)) {
       return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.MUSHROOM));
     }
-    const mushroomOwnerId = (await Mushroom.findOne({ _id: id })).user_id;
+    const mushroomOwnerId = (await Mushroom.findOne({ _id: id })).user;
     if (!mushroomOwnerId) return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.MUSHROOM));
     const areIdsIdentical = String(req.currentUserId) === String(mushroomOwnerId);
     if (!areIdsIdentical) return useAuth.send(res, msg.ERROR_OWNERRIGHT_GRANTATION);
     await Mushroom.deleteOne({ _id: id });
-    await Image.deleteOne({ specy_id: id });
+    await Image.deleteOne({ mushroom: id });
     req.body = useAuth.setBody();
     useAuth.send(res, msg.SUCCESS_RESSOURCE_DELETION(R.MUSHROOM), req.body);
   } catch (error) {

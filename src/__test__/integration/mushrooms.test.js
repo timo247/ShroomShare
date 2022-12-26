@@ -37,14 +37,24 @@ describe('GET /mushrooms', () => {
         currentPage: expect.any(Number),
         lastPage: expect.any(Number),
         pageSize: expect.any(Number),
-        mushrooms: expect.arrayContaining([
+        items: expect.arrayContaining([
           expect.objectContaining({
-            specy_id: expect.any(String),
-            description: expect.any(String),
-            user_id: expect.any(String),
-            date: expect.any(String),
             id: expect.any(String),
-            picture_id: expect.any(String),
+            description: expect.any(String),
+            date: expect.any(String),
+            picture: expect.any(String),
+            specy: expect.objectContaining({
+              name: expect.any(String),
+              description: expect.any(String),
+              usage: expect.any(String),
+              picture: expect.any(String),
+              id: expect.any(String),
+            }),
+            user: expect.objectContaining({
+              username: expect.any(String),
+              admin: expect.any(Boolean),
+              id: expect.any(String),
+            }),
             location: expect.objectContaining({
               type: expect.stringContaining('Point'),
               coordinates: expect.any(Array),
@@ -63,9 +73,9 @@ describe('GET /mushrooms', () => {
       token: tester.userToken,
     });
     let i = 0;
-    res.body.mushrooms.forEach((mushroom) => {
+    res.body.items.forEach((mushroom) => {
       expect(typeof mushroom.picture.value).toBe('string');
-      delete res.body.mushrooms[i].picture.value;
+      delete res.body.items[i].picture.value;
       i++;
     });
     expect(res.body).toEqual(
@@ -74,21 +84,29 @@ describe('GET /mushrooms', () => {
         currentPage: expect.any(Number),
         lastPage: expect.any(Number),
         pageSize: expect.any(Number),
-        mushrooms: expect.arrayContaining([
+        items: expect.arrayContaining([
           expect.objectContaining({
             id: expect.any(String),
-            description: expect.any(String),
-            picture_id: expect.any(String),
-            user_id: expect.any(String),
             date: expect.any(String),
-            specy_id: expect.any(String),
+            description: expect.any(String),
+            specy: expect.objectContaining({
+              name: expect.any(String),
+              description: expect.any(String),
+              usage: expect.any(String),
+              picture: expect.any(String),
+              id: expect.any(String),
+            }),
+            user: expect.objectContaining({
+              username: expect.any(String),
+              admin: expect.any(Boolean),
+              id: expect.any(String),
+            }),
             picture: expect.objectContaining({
+              specy: expect.any(String),
+              mushroom: expect.any(String),
               collectionName: expect.any(String),
               date: expect.any(String),
-              specy_id: expect.any(String),
-              mushroom_id: expect.any(String),
-              user_id: expect.any(String),
-              id: expect.any(String),
+              user: expect.any(String),
             }),
             location: expect.objectContaining({
               type: expect.stringContaining('Point'),
@@ -104,7 +122,7 @@ describe('GET /mushrooms', () => {
     const validSpecyId = await ApiTester.getValidSpecyId(tester.userToken);
     const res = await ApiTester.apiCall({
       method: 'get',
-      path: `mushrooms/?pageSize=2&specyId=${validSpecyId}`,
+      path: `mushrooms/?pageSize=2&specyIds=${validSpecyId}`,
       messageWrapper,
       token: tester.userToken,
     });
@@ -114,14 +132,24 @@ describe('GET /mushrooms', () => {
         currentPage: expect.any(Number),
         lastPage: expect.any(Number),
         pageSize: expect.any(Number),
-        mushrooms: expect.arrayContaining([
+        items: expect.arrayContaining([
           expect.objectContaining({
             id: expect.any(String),
             description: expect.any(String),
-            picture_id: expect.any(String),
-            user_id: expect.any(String),
             date: expect.any(String),
-            specy_id: expect.stringContaining(validSpecyId),
+            picture: expect.any(String),
+            specy: expect.objectContaining({
+              name: expect.any(String),
+              description: expect.any(String),
+              usage: expect.any(String),
+              picture: expect.any(String),
+              id: expect.stringContaining(validSpecyId),
+            }),
+            user: expect.objectContaining({
+              username: expect.any(String),
+              admin: expect.any(Boolean),
+              id: expect.any(String),
+            }),
             location: expect.objectContaining({
               type: expect.stringContaining('Point'),
               coordinates: expect.any(Array),
@@ -146,14 +174,24 @@ describe('GET /mushrooms', () => {
         currentPage: expect.any(Number),
         lastPage: expect.any(Number),
         pageSize: expect.any(Number),
-        mushrooms: expect.arrayContaining([
+        items: expect.arrayContaining([
           expect.objectContaining({
             id: expect.any(String),
             description: expect.any(String),
-            picture_id: expect.any(String),
-            user_id: expect.stringContaining(validUserId),
             date: expect.any(String),
-            specy_id: expect.any(String),
+            picture: expect.any(String),
+            specy: expect.objectContaining({
+              name: expect.any(String),
+              description: expect.any(String),
+              usage: expect.any(String),
+              picture: expect.any(String),
+              id: expect.any(String),
+            }),
+            user: expect.objectContaining({
+              username: expect.any(String),
+              admin: expect.any(Boolean),
+              id: expect.stringContaining(validUserId),
+            }),
             location: expect.objectContaining({
               type: expect.stringContaining('Point'),
               coordinates: expect.any(Array),
@@ -200,13 +238,13 @@ describe('POST /mushrooms', () => {
       expect.objectContaining({
         message: expect.stringContaining(messageWrapper.msg),
         mushroom: expect.objectContaining({
-          specy_id: expect.stringContaining(String(specyId)),
+          specy: expect.stringContaining(String(specyId)),
           description: expect.stringContaining('...'),
-          user_id: expect.any(String),
+          user: expect.any(String),
           date: expect.any(String),
           id: expect.any(String),
           picture: expect.objectContaining({
-            specy_id: expect.any(String),
+            specy: expect.any(String),
             date: expect.any(String),
             id: expect.any(String),
             collectionName: expect.any(String),
@@ -361,19 +399,26 @@ describe('PATCH /mushrooms/:id', () => {
       expect.objectContaining({
         message: expect.stringContaining(messageWrapper.msg),
         mushroom: expect.objectContaining({
-          date: expect.any(String),
-          description: expect.stringContaining(newDescription),
           id: expect.any(String),
-          specy_id: expect.any(String),
-          user_id: expect.any(String),
-          picture_id: expect.any(String),
+          description: expect.any(String),
+          date: expect.any(String),
           picture: expect.objectContaining({
-            specy_id: expect.any(String),
-            collectionName: expect.any(String),
+            specy: expect.any(String),
             date: expect.any(String),
             id: expect.any(String),
-            user_id: expect.any(String),
-            mushroom_id: expect.any(String),
+            collectionName: expect.any(String),
+          }),
+          specy: expect.objectContaining({
+            name: expect.any(String),
+            description: expect.any(String),
+            usage: expect.any(String),
+            picture: expect.any(String),
+            id: expect.any(String),
+          }),
+          user: expect.objectContaining({
+            username: expect.any(String),
+            admin: expect.any(Boolean),
+            id: expect.any(String),
           }),
           location: expect.objectContaining({
             type: expect.stringContaining('Point'),

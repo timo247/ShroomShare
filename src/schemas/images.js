@@ -9,13 +9,13 @@ const imageSchema = new Schema({
     type: String,
     required: true,
   },
-  specy_id: {
+  specy: {
     type: Schema.Types.ObjectId,
-    ref: 'species',
+    ref: 'Specy',
   },
-  mushroom_id: {
+  mushroom: {
     type: Schema.Types.ObjectId,
-    ref: 'mushrooms',
+    ref: 'Mushroom',
   },
   collectionName: {
     type: String,
@@ -27,9 +27,9 @@ const imageSchema = new Schema({
     required: true,
     default: Date.now(),
   },
-  user_id: {
+  user: {
     type: Schema.Types.ObjectId,
-    ref: 'users',
+    ref: 'User',
   },
 });
 

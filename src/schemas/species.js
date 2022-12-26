@@ -20,9 +20,9 @@ const specySchema = new Schema({
     enum: usages,
     message: (props) => msg.ERROR_SCHEMA_USAGE(props, String(usages).replace(',', ', ')),
   },
-  picture_id: {
+  picture: {
     type: Schema.Types.ObjectId,
-    ref: 'images',
+    ref: 'Image',
     required: true,
   },
 });

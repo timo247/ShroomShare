@@ -35,12 +35,12 @@ describe('GET /species', () => {
         currentPage: expect.any(Number),
         lastPage: expect.any(Number),
         pageSize: expect.any(Number),
-        species: expect.arrayContaining([
+        items: expect.arrayContaining([
           expect.objectContaining({
             description: expect.any(String),
             id: expect.any(String),
             name: expect.any(String),
-            picture_id: expect.any(String),
+            picture: expect.any(String),
             usage: expect.any(String),
           }),
         ]),
@@ -61,16 +61,15 @@ describe('GET /species', () => {
         currentPage: expect.any(Number),
         lastPage: expect.any(Number),
         pageSize: expect.any(Number),
-        species: expect.arrayContaining([
+        items: expect.arrayContaining([
           expect.objectContaining({
             id: expect.any(String),
             name: expect.any(String),
             description: expect.any(String),
             usage: expect.any(String),
-            picture_id: expect.any(String),
             picture: expect.objectContaining({
               value: expect.any(String),
-              specy_id: expect.any(String),
+              specy: expect.any(String),
               collectionName: expect.any(String),
               date: expect.any(String),
               id: expect.any(String),
@@ -106,10 +105,9 @@ describe('GET /species/:id', () => {
           description: expect.any(String),
           id: expect.any(String),
           name: expect.any(String),
-          picture_id: expect.any(String),
           usage: expect.any(String),
           picture: expect.objectContaining({
-            specy_id: expect.any(String),
+            specy: expect.any(String),
             collectionName: expect.any(String),
             date: expect.any(String),
             id: expect.any(String),
@@ -184,10 +182,9 @@ describe('POST /species', () => {
           name: expect.any(String),
           description: expect.any(String),
           usage: expect.any(String),
-          picture_id: expect.any(String),
           id: expect.any(String),
           picture: expect.objectContaining({
-            specy_id: expect.any(String),
+            specy: expect.any(String),
             date: expect.any(String),
             id: expect.any(String),
           }),
@@ -287,10 +284,9 @@ describe('PATCH /species/:id', () => {
           description: expect.any(String),
           id: expect.any(String),
           name: expect.any(String),
-          picture_id: expect.any(String),
           usage: expect.any(String),
           picture: expect.objectContaining({
-            specy_id: expect.any(String),
+            specy: expect.any(String),
             collectionName: expect.any(String),
             date: expect.any(String),
             id: expect.any(String),

@@ -83,6 +83,7 @@ const messages = {
   ERROR_FIELD_REQUIRED: (name, status = 401) => ({ status, msg: `The body field '${name}' is required.` }),
   ERROR_PARAM_REQUIRED: (name, status = 401) => ({ status, msg: `The query param '${name}' is required.` }),
   ERROR_DATE_FORMAT: { status: 401, msg: 'Date format is unvalid.' },
+  ERROR_USAGE_FORMAT: { status: 401, msg: `Usage value should eighter be 'edible' or 'inedible'.` },//eslint-disable-line
   ERROR_DATE_VALIDATION: { status: 401, msg: 'Date cannot be in futur.' },
   ERROR_DURATION_VALIDATION: { status: 401, msg: 'Duration is too big' },
   ERROR_ROUTE_EXISTENCE: { status: 404, msg: 'This route doesn\'t exist.' },
