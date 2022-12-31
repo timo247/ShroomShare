@@ -22,18 +22,19 @@ const router = express.Router();
  *        - in: query
  *          name: page
  *          type: integer
- *          description: Choississez le numéro de la page à afficher.(pas de page zéro et négative)
+ *          description: Le numéro de la page à afficher. (pas de zéro ni de nombre négative)
  *        - in: query
  *          name: PageSize
  *          type: integer
- *          description: Nombre déléments que vous voulez sur la page.
+ *          description: Nombre d'éléments par page.
+ *        - in: query
+ *          name: search
+ *          type: string
+ *          description: Le nom d'un utilisateur à rechercher
  *      responses:
  *        200:
  *           content:
  *            application/json:
- *              schema:
- *                type: object
- *                $ref: '#components/schema/UserSchema'
  *              examples:
  *                AllUserExample:
  *                   $ref: '#/components/examples/AllUserExample'

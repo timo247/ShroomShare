@@ -22,17 +22,14 @@ const router = express.Router();
  *       200:
  *         content:
  *           application/json:
- *             schema:
- *               type: object
- *               $ref: '#components/schema/CredentialOkSchema'
  *             examples:
  *               CredentialResponseExemple:
  *                 $ref: '#components/examples/CredentialOkExample'
  */
 
 router.post('/', async (req, res, next) => {
-  if (!req.body?.password ?? undefined) useAuth.send(res, msg.ERROR_FIELD_REQUIRED('password'));
-  if (!req.body?.username ?? undefined) useAuth.send(res, msg.ERROR_FIELD_REQUIRED('username'));
+  if (!req.body?.password) return useAuth.send(res, msg.ERROR_FIELD_REQUIRED('password'));
+  if (!req.body?.username) return useAuth.send(res, msg.ERROR_FIELD_REQUIRED('username'));
   try {
     const user = await User.findOne().where('username').equals(req.body.username);
     if (!user) useAuth.send(res, msg.ERROR_AUTH_LOGIN);
@@ -48,13 +45,17 @@ router.post('/', async (req, res, next) => {
 });
 
 router.use((req, res, next) => {
-  if (!req.body.user) useAuth.send(res, msg.ERROR_METHOD_EXISTENCE);
+  if (!req.body.user) return useAuth.send(res, msg.ERROR_METHOD_EXISTENCE);
   const userId = req.body.user.id.toString();
   const tokenWrapper = useAuth.generateJwtToken(userId, req.body.user.admin);
   if (tokenWrapper?.error) useAuth.send(res, msg.INTERNALERROR_TOKEN_CREATION);
   const payloadWrapper = useAuth.verifyJwtToken(tokenWrapper.token);
-  if (payloadWrapper?.error) useAuth.send(res, msg.INTERNALERROR_TOKEN_VALIDATION);
-  useAuth.send(res, msg.SUCCESS_TOKEN_CREATION, { user:req.body.user,token: tokenWrapper.token });
+  if (payloadWrapper?.error) return useAuth.send(res, msg.INTERNALERROR_TOKEN_VALIDATION);
+  return useAuth.send(
+    res,
+    msg.SUCCESS_TOKEN_CREATION,
+    { user: req.body.user, token: tokenWrapper.token },
+  );
 });
 
 export default router;

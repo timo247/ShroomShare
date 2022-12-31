@@ -14,25 +14,20 @@ let speciesList;
 async function seeder() {
   location = await getLocation();
   speciesList = await getCsvData();
-  const max = [];
-  for (let index = 1; index < 10; index++) {
-    max.push(index);
-  }
-  for (const i of max) {
+
+  let i = 1;
+  for (const specy of speciesList) {
     const pictureId = new Mongoose.Types.ObjectId();
     const mushroomId = new Mongoose.Types.ObjectId();
-    const y = randomInt(1, 6);
     const userId = (await getUser(`user0${i}`)).id;
-    const species = (await getSpecies(speciesList[i].name));
+    const species = (await getSpecies(specy.name));
     const coordinates = location[i - 1].split(',');
-    const imagePath = `./src/data/images/mushroomSeederImg/${y}.jpg`;
+    const imagePath = `./src/data/images/${specy.picture}`;
     await createMushroom(species, coordinates, pictureId, mushroomId, userId);
     await createImg(imagePath, species.id, pictureId, userId, mushroomId);
+    i++;
+    if (i >= 10) break;
   }
-}
-
-function randomInt(min, max) {
-  return Math.floor(Math.random() * (max - min)) + min;
 }
 
 async function getCsvData() {

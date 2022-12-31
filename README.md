@@ -113,8 +113,13 @@ __Réponses: utilisateur déconnecté__
 
 ```json
 {
-  "message": "Token succesfully created.",
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkphbmUgRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.cMErWtEf7DxCXJl8C9q0L7ttkm-Ex54UWHsOCMGbtUc"
+    "message": "Token succesfully created.",
+    "user": {
+        "username": "user01",
+        "admin": false,
+        "id": "63a9a601147117f37fb3bdc0"
+    },
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2E5YTYwMTE0NzExN2YzN2ZiM2JkYzAiLCJleHAiOjE2NzI4MjYzOTgsInNjb3BlIjoidXNlciIsImlhdCI6MTY3MjIyMTU5OH0.glO6VOM88FLTzgu-HJhcBIAlpdDWxnVAYD39Ir4VUFc"
 }
 ```
 ## Espèces (de champignons)
@@ -143,11 +148,9 @@ __Réponses: utilisateur déconnecté__
     "name": "Amanite phalloides",
     "description": "The Amanita phalloides is a ...",
     "usage": "non-commestible",
-    "picture_id": "636b97a08f7ef3fb6243e92e",
     "id": "636b97a08f7ef3fb6243e92f",
     "picture": {
       "value": "data:image/undefinedbase64, ... ",
-      "specy_id": "636b97a08f7ef3fb6243e92f",
       "collectionName": "species",
       "date": "2022-11-09T12:05:51.097Z",
       "id": "636b97a08f7ef3fb6243e92e"
@@ -180,11 +183,9 @@ __Réponses: utilisateur déconnecté__
     "name": "Amanite phalloides",
     "description": "The Amanita phalloides is a ...",
     "usage": "non-commestible",
-    "picture_id": "636b97a08f7ef3fb6243e92e",
     "id": "636b97a08f7ef3fb6243e92f",
     "picture": {
       "value": "data:image/undefinedbase64, ... ",
-      "specy_id": "636b97a08f7ef3fb6243e92f",
       "collectionName": "species",
       "date": "2022-11-09T12:05:51.097Z",
       "id": "636b97a08f7ef3fb6243e92e"
@@ -214,28 +215,35 @@ __Réponses: utilisateur déconnecté__
 - `?page=value`: Numéro de la page
 - `?pageSize`: Nombre d’éléments par page
 - `?showPictures`: {boolean} renvoie les images
+- `?count`: {boolean} compte les espèces
+- `?search`: {string} Recherche par chaîne de character
 
 **Réponse 200**
 
 ```json
 {
-  "message": "Species successfully retrieved.",
-  "species": [
-    {
-      "name": "Amanite phalloides",
-      "description": "The Amanita phalloides is a ...",
-      "usage": "non-commestible",
-      "picture_id": "636b97a08f7ef3fb6243e92e",
-      "id": "636b97a08f7ef3fb6243e92f",
-      "picture": {
-        "value": "data:image/undefinedbase64, ... ",
-        "specy_id": "636b97a08f7ef3fb6243e92f",
-        "collectionName": "species",
-        "date": "2022-11-09T12:05:51.097Z",
-        "id": "636b97a08f7ef3fb6243e92e"
-      }
-    }
-  ]
+    "message": "Species successfully retrieved.",
+    "items": [
+        {
+            "name": "Amanite phalloïde",
+            "description": "Une partie du voile initial forme un anneau mou...",
+            "usage": "non-commestible",
+            "picture": "63a9a602147117f37fb3bdf9",
+            "id": "63a9a602147117f37fb3bdfa"
+        },
+    ],
+    "currentPage": 1,
+    "pageSize": 5,
+    "lastPage": 4
+}
+```
+
+Si le param `count` est utilisé alors le serveur retourne ce genre de réponse
+
+```json
+{
+    "message": "Species successfully counted.",
+    "count": 20
 }
 ```
 
@@ -247,21 +255,20 @@ __Réponses: utilisateur déconnecté__
 
 ```json
 {
-  "message": "Specy successfully retrieved.",
-  "specy": {
-    "name": "Amanite phalloides",
-    "description": "The Amanita phalloides is a ...",
-    "usage": "non-commestible",
-    "picture_id": "636b97a08f7ef3fb6243e92e",
-    "id": "636b97a08f7ef3fb6243e92f",
-    "picture": {
-      "value": "data:image/undefinedbase64, ... ",
-      "specy_id": "636b97a08f7ef3fb6243e92f",
-      "collectionName": "species",
-      "date": "2022-11-09T12:05:51.097Z",
-      "id": "636b97a08f7ef3fb6243e92e"
+    "message": "Specy successfully retrieved.",
+    "specy": {
+        "name": "Amanite phalloïde",
+        "description": "Une partie du voile initial forme un anneau mou...",
+        "usage": "non-commestible",
+        "id": "63a9a602147117f37fb3bdfa",
+        "picture": {
+            "value": "data:image/...",
+            "specy": "63a9a602147117f37fb3bdfa",
+            "collectionName": "species",
+            "date": "2022-12-26T13:47:45.809Z",
+            "id": "63a9a602147117f37fb3bdf9",
+        },
     }
-  }
 }
 ```
 
@@ -293,18 +300,17 @@ __Réponses: utilisateur déconnecté__
 {
   "message": "Mushroom successfully added.",
   "mushroom": {
-    "specy_id": "636b97a08f7ef3fb6243e92f",
-    "user_id": "636b97a08f7ef3fb6243e92f",
-    "picture_id": "636b97a08f7ef3fb6243e92e",
+    "specy": "636b97a08f7ef3fb6243e92f",
+    "user": "636b97a08f7ef3fb6243e92f",
     "description": "This is a Amanita phalloides...",
     "date": "2022.01.01",
     "id": "636b97a08f7ef3fb6243e92f",
     "picture": {
-      "value": "data:image/undefinedbase64, ... ",
-      "specy_id": "636b97a08f7ef3fb6243e92f",
-      "mushroom_id": "636b97a08f7ef3fb6243e92f",
-      "user_id": "636b97a08f7ef3fb6243e92f",
-      "collectionName": "species",
+      "value": "data:image/undefinedbase64, ...",
+      "specy": "636b97a08f7ef3fb6243e92f",
+      "mushroom": "636b97a08f7ef3fb6243e92f",
+      "user": "636b97a08f7ef3fb6243e92f",
+      "collectionName": "mushrooms",
       "date": "2022-11-09T12:05:51.097Z",
       "id": "636b97a08f7ef3fb6243e92e"
     },
@@ -353,18 +359,17 @@ __Réponses: utilisateur déconnecté__
 {
   "message": "Mushroom successfully updated.",
   "mushroom": {
-    "specy_id": "636b97a08f7ef3fb6243e92f",
-    "user_id": "636b97a08f7ef3fb6243e92f",
-    "picture_id": "636b97a08f7ef3fb6243e92e",
+    "specy": "636b97a08f7ef3fb6243e92f",
+    "user": "636b97a08f7ef3fb6243e92f",
     "description": "This is a Amanita phalloides...",
     "date": "2022.01.01",
     "id": "636b97a08f7ef3fb6243e92f",
     "picture": {
       "value": "data:image/undefinedbase64, ... ",
-      "mushroom_id": "636b97a08f7ef3fb6243e92f",
-      "user_id": "636b97a08f7ef3fb6243e92f",
-      "specy_id": "636b97a08f7ef3fb6243e92f",
-      "collectionName": "species",
+      "mushroom": "636b97a08f7ef3fb6243e92f",
+      "user": "636b97a08f7ef3fb6243e92f",
+      "specy": "636b97a08f7ef3fb6243e92f",
+      "collectionName": "mushrooms",
       "date": "2022-11-09T12:05:51.097Z",
       "id": "636b97a08f7ef3fb6243e92e"
     },
@@ -384,42 +389,99 @@ __Réponses: utilisateur déconnecté__
 
 - `?latitude=Number`: Coordonnée GPS
 - `?longitude=Number`: Coordonnée GPS
-- `?specyId=String`: Id de l'espèce
-- `?userId=Integer`: Id de l'utilisateur
+- `?specyIds=String`: les ids des espèces, séparé par des virgules
+- `?userIds=Integer`: les ids des utilisateurs séparé par des virgules
 - `?showPictures=Boolean`: affiche ou non les images
 - `?from=Date`: Date de début
 - `?to=Date`: Date de Fin
 - `?page=value`: Numéro de la page
 - `?pageSize`: Nombre d’éléments par page
+- `?usage`: soit `edible` ou `inedible`
+- `?radius`: Le rayon de recherche des champignon
 
 **Réponse: 200**
 
+Sans images 
+
 ```json
 {
-  "message": "Mushrooms successfully retrieved.",
-  "mushroom": [
-    {
-      "specy_id": "636b97a08f7ef3fb6243e92f",
-      "user_id": "636b97a08f7ef3fb6243e92f",
-      "picture_id": "636b97a08f7ef3fb6243e92e",
-      "description": "This is a Amanita phalloides...",
-      "date": "2022.01.01",
-      "id": "636b97a08f7ef3fb6243e92f",
-      "picture": {
-        "value": "data:image/undefinedbase64, ... ",
-        "specy_id": "636b97a08f7ef3fb6243e92f",
-        "mushroom_id": "636b97a08f7ef3fb6243e92f",
-        "user_id": "636b97a08f7ef3fb6243e92f",
-        "collectionName": "species",
-        "date": "2022-11-09T12:05:51.097Z",
-        "id": "636b97a08f7ef3fb6243e92e"
-      },
-      "location": {
-        "type": "Point", 
-        "coordinates": [ 46.616517,6.234434 ]
-      },
-    }
-  ]
+    "message": "Mushrooms successfully retrieved.",
+    "currentPage": 1,
+    "pageSize": 5,
+    "lastPage": 2,
+    "items": [
+        {
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    5.767669,
+                    46.261447
+                ]
+            },
+            "specy": {
+                "name": "Amanite tue-mouches",
+                "description": "L'amanite tue-mouches...",
+                "usage": "non-commestible",
+                "picture": "63a9a602147117f37fb3bdff",
+                "id": "63a9a602147117f37fb3be00"
+            },
+            "user": {
+                "username": "user05",
+                "admin": false,
+                "id": "63a9a602147117f37fb3bdcc"
+            },
+            "picture": "63a9a602147117f37fb3be79",
+            "description": "J'ai trouvé ce magnifique spécimen...",
+            "date": "2022-12-26T13:47:46.723Z",
+            "id": "63a9a602147117f37fb3be7a"
+        }
+    ]
+}
+```
+
+Avec images
+
+```json
+{
+    "message": "Mushrooms successfully retrieved.",
+    "currentPage": 1,
+    "pageSize": 5,
+    "lastPage": 2,
+    "items": [
+        {
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    5.767669,
+                    46.261447
+                ]
+            },
+            "specy": {
+                "name": "Amanite tue-mouches",
+                "description": "L'amanite tue-mouches...",
+                "usage": "non-commestible",
+                "picture": "63a9a602147117f37fb3bdff",
+                "id": "63a9a602147117f37fb3be00"
+            },
+            "user": {
+                "username": "user05",
+                "admin": false,
+                "id": "63a9a602147117f37fb3bdcc"
+            },
+            "picture": {
+                "value": "data:image/undefinedbase64, ...",
+                "specy": "63a9a602147117f37fb3bde8",
+                "mushroom": "63a9a602147117f37fb3be5a",
+                "collectionName": "mushrooms",
+                "date": "2022-12-26T13:47:45.809Z",
+                "user": "63a9a601147117f37fb3bdc0",
+                "id": "63a9a602147117f37fb3be59"
+            },
+            "description": "J'ai trouvé ce magnifique spécimen...",
+            "date": "2022-12-26T13:47:46.723Z",
+            "id": "63a9a602147117f37fb3be7a"
+        }
+    ]
 }
 ```
 
@@ -433,18 +495,23 @@ __Réponses: utilisateur déconnecté__
 
 - `?page=value`: Numéro de la page
 - `?pageSize`: Nombre d’éléments par page
+- `?search`: Le nom de l'utilisateur souhaité
 
 **Réponse: 200**
 
 ```json
 {
-  "message": "Users successfully retrieved.",
-  "users": [
-    {
-      "username": "John2022",
-      "admin": "false"
-    }
-  ]
+    "message": "Users successfully retrieved.",
+    "items": [
+        {
+            "username": "user02",
+            "admin": true,
+            "id": "63a9a601147117f37fb3bdc3"
+        }
+    ],
+    "currentPage": 1,
+    "pageSize": 1,
+    "lastPage": 1
 }
 ```
 
@@ -460,6 +527,7 @@ __Réponses: utilisateur déconnecté__
   "user": {
     "username": "John2023",
     "admin": "false"
+    "id": "63a9a602147117f37fb3bddd"
   }
 }
 ```
@@ -484,9 +552,8 @@ __Réponses: utilisateur déconnecté__
   "message": "User successfully created.",
   "user": {
     "username": "John2023",
-    "password": "mySecretPassword",
-    "Email": "john.doe@gmail.com",
     "admin": "false"
+    "id": "636cca7ec8fff49b7d347e5c"
   },
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjY1MzAwNTAsInNjb3BlIjoidXNlciIsImlhdCI6MTY2NjQ0MzY1MH0.PPkUvvPJEJZo8nMsT1IykiHvX7kPjhJwmy4saPsdw0I"
 }
@@ -514,9 +581,8 @@ __Réponses: utilisateur déconnecté__
   "message": "User successfully modified.",
   "user": {
     "username": "John2023",
-    "password": "mySecretPassword",
-    "Email": "john.doe@gmail.com",
     "admin": "false"
+    "id": "636cca7ec8fff49b7d347e5c"
   }
 }
 ```
@@ -550,13 +616,33 @@ __Réponses: utilisateur déconnecté__
 
 **Réponse: 200**
 
+Exemple d'un tableau contenant l'image d'un champignon.
+
 ```json
 {
   "message": "Pictures successfully retrieved.",
   "pictures": [
      {
         "value": "data:image/jpgbase64, /9j/4AAQSkZJRgABAQAAAQABAAD/",
-        "specy_id": "636cca7ec8fff49b7d347e5d",
+        "specy": "636cca7ec8fff49b7d347e5d",
+        "mushroom": "636cca7ec8fff49b7d347e5e",
+        "collectionName": "mushroom",
+        "date": "2022-11-10T09:55:08.571Z",
+        "id": "636cca7ec8fff49b7d347e5c"
+     }
+  ]
+}
+```
+
+Exemple d'un tableau contenant l'image d'une espèce.
+
+```json
+{
+  "message": "Pictures successfully retrieved.",
+  "pictures": [
+     {
+        "value": "data:image/jpgbase64, /9j/4AAQSkZJRgABAQAAAQABAAD/",
+        "specy": "636cca7ec8fff49b7d347e5d",
         "collectionName": "species",
         "date": "2022-11-10T09:55:08.571Z",
         "id": "636cca7ec8fff49b7d347e5c"

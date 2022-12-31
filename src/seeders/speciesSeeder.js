@@ -16,16 +16,12 @@ async function getCsvData() {
 }
 
 async function seeder() {
-  const imgsPath = path.resolve('src/data/images');
-  const imgs = fs.readdirSync(imgsPath);
-  let i = 0;
   const speciesArray = await getCsvData();
   for (const specy of speciesArray) {
     const pictureId = new mongoose.Types.ObjectId();
     const specyId = new mongoose.Types.ObjectId();
     await createSpecy(specy, specyId, pictureId);
-    await createImg(`src/data/images/${imgs[i]}`, specyId, pictureId);
-    i++;
+    await createImg(`src/data/images/${specy.picture}`, specyId, pictureId);
   }
 }
 

@@ -49,13 +49,18 @@ const errorLogger = config.debug.apiErrors;
 router.get('/', auth.authenticateUser, async (req, res, next) => {
   try {
     const showPictures = req.query?.showPictures;
+    const searchQuery = req.query?.search;
     const isCount = req.query?.count;
     if (isCount === 'true') {
       const count = await Specy.countDocuments();
       req.body = useAuth.setBody({ count });
       return useAuth.send(res, msg.SUCCESS_RESSOURCE_COUNTING(R.SPECIES), req.body);
     }
-    const speciesQuery = Specy.find().sort('name');
+    const regexp = {
+      name: { $regex: searchQuery, $options: 'i' },
+    };
+    const option = searchQuery ? regexp : undefined;
+    const speciesQuery = Specy.find(option).sort('name');
 
     if (showPictures === 'true') {
       speciesQuery.populate('picture');
@@ -149,22 +154,21 @@ router.post('/', auth.authenticateAdmin, async (req, res, next) => {
     if (!isBase64(req.body.picture)) return useAuth.send(res, msg.ERROR_IMG_BASE64);
     const pictureId = new mongoose.Types.ObjectId();
     const specyId = new mongoose.Types.ObjectId();
-    req.body['_id'] = specyId; //eslint-disable-line
-    req.body.picture_id = pictureId;
     const picture = req.body.picture;
-    delete req.body.picture;
     const specy = new Specy({
       name: req.body.name,
       description: req.body.description,
       usage: req.body.usage,
-      picture: req.body.picture_id,
+      picture: pictureId,
     });
     const newPicture = new Image({
       _id: pictureId,
       value: picture,
       specy: specyId,
+      collectionName: 'species',
     });
     const savedSpecy = await specy.save();
+    await newPicture.save();
     const newSpecy = JSON.parse(JSON.stringify(savedSpecy));
     newSpecy.picture = newPicture;
     req.body = useAuth.setBody({ specy: newSpecy });

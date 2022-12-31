@@ -13,6 +13,7 @@
  *     schema:
  *       CredentialSchema:
  *         type: object
+ *         required: [username,password]
  *         properties:
  *           username:
  *             type: string
@@ -38,8 +39,8 @@
  *                type: string
  *             message:
  *                type: string
- *                maxLength: 12   
- *           required: [token]
+ *             user:
+ *                type: Object
  */
     
 // ==========================================================================
@@ -92,9 +93,13 @@
  *     examples:
  *        CredentialOkExample:
  *           value:
- *             username: user01
- *             password: password01
  *             message: Token succesfully created.
+ *             token: 'adfdafduefadfaadf233hu4...' 
+ *             user:
+ *               username: user01
+ *               email: user01@gmail.com
+ *               admin: false
+ *               id: 63a9a602147117f37fb3bdde
  */
 
 // ==========================================================================
