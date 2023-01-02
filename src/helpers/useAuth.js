@@ -39,6 +39,7 @@ const useAuth = {
   },
   getPayloadFromToken(req) {
     const authorization = req.get('Authorization');
+    if (!authorization) return {};
     const match = authorization.match(/^Bearer (.+)$/);
     if (!match) return {};
     const token = match[1];
