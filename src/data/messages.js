@@ -41,8 +41,8 @@ const messages = {
   SUCCESS_RESSOURCE_DELETION: (name) => new Message(name, 'successfully deleted.', 200).getMessageWrapper(),
   SUCCESS_RESSOURCE_COUNTING: (name) => new Message(name, 'successfully counted.', 200).getMessageWrapper(),
   ERROR_RESSOURCE_EXISTANCE: (name) => new Message(name, 'not found.', 404).getMessageWrapper(),
-  ERROR_RESSOURCE_UNICITY: (name) => new Message(name, 'is already taken', 401, false).getMessageWrapper(),
-  ERROR_RESSOURCE_DUPLICATE: (name) => new Message(name, 'already exist', 409).getMessageWrapper(),
+  ERROR_RESSOURCE_UNICITY: (name) => new Message(name, 'is already taken.', 401, false).getMessageWrapper(),
+  ERROR_RESSOURCE_DUPLICATE: (name) => new Message(name, 'already exist.', 409).getMessageWrapper(),
   //  Route auth
   // ==========================================================================
   ERROR_AUTH_LOGIN: { status: 401, msg: 'Username and/or password are/is invalid.' },
