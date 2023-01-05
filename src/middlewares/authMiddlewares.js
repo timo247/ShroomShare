@@ -30,7 +30,6 @@ const authMiddlewares = {
 
 async function authenticate(req) {
   const authorization = req.get('Authorization');
-  errorLogger(authorization);
   if (!authorization) return { error: msg.ERROR_AUTH_HEADER_PRESENCE };
   const match = authorization.match(/^Bearer (.+)$/);
   if (!match) return { error: msg.ERROR_AUTH_BEARERTOKEN_FORMAT };
@@ -39,6 +38,7 @@ async function authenticate(req) {
     const payload = jwt.verify(token, config.secretKey);
     req.currentUserId = payload.sub;
     req.currentUserRole = payload.scope;
+    errorLogger(payload);
     return payload;
   } catch (error) {
     return { error: msg.ERROR_TOKEN_VALIDATION };

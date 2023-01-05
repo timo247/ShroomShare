@@ -1,4 +1,5 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import User from '../schemas/user.js';
 import auth from '../middlewares/authMiddlewares.js';
@@ -133,11 +134,14 @@ router.post('/', async (req, res, next) => {
     req.body.password = await bcrypt.hash(req.body.password, config.bcryptCostFactor);
     const payload = useAuth.getPayloadFromToken(req);
     req.body.admin = payload?.scope === 'admin';
+    const userId = new mongoose.Types.ObjectId();
+    req.body['_id'] = userId; //eslint-disable-line
     const alreadyExistingUser = await User.findOne({ username: req.body.username });
     if (alreadyExistingUser) return useAuth.send(res, msg.ERROR_RESSOURCE_UNICITY('username'));
     const user = new User(req.body);
     const savedUser = await user.save();
-    const tokenWrapper = useAuth.generateJwtToken(req.currentUserId, req.currentUserRole);
+    const role = req.body.admin === 'admin' ? 'admin' : 'user';
+    const tokenWrapper = useAuth.generateJwtToken(req.body['_id'], role);//eslint-disable-line
     if (tokenWrapper.token) {
       req.body = useAuth.setBody({ user: savedUser, token: tokenWrapper.token });
       return useAuth.send(res, msg.SUCCESS_RESSOURCE_CREATION(R.USER), req.body);

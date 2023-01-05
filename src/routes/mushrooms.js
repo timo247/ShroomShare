@@ -12,7 +12,6 @@ import Image from '../schemas/images.js';
 import config from '../../config.js';
 import validateGeoJsonCoordinates from '../helpers/useValidateGeoJsonCoordinates.js';
 import validateDate from '../helpers/useValidateDate.js';
-import User from '../schemas/user.js';
 
 const router = express.Router();
 const errorLogger = config.debug.apiErrors;
