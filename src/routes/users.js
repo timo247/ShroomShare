@@ -139,9 +139,17 @@ router.post('/', async (req, res, next) => {
     const alreadyExistingUser = await User.findOne({ username: req.body.username });
     if (alreadyExistingUser) return useAuth.send(res, msg.ERROR_RESSOURCE_UNICITY('username'));
     const user = new User(req.body);
-    const savedUser = await user.save();
+    await user.save();
+    const savedUser = await User.findById(userId).lean();
+    if (!savedUser) return useAuth.send(res, msg.INTERNALERROR());
     const role = req.body.admin === 'admin' ? 'admin' : 'user';
     const tokenWrapper = useAuth.generateJwtToken(req.body['_id'], role);//eslint-disable-line
+
+    delete savedUser.password;
+    savedUser.id = savedUser['_id'];//eslint-disable-line
+    delete savedUser['_id'];//eslint-disable-line
+    delete savedUser['__v'];//eslint-disable-line
+
     if (tokenWrapper.token) {
       req.body = useAuth.setBody({ user: savedUser, token: tokenWrapper.token });
       return useAuth.send(res, msg.SUCCESS_RESSOURCE_CREATION(R.USER), req.body);

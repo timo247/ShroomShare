@@ -33,11 +33,15 @@ router.post('/', async (req, res, next) => {
   const password = req.body.password;
   const username = req.body.username;
   try {
-    const user = await User.findOne().where('username').equals(username);
+    const user = await User.findOne().where('username').equals(username).lean();
     if (!user) return useAuth.send(res, msg.ERROR_AUTH_LOGIN);
     const match = await bcrypt.compare(password, user.password);
     if (!match) return useAuth.send(res, msg.ERROR_AUTH_LOGIN);
     req.body = {};
+    delete user.password;
+    user.id = user['_id'];//eslint-disable-line
+    delete user['_id'];//eslint-disable-line
+    delete user['__v'];//eslint-disable-line
     req.body.user = user;
     next();
   } catch (error) {
@@ -48,7 +52,7 @@ router.post('/', async (req, res, next) => {
 
 router.use((req, res, next) => {
   if (!req.body.user) return useAuth.send(res, msg.ERROR_METHOD_EXISTENCE);
-  const userId = req.body.user.id.toString();
+  const userId = req.body.user['_id'];//eslint-disable-line
   const tokenWrapper = useAuth.generateJwtToken(userId, req.body.user.admin);
   if (tokenWrapper?.error) return useAuth.send(res, msg.INTERNALERROR_TOKEN_CREATION);
   const payloadWrapper = useAuth.verifyJwtToken(tokenWrapper.token);
