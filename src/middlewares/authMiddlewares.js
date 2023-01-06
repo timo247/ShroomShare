@@ -14,15 +14,15 @@ const authMiddlewares = {
   async authenticateUser(req, res, next) {
     const payload = await authenticate(req);
     if (payload.error) return useAuth.send(res, payload.error);
-    req.currentUserId = payload.sub;
-    req.currentUserRole = payload.scope;
+    res.locals.currentUserId = payload.sub;
+    res.locals.currentUserRole = payload.scope;
     return next();
   },
   async authenticateAdmin(req, res, next) {
     const payload = await authenticate(req);
     if (payload.error) return useAuth.send(res, payload.error);
-    req.currentUserId = payload.sub;
-    req.currentUserRole = payload.scope;
+    res.locals.currentUserId = payload.sub;
+    res.locals.currentUserRole = payload.scope;
     if (payload.scope === roles.admin) return next();
     return useAuth.send(res, msg.ERROR_AUTH_PERMISSION_GRANTATION);
   },
@@ -36,8 +36,6 @@ async function authenticate(req) {
   const token = match[1];
   try {
     const payload = jwt.verify(token, config.secretKey);
-    req.currentUserId = payload.sub;
-    req.currentUserRole = payload.scope;
     errorLogger(payload);
     return payload;
   } catch (error) {

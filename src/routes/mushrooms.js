@@ -209,12 +209,12 @@ router.post('/', auth.authenticateUser, async (req, res, next) => {
       value: req.body.picture,
       specy: req.body.specy_id,
       collectionName: 'mushrooms',
-      user: req.currentUserId,
+      user: res.locals.currentUserId,
       mushroom: mushroomId,
     });
     const mushroom = new Mushroom({
       _id: mushroomId,
-      user: req.currentUserId,
+      user: res.locals.currentUserId,
       specy: req.body.specy_id,
       picture: pictureId,
       description: req.body.description,
@@ -323,7 +323,7 @@ router.delete('/:id', auth.authenticateUser, async (req, res, next) => {
     }
     const mushroomOwnerId = (await Mushroom.findOne({ _id: id })).user;
     if (!mushroomOwnerId) return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.MUSHROOM));
-    const areIdsIdentical = String(req.currentUserId) === String(mushroomOwnerId);
+    const areIdsIdentical = String(res.locals.currentUserId) === String(mushroomOwnerId);
     if (!areIdsIdentical) return useAuth.send(res, msg.ERROR_OWNERRIGHT_GRANTATION);
     await Mushroom.deleteOne({ _id: id });
     await Image.deleteOne({ mushroom: id });

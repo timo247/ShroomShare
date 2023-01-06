@@ -142,8 +142,7 @@ router.post('/', async (req, res, next) => {
     await user.save();
     const savedUser = await User.findById(userId).lean();
     if (!savedUser) return useAuth.send(res, msg.INTERNALERROR());
-    const role = req.body.admin === 'admin' ? 'admin' : 'user';
-    const tokenWrapper = useAuth.generateJwtToken(req.body['_id'], role);//eslint-disable-line
+    const tokenWrapper = useAuth.generateJwtToken(req.body['_id'], req.body.admin);//eslint-disable-line
 
     delete savedUser.password;
     savedUser.id = savedUser['_id'];//eslint-disable-line
@@ -193,7 +192,7 @@ router.patch('/:id', auth.authenticateUser, async (req, res, next) => {
       req.body.password = await bcrypt.hash(req.body.password, config.bcryptCostFactor);
     }
     const params = req.body;
-    const areIdsIdentical = String(req.currentUserId) === String(id);
+    const areIdsIdentical = String(res.locals.currentUserId) === String(id);
     if (!areIdsIdentical) return useAuth.send(res, msg.ERROR_OWNERRIGHT_GRANTATION);
     await User.findByIdAndUpdate(id, params);
     const modifiedUser = await User.findOne({ _id: id });
@@ -230,7 +229,7 @@ router.delete('/:id', auth.authenticateUser, async (req, res, next) => {
     if (!useRouter.isValidMongooseId(id)) {
       return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
     }
-    const areIdsIdentical = String(req.currentUserId) === String(id);
+    const areIdsIdentical = String(res.locals.currentUserId) === String(id);
     if (!areIdsIdentical) return useAuth.send(res, msg.ERROR_OWNERRIGHT_GRANTATION);
     const userToDelete = await User.findOne({ _id: id });
     if (!userToDelete) return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.USER));
