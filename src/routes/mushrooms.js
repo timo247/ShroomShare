@@ -129,7 +129,7 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
       const index = usagesEn.indexOf(usageQuery);
       if (index === -1) return useAuth.send(res, msg.ERROR_USAGE_FORMAT);
       dynamicQuery = dynamicQuery.populate({
-        path: 'specy_id',
+        path: 'specy',
         match: { usage: { $eq: usagesFR[index] } },
       });
     } else {
