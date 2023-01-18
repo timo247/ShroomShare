@@ -9,6 +9,16 @@ import Image from '../schemas/images.js';
 import Mushroom from '../schemas/mushroom.js';
 
 connection();
+
+await Promise.all([
+  User.deleteMany(),
+  Specy.deleteMany(),
+  Image.deleteMany(),
+  Mushroom.deleteMany(),
+]);
+
+await userSeeder();
+await speciesSeeder();
 await mushroomSeeder();
 await mongoose.connection.close();
 process.exit();
