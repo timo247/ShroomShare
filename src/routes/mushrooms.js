@@ -87,7 +87,6 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
     let dateMin = 0;
     let dateMax = Date.now();
     let dynamicQuery = Mushroom.find();
-
     if (long && lat) {
       if (long < -180 || long > 90) return useAuth.send(res, msg.ERROR_LONGITUDE_VALIDATION);
       if (lat < -90 || lat > 90) return useAuth.send(res, msg.ERROR_LATITUDE_VALIDATION);
@@ -141,9 +140,9 @@ router.get('/', auth.authenticateUser, async (req, res, next) => {
     let data = await dynamicQuery.populate('user');
 
     data = data.filter((item) => {
-      if (item.user_id === null) return;
-      if (item.specy_id === null) return;
-      if (item.picture_id === null) return;
+      if (item.user === null) return;
+      if (item.specy === null) return;
+      if (item.picture === null) return;
       return item;
     });
 
