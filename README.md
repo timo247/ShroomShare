@@ -1,8 +1,6 @@
 # ShroomShare
 
-REST API allowing users to localize where they gather mushrooms.
-This application allows administrator to create species, which are different type of mushrooms that can be found into the wild.
-Then, the app users may find mushrooms into the wild corresponding to the available species. When they do, they then can picture them, localize them,describe them and send these informations into the app. Then, all the users can know that the particular specy can be found at the location where the user took the picture.
+API REST permettant aux utilisateurs de localiser où ils récoltent des champignons. Cette application permet aux administrateurs de créer des espèces, qui sont différents types de champignons qui peuvent être trouvés dans la nature. Ensuite, les utilisateurs de l'application peuvent trouver des champignons dans la nature correspondant aux espèces disponibles. Lorsqu'ils le font, ils peuvent alors les photographier, les localiser, les décrire et envoyer ces informations dans l'application. Ensuite, tous les utilisateurs peuvent savoir que cette espèce particulière peut être trouvée à l'emplacement où l'utilisateur a pris la photo.
 
 # Table of Contents
 

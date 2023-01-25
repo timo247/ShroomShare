@@ -25,47 +25,70 @@ Object.values(CHANNELS).forEach((value) => {
 
 function createWebSocketServer(httpServer) {
   const wss = new WebSocketServer({ clientTracking: false, noServer: true });
+  console.log('coucou');
 
   wss.on('connection', async (ws, request, client, socket) => {
-    const language = getQueryParam('language', request.url) || defaultLangugage;
-    const currentChannel = CHANNELS[language.toUpperCase()]
-      || CHANNELS[defaultLangugage.toUpperCase()];
-    let user;
-    try {
-      user = await User.findOne({ _id: client.sub });
-      if (!user) {
+    const url = new URL(`http://base-url/${request.url}`);
+    const searchParams = url.searchParams;
+    if (searchParams !== undefined) {
+      // get url parameters
+      const id = searchParams.get('id');
+      let language = searchParams.get('language');
+      if (language === null) {
+        language = defaultLangugage;
+      }
+      console.log('params', searchParams);
+      const currentChannel =
+        CHANNELS[language.toUpperCase()] ||
+        CHANNELS[defaultLangugage.toUpperCase()];
+      let user;
+      try {
+        user = await User.findById(id);
+        console.log('user', user);
+        if (!user) {
+          errorsLogger('id does no more exist');
+          console.log('we destroy socket because !user');
+          return destroySocket(socket, UNAUTHORIZED);
+        }
+      } catch (error) {
         errorsLogger('id does no more exist');
         return destroySocket(socket, UNAUTHORIZED);
       }
-    } catch (error) {
-      errorsLogger('id does no more exist');
+      channels[currentChannel].set(client.sub, { ws, user });
+      let response = setUserResponse(msg.CHAT_USER_CONNECTION, user);
+      broadcastMessage(response, currentChannel);
+
+      ws.on('message', (message) => {
+        const rawMessage = String(message);
+        onMessageReceived(ws, rawMessage, user, currentChannel);
+      });
+
+      ws.on('close', () => {
+        response = setUserResponse(msg.CHAT_USER_DISCONNECTION, user);
+        broadcastMessage(response, currentChannel);
+        channels[currentChannel].delete(client.sub);
+      });
+    } else {
+      errorsLogger('user id not provided in url');
       return destroySocket(socket, UNAUTHORIZED);
     }
-    channels[currentChannel].set(client.sub, { ws, user });
-    let response = setUserResponse(msg.CHAT_USER_CONNECTION, user);
-    broadcastMessage(response, currentChannel);
-
-    ws.on('message', (message) => {
-      const rawMessage = String(message);
-      onMessageReceived(ws, rawMessage, user, currentChannel);
-    });
-
-    ws.on('close', () => {
-      response = setUserResponse(msg.CHAT_USER_DISCONNECTION, user);
-      broadcastMessage(response, currentChannel);
-      channels[currentChannel].delete(client.sub);
-    });
   });
 
   httpServer.on('upgrade', function upgrade(request, socket, head) {
-    authenticate(request, function next(err, client) {
-      if (err || !client) {
-        return destroySocket(socket, UNAUTHORIZED);
-      }
-
-      wss.handleUpgrade(request, socket, head, function done(ws) {
-        wss.emit('connection', ws, request, client, socket);
-      });
+    console.log('peut etre');
+    // authenticate(request, function next(err, client) {
+    //   if (err || !client) {
+    //     return destroySocket(socket, UNAUTHORIZED);
+    //   }
+    const fictiveClient = {
+      sub: '63793406983ac6743474f1eb',
+      exp: 1673364546,
+      scope: 'user',
+      iat: 1672759746,
+    };
+    wss.handleUpgrade(request, socket, head, function done(ws) {
+      wss.emit('connection', ws, request, fictiveClient, socket);
+      // });
     });
   });
 }
@@ -75,7 +98,9 @@ function createWebSocketServer(httpServer) {
 // ==========================================================================
 
 function broadcastMessage(message, channelId) {
-  channels[channelId].forEach((client) => { client.ws.send(JSON.stringify(message)); });
+  channels[channelId].forEach((client) => {
+    client.ws.send(JSON.stringify(message));
+  });
 }
 
 function onMessageReceived(ws, message, user, channelId) {
@@ -90,6 +115,7 @@ function authenticate(request, next) {
       const match = authorization.match(/^Bearer (.+)$/);
       const token = match[1];
       const payload = jwt.verify(token, config.secretKey);
+      //console.log('payload', payload);
       next(undefined, payload);
     } catch (error) {
       next(error);
@@ -105,17 +131,24 @@ function destroySocket(socket, status) {
 function setUserResponse(status, user, message) {
   return message
     ? {
-      status, message, timestamp: Date.now(), user,
-    }
+        status,
+        message,
+        timestamp: Date.now(),
+        user,
+      }
     : {
-      status, timestamp: Date.now(), user,
-    };
+        status,
+        timestamp: Date.now(),
+        user,
+      };
 }
 
 function getQueryParam(key, url) {
-  const regexp = new RegExp(`${key}=([^&]*)`);
+  const regexp = new RegExp(`${key}=([^&])`);
+
   const matches = url.match(regexp);
   if (matches !== null) return matches[1];
+  console.log('matched regexp', matches, 'url', url);
 }
 
 export default createWebSocketServer;
