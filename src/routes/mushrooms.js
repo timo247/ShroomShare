@@ -262,14 +262,14 @@ router.patch('/:id', auth.authenticateUser, async (req, res, next) => {
     if (!useRouter.isValidMongooseId(id)) {
       return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.MUSHROOM));
     }
-    if (req.body.picture) {
+    if (req.params.picture) {
       if (!isBase64(req.body.picture)) return useAuth.send(res, msg.ERROR_IMG_BASE64);
     }
-    if (req.body.date) {
+    if (req.params.date) {
       if (!validateDate(req.body.date)) return useAuth.send(res, msg.ERROR_DATE_FORMAT);
     }
-    if (req.body.location.coordinates) {
-      if (!validateGeoJsonCoordinates(req.body.location.coordinates)) {
+    if (req.params.location?.coordinates) {
+      if (!validateGeoJsonCoordinates(req.params.location.coordinates)) {
         return useAuth.send(res, msg.ERROR_GEOJSON_FORMAT);
       }
     }
