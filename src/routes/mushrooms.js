@@ -262,14 +262,14 @@ router.patch('/:id', auth.authenticateUser, async (req, res, next) => {
     if (!useRouter.isValidMongooseId(id)) {
       return useAuth.send(res, msg.ERROR_RESSOURCE_EXISTANCE(R.MUSHROOM));
     }
-    if (req.params.picture) {
+    if (req.body.picture) {
       if (!isBase64(req.body.picture)) return useAuth.send(res, msg.ERROR_IMG_BASE64);
     }
-    if (req.params.date) {
+    if (req.body.date) {
       if (!validateDate(req.body.date)) return useAuth.send(res, msg.ERROR_DATE_FORMAT);
     }
-    if (req.params.location?.coordinates) {
-      if (!validateGeoJsonCoordinates(req.params.location.coordinates)) {
+    if (req.body.location?.coordinates) {
+      if (!validateGeoJsonCoordinates(req.body.location.coordinates)) {
         return useAuth.send(res, msg.ERROR_GEOJSON_FORMAT);
       }
     }
@@ -277,7 +277,7 @@ router.patch('/:id', auth.authenticateUser, async (req, res, next) => {
     if (params.picture) {
       const picture = {
         date: Date.now(),
-        value: req.params.picture,
+        value: req.body.picture,
       };
       delete params.picture;
       await Image.findOneAndUpdate({ mushroom: id }, picture);
