@@ -35,7 +35,7 @@ function createWebSocketServer(httpServer) {
       const id = searchParams.get('id');
       let language = searchParams.get('language');
       if (language === null) {
-        language = defaultLangugage;
+        language = defaultLanguage;
       }
       console.log('params', searchParams);
       const currentChannel =
