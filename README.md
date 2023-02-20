@@ -39,7 +39,7 @@ Les messages n'ont pas besoin de respecter un format particulier, il peuvent êt
 __Accéder au chat__
 
 ```
- ws://shroom-share.onrender.com 
+ wss://shroom-share.onrender.com 
 ```
 __Query parameter__
 
